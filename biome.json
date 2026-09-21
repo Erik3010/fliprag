@@ -23,6 +23,7 @@
   },
   "linter": {
     "enabled": true,
+    "includes": ["**", "!packages/ui/src/components/**"],
     "rules": {
       "preset": "recommended",
       "correctness": {

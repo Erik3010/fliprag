@@ -9,8 +9,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@fliprag/schemas": "workspace:*",
     "@hono/node-server": "^2.1.1",
-    "hono": "^4.13.8"
+    "@hono/zod-validator": "^0.9.1",
+    "hono": "^4.13.8",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",
