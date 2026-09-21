@@ -7,9 +7,8 @@
     "jsx": "react-jsx",
     "noEmit": true,
     "paths": {
-      "@/*": ["./src/*"],
-      "@fliprag/ui/*": ["../../packages/ui/src/*"]
+      "@fliprag/ui/*": ["./src/*"]
     }
   },
-  "include": ["src", "vite.config.ts"]
+  "include": ["src"]
 }

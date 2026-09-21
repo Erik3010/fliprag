@@ -1,3 +1,4 @@
+import { Button } from '@fliprag/ui/components/button'
 import { useCallback, useEffect, useState } from 'react'
 
 type Health = {
@@ -73,14 +74,14 @@ export function App() {
         )}
       </section>
 
-      <button
+      <Button
         type="button"
         onClick={() => void check()}
         disabled={probe.state === 'checking'}
-        className="min-h-11 rounded-md bg-orange-800 px-5 text-white outline-offset-2 outline-orange-800 hover:bg-orange-900 focus-visible:outline-2 disabled:bg-neutral-200 disabled:text-neutral-600 dark:bg-orange-400 dark:text-neutral-950 dark:outline-orange-400 dark:hover:bg-orange-300 dark:disabled:bg-neutral-800 dark:disabled:text-neutral-400"
+        className="min-h-11"
       >
         Check the server again
-      </button>
+      </Button>
     </main>
   )
 }
