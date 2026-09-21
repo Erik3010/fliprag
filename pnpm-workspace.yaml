@@ -1,0 +1,19 @@
+packages:
+  - apps/*
+  - packages/*
+
+# Shared versions live here; packages reference them as "catalog:" or "catalog:react".
+catalog:
+  '@types/node': ^26.6.2
+  typescript: ^7.0.2
+
+catalogs:
+  react:
+    '@types/react': ^19.3.0
+    '@types/react-dom': ^19.3.0
+    react: ^19.3.0
+    react-dom: ^19.3.0
+
+# Postinstall scripts are blocked by default in pnpm 10; list the ones you trust.
+onlyBuiltDependencies:
+  - esbuild
