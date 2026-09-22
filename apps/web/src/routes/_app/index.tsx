@@ -1,5 +1,6 @@
 import { Button } from '@fliprag/ui/components/button'
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { format } from 'date-fns'
 import { ChevronRight, Plus, Upload } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { DeckList } from '@/features/decks/components/deck-list'
@@ -10,12 +11,6 @@ import { placeholderDocuments } from '@/features/documents/placeholder'
 
 export const Route = createFileRoute('/_app/')({
   component: Home,
-})
-
-const today = new Intl.DateTimeFormat('en-GB', {
-  weekday: 'long',
-  day: 'numeric',
-  month: 'long',
 })
 
 // TODO: load decks, counts, and the latest document from the server. Placeholder rows until then.
@@ -35,7 +30,7 @@ function Home() {
       <header className="flex flex-wrap items-center justify-between gap-6">
         <div>
           <p className="font-mono text-muted-foreground text-xs uppercase tracking-widest">
-            {today.format(new Date())}
+            {format(new Date(), 'EEEE d MMMM')}
           </p>
 
           {/* TODO: greet with the account's own name once one is stored. Hard coded until then. */}

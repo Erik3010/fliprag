@@ -1,10 +1,11 @@
+import { subDays } from 'date-fns'
 import type { Deck } from '@/features/decks/types'
 
 // Stand-in rows so the home screen can be built before the API exists. Nothing here is real.
 // Delete this file once decks are loaded from the server.
 
 function daysAgo(days: number) {
-  return new Date(Date.now() - days * 86_400_000).toISOString()
+  return subDays(new Date(), days).toISOString()
 }
 
 export const placeholderDecks: Deck[] = [
