@@ -4,7 +4,7 @@ import { FileText } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
 import { DeckMark } from '@/features/decks/components/deck-mark'
 import type { Deck } from '@/features/decks/types'
-import { relativeDay } from '@/shared/relative-time'
+import { relativeDay } from '@/lib/date'
 
 type DeckListProps = {
   decks: Deck[]

@@ -13,6 +13,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AppAccountRouteImport } from './routes/_app/account'
 import { Route as AppDocumentsRouteImport } from './routes/_app/documents'
 import { Route as AppDecksDeckIdRouteImport } from './routes/_app/decks.$deckId'
 import { Route as AppDecksNewRouteImport } from './routes/_app/decks.new'
@@ -35,6 +36,11 @@ const SignupRoute = SignupRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAccountRoute = AppAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDocumentsRoute = AppDocumentsRouteImport.update({
@@ -62,6 +68,7 @@ export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/account': typeof AppAccountRoute
   '/documents': typeof AppDocumentsRoute
   '/decks/$deckId': typeof AppDecksDeckIdRoute
   '/decks/new': typeof AppDecksNewRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/account': typeof AppAccountRoute
   '/documents': typeof AppDocumentsRoute
   '/': typeof AppIndexRoute
   '/decks/$deckId': typeof AppDecksDeckIdRoute
@@ -81,6 +89,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/_app/account': typeof AppAccountRoute
   '/_app/documents': typeof AppDocumentsRoute
   '/_app/': typeof AppIndexRoute
   '/_app/decks/$deckId': typeof AppDecksDeckIdRoute
@@ -93,6 +102,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/signup'
+    | '/account'
     | '/documents'
     | '/decks/$deckId'
     | '/decks/new'
@@ -101,6 +111,7 @@ export interface FileRouteTypes {
   to:
     | '/login'
     | '/signup'
+    | '/account'
     | '/documents'
     | '/'
     | '/decks/$deckId'
@@ -111,6 +122,7 @@ export interface FileRouteTypes {
     | '/_app'
     | '/login'
     | '/signup'
+    | '/_app/account'
     | '/_app/documents'
     | '/_app/'
     | '/_app/decks/$deckId'
@@ -155,6 +167,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/account': {
+      id: '/_app/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AppAccountRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/documents': {
       id: '/_app/documents'
       path: '/documents'
@@ -187,6 +206,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppAccountRoute: typeof AppAccountRoute
   AppDocumentsRoute: typeof AppDocumentsRoute
   AppIndexRoute: typeof AppIndexRoute
   AppDecksDeckIdRoute: typeof AppDecksDeckIdRoute
@@ -194,6 +214,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAccountRoute: AppAccountRoute,
   AppDocumentsRoute: AppDocumentsRoute,
   AppIndexRoute: AppIndexRoute,
   AppDecksDeckIdRoute: AppDecksDeckIdRoute,

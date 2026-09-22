@@ -1,5 +1,5 @@
 import type { SourceDocument } from '@/features/documents/types'
-import { relativeDay } from '@/shared/relative-time'
+import { relativeDay } from '@/lib/date'
 
 export function documentSize(bytes: number) {
   return bytes >= 1_000_000

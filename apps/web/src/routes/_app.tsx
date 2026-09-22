@@ -1,7 +1,9 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { requireSession } from '@/features/auth/guard'
 import { AppSidebar } from './-components/app-sidebar'
 
 export const Route = createFileRoute('/_app')({
+  beforeLoad: requireSession,
   component: AppLayout,
 })
 

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { fetchHealth, type Health } from '@/features/health/api'
-import { failureMessage } from '@/shared/api'
+import { failureMessage } from '@/lib/http'
 
 export type Probe =
   | { state: 'checking' }

@@ -1,4 +1,4 @@
-import { api } from '@/shared/api'
+import { api } from '@/lib/http'
 
 export type Health = {
   status: string

@@ -2,9 +2,11 @@ import { Card, CardContent, CardHeader } from '@fliprag/ui/components/card'
 import { PageHeading } from '@fliprag/ui/components/page-heading'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { CredentialsForm } from '@/features/auth/components/credentials-form'
+import { redirectIfSignedIn } from '@/features/auth/guard'
 import { useSignup } from '@/features/auth/hooks/use-signup'
 
 export const Route = createFileRoute('/signup')({
+  beforeLoad: redirectIfSignedIn,
   component: Signup,
 })
 

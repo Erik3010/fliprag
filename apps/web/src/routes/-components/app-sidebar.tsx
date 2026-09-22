@@ -1,6 +1,6 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from '@fliprag/ui/components/tooltip'
 import { Link } from '@tanstack/react-router'
-import { FileText, House, LogIn } from 'lucide-react'
+import { FileText, House, UserRound } from 'lucide-react'
 
 const tabs = [
   { to: '/', label: 'Home', icon: House },
@@ -44,13 +44,13 @@ export function AppSidebar() {
       <div className="flex justify-center">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link to="/login" className={item}>
-              <LogIn className="size-5" aria-hidden="true" />
-              <span className="sr-only">Sign in</span>
+            <Link to="/account" activeProps={{ className: itemActive }} className={item}>
+              <UserRound className="size-5" aria-hidden="true" />
+              <span className="sr-only">Account</span>
             </Link>
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={6}>
-            Sign in
+            Account
           </TooltipContent>
         </Tooltip>
       </div>
