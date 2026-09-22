@@ -16,6 +16,7 @@ import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppDocumentsRouteImport } from './routes/_app/documents'
 import { Route as AppDecksDeckIdRouteImport } from './routes/_app/decks.$deckId'
 import { Route as AppDecksNewRouteImport } from './routes/_app/decks.new'
+import { Route as DecksDeckIdStudyRouteImport } from './routes/decks.$deckId.study'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -51,6 +52,11 @@ const AppDecksNewRoute = AppDecksNewRouteImport.update({
   path: '/decks/new',
   getParentRoute: () => AppRoute,
 } as any)
+const DecksDeckIdStudyRoute = DecksDeckIdStudyRouteImport.update({
+  id: '/decks/$deckId/study',
+  path: '/decks/$deckId/study',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/documents': typeof AppDocumentsRoute
   '/decks/$deckId': typeof AppDecksDeckIdRoute
   '/decks/new': typeof AppDecksNewRoute
+  '/decks/$deckId/study': typeof DecksDeckIdStudyRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
   '/decks/$deckId': typeof AppDecksDeckIdRoute
   '/decks/new': typeof AppDecksNewRoute
+  '/decks/$deckId/study': typeof DecksDeckIdStudyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -77,14 +85,27 @@ export interface FileRoutesById {
   '/_app/': typeof AppIndexRoute
   '/_app/decks/$deckId': typeof AppDecksDeckIdRoute
   '/_app/decks/new': typeof AppDecksNewRoute
+  '/decks/$deckId/study': typeof DecksDeckIdStudyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/login' | '/signup' | '/documents' | '/decks/$deckId' | '/decks/new'
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/documents'
+    | '/decks/$deckId'
+    | '/decks/new'
+    | '/decks/$deckId/study'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/login' | '/signup' | '/documents' | '/' | '/decks/$deckId' | '/decks/new'
+    | '/login'
+    | '/signup'
+    | '/documents'
+    | '/'
+    | '/decks/$deckId'
+    | '/decks/new'
+    | '/decks/$deckId/study'
   id:
     | '__root__'
     | '/_app'
@@ -94,12 +115,14 @@ export interface FileRouteTypes {
     | '/_app/'
     | '/_app/decks/$deckId'
     | '/_app/decks/new'
+    | '/decks/$deckId/study'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  DecksDeckIdStudyRoute: typeof DecksDeckIdStudyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -153,6 +176,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDecksNewRouteImport
       parentRoute: typeof AppRoute
     }
+    '/decks/$deckId/study': {
+      id: '/decks/$deckId/study'
+      path: '/decks/$deckId/study'
+      fullPath: '/decks/$deckId/study'
+      preLoaderRoute: typeof DecksDeckIdStudyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -176,6 +206,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  DecksDeckIdStudyRoute: DecksDeckIdStudyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
