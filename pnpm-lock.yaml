@@ -45,6 +45,9 @@ importers:
 
   apps/server:
     dependencies:
+      '@fliprag/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@fliprag/schemas':
         specifier: workspace:*
         version: link:../../packages/schemas
@@ -60,9 +63,6 @@ importers:
       hono:
         specifier: ^4.13.8
         version: 4.13.8
-      postgres:
-        specifier: ^3.4.9
-        version: 3.4.9
       zod:
         specifier: 'catalog:'
         version: 4.6.5
@@ -70,9 +70,6 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 26.6.2
-      drizzle-kit:
-        specifier: ^0.31.11
-        version: 0.31.11
       tsx:
         specifier: ^4.23.15
         version: 4.23.15
@@ -155,6 +152,25 @@ importers:
       vite:
         specifier: ^8.3.0
         version: 8.3.0(@types/node@26.6.2)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)
+
+  packages/db:
+    dependencies:
+      drizzle-orm:
+        specifier: ^0.45.3
+        version: 0.45.3(postgres@3.4.9)
+      postgres:
+        specifier: ^3.4.9
+        version: 3.4.9
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.6.2
+      drizzle-kit:
+        specifier: ^0.31.11
+        version: 0.31.11
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
 
   packages/schemas:
     dependencies:

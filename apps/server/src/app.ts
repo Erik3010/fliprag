@@ -1,8 +1,8 @@
+import { db } from '@fliprag/db'
 import { credentialsSchema } from '@fliprag/schemas/auth'
 import { zValidator } from '@hono/zod-validator'
 import { sql } from 'drizzle-orm'
 import { Hono } from 'hono'
-import { db } from './db/index.js'
 
 const startedAt = Date.now()
 

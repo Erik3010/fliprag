@@ -4,7 +4,8 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "types": ["node"],
-    "noEmit": true
+    "rootDir": "src",
+    "outDir": "dist"
   },
-  "include": ["src", "drizzle.config.ts"]
+  "include": ["src"]
 }

@@ -12,7 +12,7 @@
       "!**/.turbo",
       "!pnpm-lock.yaml",
       "!**/routeTree.gen.ts",
-      "!apps/server/drizzle"
+      "!packages/db/migrations"
     ]
   },
   "formatter": {
