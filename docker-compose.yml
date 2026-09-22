@@ -1,0 +1,22 @@
+# Only Postgres runs in Docker. The web and server run on the host with pnpm, so hot reload and
+# the nvm toolchain keep working. Start it once with `docker compose up -d`.
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: fliprag-db
+    environment:
+      POSTGRES_USER: fliprag
+      POSTGRES_PASSWORD: fliprag
+      POSTGRES_DB: fliprag
+    ports:
+      - '${DB_PORT:-5432}:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U fliprag -d fliprag']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:

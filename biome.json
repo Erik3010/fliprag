@@ -6,7 +6,14 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!**/dist", "!**/.turbo", "!pnpm-lock.yaml", "!**/routeTree.gen.ts"]
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/.turbo",
+      "!pnpm-lock.yaml",
+      "!**/routeTree.gen.ts",
+      "!apps/server/drizzle"
+    ]
   },
   "formatter": {
     "enabled": true,
