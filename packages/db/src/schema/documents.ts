@@ -10,8 +10,6 @@ export const documents = pgTable(
       .references(() => users.id, { onDelete: 'cascade' }),
     name: text().notNull(),
     originalFilename: text().notNull(),
-    // "<userId>/<id>.pdf". A relative path under the uploads dir today, an object key on S3 or R2
-    // later, so the row does not change when the files move.
     storageKey: text().notNull().unique('documents_storage_key_unique'),
     sizeBytes: integer().notNull(),
     pageCount: integer().notNull(),
