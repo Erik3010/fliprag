@@ -1,3 +1,4 @@
+import { Toaster } from '@fliprag/ui/components/sonner'
 import { TooltipProvider } from '@fliprag/ui/components/tooltip'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
@@ -25,6 +26,7 @@ createRoot(container).render(
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <RouterProvider router={router} />
+        <Toaster position="bottom-center" />
       </TooltipProvider>
     </QueryClientProvider>
   </StrictMode>,
