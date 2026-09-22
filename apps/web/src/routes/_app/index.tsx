@@ -3,9 +3,10 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { ChevronRight, Plus, Upload } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { DeckList } from '@/features/decks/components/deck-list'
-import { placeholderCounts, placeholderDecks } from '@/features/decks/placeholder'
+import { DeckListEmpty } from '@/features/decks/components/deck-list-empty'
+import { placeholderDecks } from '@/features/decks/placeholder'
 import type { LibraryCounts } from '@/features/decks/types'
-import { placeholderLatestDocument } from '@/features/documents/placeholder'
+import { placeholderDocuments } from '@/features/documents/placeholder'
 
 export const Route = createFileRoute('/_app/')({
   component: Home,
@@ -20,8 +21,14 @@ const today = new Intl.DateTimeFormat('en-GB', {
 // TODO: load decks, counts, and the latest document from the server. Placeholder rows until then.
 function Home() {
   const decks = placeholderDecks
-  const counts = placeholderCounts
-  const latest = counts.documents > 0 ? placeholderLatestDocument : undefined
+  const documents = placeholderDocuments
+
+  const counts = {
+    decks: decks.length,
+    cards: decks.reduce((total, deck) => total + deck.cardCount, 0),
+    documents: documents.length,
+  }
+  const latest = documents[0]
 
   return (
     <div className="flex flex-col gap-7">
@@ -33,7 +40,7 @@ function Home() {
 
           {/* TODO: greet with the account's own name once one is stored. Hard coded until then. */}
           <h1 className="mt-1.5 text-balance font-semibold text-3xl tracking-tight">
-            Good morning, Maya
+            Welcome, Maya
           </h1>
         </div>
 
@@ -63,7 +70,7 @@ function Home() {
 
       <Counts counts={counts} />
 
-      <DeckList decks={decks} />
+      <DeckList decks={decks} empty={<DeckListEmpty hasDocument={documents.length > 0} />} />
     </div>
   )
 }

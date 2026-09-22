@@ -1,7 +1,7 @@
 import { Button } from '@fliprag/ui/components/button'
 import { Link } from '@tanstack/react-router'
 import { FileText } from 'lucide-react'
-import { useState } from 'react'
+import { type ReactNode, useState } from 'react'
 import { DeckMark } from '@/features/decks/components/deck-mark'
 import type { Deck } from '@/features/decks/types'
 
@@ -22,10 +22,11 @@ function edited(iso: string) {
 
 type DeckListProps = {
   decks: Deck[]
+  empty: ReactNode
   pageSize?: number
 }
 
-export function DeckList({ decks, pageSize = 6 }: DeckListProps) {
+export function DeckList({ decks, empty, pageSize = 6 }: DeckListProps) {
   const [page, setPage] = useState(0)
 
   const pageCount = Math.ceil(decks.length / pageSize)
@@ -47,9 +48,7 @@ export function DeckList({ decks, pageSize = 6 }: DeckListProps) {
       </div>
 
       {decks.length === 0 ? (
-        <p className="rounded-xl border border-dashed px-8 py-14 text-center text-muted-foreground">
-          No decks yet. The banner above starts the first one.
-        </p>
+        empty
       ) : (
         <ul className="grid grid-cols-[repeat(auto-fill,minmax(17rem,1fr))] items-stretch gap-3.5">
           {shown.map((deck) => (

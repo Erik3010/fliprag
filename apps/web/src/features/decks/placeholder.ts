@@ -1,5 +1,4 @@
-import type { Deck, LibraryCounts } from '@/features/decks/types'
-import { placeholderDocuments } from '@/features/documents/placeholder'
+import type { Deck } from '@/features/decks/types'
 
 // Stand-in rows so the home screen can be built before the API exists. Nothing here is real.
 // Delete this file once decks are loaded from the server.
@@ -59,9 +58,3 @@ export const placeholderDecks: Deck[] = [
     updatedAt: daysAgo(40),
   },
 ]
-
-export const placeholderCounts: LibraryCounts = {
-  decks: placeholderDecks.length,
-  cards: placeholderDecks.reduce((total, deck) => total + deck.cardCount, 0),
-  documents: placeholderDocuments.length,
-}
