@@ -30,5 +30,3 @@ export const placeholderDocuments: SourceDocument[] = [
     addedAt: daysAgo(12),
   },
 ]
-
-export const placeholderLatestDocument = placeholderDocuments[0]
