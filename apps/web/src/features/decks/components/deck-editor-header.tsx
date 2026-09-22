@@ -2,7 +2,7 @@ import { Button } from '@fliprag/ui/components/button'
 import { cn } from '@fliprag/ui/lib/utils'
 import { Link } from '@tanstack/react-router'
 import { Loader2, Play, Trash2 } from 'lucide-react'
-import { generationSteps } from '@/features/decks/hooks/use-deck-editor'
+import { generationSteps } from '@/features/decks/hooks/use-generation-walk'
 
 type DeckEditorHeaderProps = {
   deckId: string
