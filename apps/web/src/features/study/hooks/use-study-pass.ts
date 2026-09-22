@@ -1,8 +1,23 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useReducer } from 'react'
 import type { Card } from '@/features/cards/types'
 
 export type PassOrder = 'deck' | 'shuffle'
 export type PassPhase = 'start' | 'card' | 'end'
+
+type PassState = {
+  phase: PassPhase
+  order: PassOrder
+  queue: Card[]
+  index: number
+  flipped: boolean
+}
+
+type PassAction =
+  | { type: 'pick'; order: PassOrder }
+  | { type: 'begin'; order: PassOrder; cards: Card[] }
+  | { type: 'flip' }
+  | { type: 'next' }
+  | { type: 'prev' }
 
 function shuffle(cards: Card[]) {
   const out = cards.slice()
@@ -15,6 +30,36 @@ function shuffle(cards: Card[]) {
   return out
 }
 
+// A pass is never persisted: every arrival starts the deck again from the top.
+function passReducer(state: PassState, action: PassAction): PassState {
+  switch (action.type) {
+    case 'pick':
+      return { ...state, order: action.order }
+    case 'begin':
+      return {
+        phase: 'card',
+        order: action.order,
+        queue: action.order === 'shuffle' ? shuffle(action.cards) : action.cards,
+        index: 0,
+        flipped: false,
+      }
+    case 'flip':
+      return { ...state, flipped: !state.flipped }
+    case 'next':
+      return state.index >= state.queue.length - 1
+        ? { ...state, phase: 'end', flipped: false }
+        : { ...state, index: state.index + 1, flipped: false }
+    case 'prev':
+      return state.index === 0 ? state : { ...state, index: state.index - 1, flipped: false }
+  }
+}
+
+// What each key does in each phase. Anything not listed falls through to the browser.
+const keys: Partial<Record<PassPhase, Record<string, 'begin' | 'flip' | 'next' | 'prev'>>> = {
+  start: { Enter: 'begin' },
+  card: { ' ': 'flip', ArrowRight: 'next', ArrowLeft: 'prev' },
+}
+
 function typing(target: EventTarget | null) {
   return (
     target instanceof HTMLElement &&
@@ -22,98 +67,44 @@ function typing(target: EventTarget | null) {
   )
 }
 
-// One pass through a deck. Nothing about it is kept: leaving the screen ends the pass, and coming
-// back starts the deck again from the top.
 export function useStudyPass(cards: Card[]) {
-  const [phase, setPhase] = useState<PassPhase>('start')
-  const [order, setOrder] = useState<PassOrder>('deck')
-  const [queue, setQueue] = useState<Card[]>(cards)
-  const [index, setIndex] = useState(0)
-  const [flipped, setFlipped] = useState(false)
-
-  const total = queue.length
-  const atFirst = index === 0
-  const atLast = index >= total - 1
-
-  const begin = useCallback(
-    (next: PassOrder) => {
-      setOrder(next)
-      setQueue(next === 'shuffle' ? shuffle(cards) : cards)
-      setIndex(0)
-      setFlipped(false)
-      setPhase('card')
-    },
-    [cards],
+  const [state, dispatch] = useReducer(
+    passReducer,
+    cards,
+    (queue): PassState => ({ phase: 'start', order: 'deck', queue, index: 0, flipped: false }),
   )
 
-  const flip = useCallback(() => setFlipped((current) => !current), [])
+  const { phase, order, queue, index, flipped } = state
 
-  const next = useCallback(() => {
-    setFlipped(false)
-    if (atLast) {
-      setPhase('end')
-    } else {
-      setIndex((current) => current + 1)
-    }
-  }, [atLast])
-
-  const prev = useCallback(() => {
-    if (atFirst) {
-      return
-    }
-    setFlipped(false)
-    setIndex((current) => current - 1)
-  }, [atFirst])
-
-  // The keyboard drives all of it: Enter starts, Space flips, the arrows move. Space and Enter
-  // are stopped from also pressing whichever button has focus, so a key does one thing.
+  // The keyboard drives all of it. The key is swallowed so it cannot also press whichever
+  // button has focus, and nothing fires while the person is typing in a field.
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
-      if (typing(event.target) || event.metaKey || event.ctrlKey || event.altKey) {
+      const type = keys[phase]?.[event.key]
+      if (!type || typing(event.target) || event.metaKey || event.ctrlKey || event.altKey) {
         return
       }
-
-      if (phase === 'start') {
-        if (event.key === 'Enter') {
-          event.preventDefault()
-          begin(order)
-        }
-        return
-      }
-
-      if (phase !== 'card') {
-        return
-      }
-
-      if (event.key === ' ') {
-        event.preventDefault()
-        flip()
-      } else if (event.key === 'ArrowRight') {
-        event.preventDefault()
-        next()
-      } else if (event.key === 'ArrowLeft') {
-        event.preventDefault()
-        prev()
-      }
+      event.preventDefault()
+      dispatch(type === 'begin' ? { type, order, cards } : { type })
     }
 
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
-  }, [phase, order, begin, flip, next, prev])
+  }, [phase, order, cards])
 
   return {
     phase,
     order,
-    total,
+    total: queue.length,
     index,
-    card: queue[Math.min(index, total - 1)],
+    card: queue[index],
     flipped,
-    atFirst,
-    atLast,
-    pickOrder: setOrder,
-    begin,
-    flip,
-    next,
-    prev,
+    atFirst: index === 0,
+    atLast: index >= queue.length - 1,
+    pickOrder: (next: PassOrder) => dispatch({ type: 'pick', order: next }),
+    begin: (next: PassOrder) => dispatch({ type: 'begin', order: next, cards }),
+    flip: () => dispatch({ type: 'flip' }),
+    next: () => dispatch({ type: 'next' }),
+    prev: () => dispatch({ type: 'prev' }),
   }
 }
