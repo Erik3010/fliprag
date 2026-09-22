@@ -12,6 +12,7 @@
     "dev:server": "pnpm --filter @fliprag/server dev",
     "db:generate": "pnpm --filter @fliprag/db db:generate",
     "db:migrate": "pnpm --filter @fliprag/db db:migrate",
+    "db:seed": "pnpm --filter @fliprag/server seed",
     "db:studio": "pnpm --filter @fliprag/db db:studio",
     "build": "pnpm --recursive build",
     "typecheck": "pnpm --recursive typecheck",
