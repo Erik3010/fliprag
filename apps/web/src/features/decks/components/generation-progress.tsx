@@ -34,7 +34,7 @@ export function GenerationProgress({ step }: GenerationProgressProps) {
               <span
                 aria-hidden="true"
                 className={cn(
-                  'grid size-5.5 shrink-0 place-items-center rounded-full',
+                  'grid size-5 shrink-0 place-items-center rounded-full',
                   done && 'bg-primary text-primary-foreground',
                   running && 'border border-ring bg-card',
                   !done && !running && 'border border-dashed bg-card',
