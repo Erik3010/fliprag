@@ -1,7 +1,7 @@
 import { Button } from '@fliprag/ui/components/button'
 import { FieldError } from '@fliprag/ui/components/field-error'
 import { createFileRoute } from '@tanstack/react-router'
-import { Plus, Upload } from 'lucide-react'
+import { Plus, RefreshCw, Upload } from 'lucide-react'
 import { type DragEvent, useRef, useState } from 'react'
 import { DeleteDocumentDialog } from '@/features/documents/components/delete-document-dialog'
 import { DocumentRow } from '@/features/documents/components/document-row'
@@ -22,8 +22,9 @@ function Documents() {
   const [justRenamedId, setJustRenamedId] = useState<string | null>(null)
   const fileInput = useRef<HTMLInputElement>(null)
 
-  const { documents, upload } = library
-  const isEmpty = documents.length === 0 && !upload
+  const documents = library.documents ?? []
+  const { upload } = library
+  const isEmpty = !library.loading && !library.error && documents.length === 0 && !upload
 
   function take(files: FileList | null) {
     const file = files?.[0]
@@ -84,11 +85,16 @@ function Documents() {
       >
         {upload && <UploadProgress upload={upload} onCancel={library.cancel} />}
 
+        {library.loading && <LoadingRows />}
+
+        {library.error && <CouldNotLoad detail={library.error} onRetry={library.retry} />}
+
         {documents.map((document) => (
           <DocumentRow
             key={document.id}
             document={document}
             justRenamed={document.id === justRenamedId}
+            onOpen={(doc) => library.open(doc.id)}
             onRename={setRenaming}
             onDelete={setPendingDelete}
           />
@@ -126,6 +132,41 @@ function Documents() {
           setPendingDelete(null)
         }}
       />
+    </div>
+  )
+}
+
+// Quiet placeholders the shape of a row. Never an empty list while the answer is on its way.
+function LoadingRows() {
+  return (
+    <output aria-label="Loading documents" className="flex flex-col gap-2.5">
+      {[0, 1, 2].map((row) => (
+        <div key={row} className="flex items-center gap-3.5 rounded-xl border bg-card px-4 py-3.5">
+          <span className="size-9 shrink-0 animate-pulse rounded-lg bg-muted" />
+          <span className="flex flex-1 flex-col gap-2">
+            <span className="h-4 w-1/2 animate-pulse rounded bg-muted" />
+            <span className="h-3 w-1/3 animate-pulse rounded bg-muted" />
+          </span>
+        </div>
+      ))}
+    </output>
+  )
+}
+
+function CouldNotLoad({ detail, onRetry }: { detail: string; onRetry: () => void }) {
+  return (
+    <div
+      role="alert"
+      className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-destructive/40 bg-card px-4 py-3.5"
+    >
+      <span className="flex flex-col gap-0.5">
+        <span className="font-medium text-sm">Your documents could not be loaded</span>
+        <span className="text-muted-foreground text-xs">{detail}</span>
+      </span>
+      <Button type="button" variant="outline" size="sm" onClick={onRetry}>
+        <RefreshCw aria-hidden="true" />
+        Try again
+      </Button>
     </div>
   )
 }

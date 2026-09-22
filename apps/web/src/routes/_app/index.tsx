@@ -1,29 +1,29 @@
 import { Button } from '@fliprag/ui/components/button'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { format } from 'date-fns'
-import { ChevronRight, Plus, Upload } from 'lucide-react'
+import { ChevronRight, Plus, RefreshCw, Upload } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { DeckList } from '@/features/decks/components/deck-list'
 import { DeckListEmpty } from '@/features/decks/components/deck-list-empty'
 import { placeholderDecks } from '@/features/decks/placeholder'
 import type { LibraryCounts } from '@/features/decks/types'
-import { placeholderDocuments } from '@/features/documents/placeholder'
+import { useDocuments } from '@/features/documents/hooks/use-documents'
 
 export const Route = createFileRoute('/_app/')({
   component: Home,
 })
 
-// TODO: load decks, counts, and the latest document from the server. Placeholder rows until then.
+// TODO: load decks and their counts from the server. Placeholder rows until then.
 function Home() {
   const decks = placeholderDecks
-  const documents = placeholderDocuments
+  const { documents, error, retry } = useDocuments()
 
   const counts = {
     decks: decks.length,
     cards: decks.reduce((total, deck) => total + deck.cardCount, 0),
-    documents: documents.length,
+    documents: documents?.length ?? null,
   }
-  const latest = documents[0]
+  const latest = documents?.[0]
 
   return (
     <div className="flex flex-col gap-7">
@@ -47,7 +47,23 @@ function Home() {
         </Button>
       </header>
 
-      {latest ? (
+      {error ? (
+        <div
+          role="alert"
+          className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-destructive/40 bg-card px-5 py-4"
+        >
+          <span className="flex flex-col gap-0.5">
+            <span className="font-medium text-sm">Your documents could not be loaded</span>
+            <span className="text-muted-foreground text-xs">{error}</span>
+          </span>
+          <Button type="button" variant="outline" size="sm" onClick={retry}>
+            <RefreshCw aria-hidden="true" />
+            Try again
+          </Button>
+        </div>
+      ) : documents === undefined ? (
+        <div aria-hidden="true" className="h-24 animate-pulse rounded-xl bg-muted" />
+      ) : latest ? (
         <NextStep
           to="/decks/new"
           icon={Plus}
@@ -65,7 +81,10 @@ function Home() {
 
       <Counts counts={counts} />
 
-      <DeckList decks={decks} empty={<DeckListEmpty hasDocument={documents.length > 0} />} />
+      <DeckList
+        decks={decks}
+        empty={<DeckListEmpty hasDocument={documents !== undefined && documents.length > 0} />}
+      />
     </div>
   )
 }
@@ -119,7 +138,14 @@ function Counts({ counts }: { counts: LibraryCounts }) {
             {label}
           </dt>
           <dd className="font-semibold text-3xl leading-none tracking-tight tabular-nums">
-            {value}
+            {value === null ? (
+              <output
+                aria-label="Loading"
+                className="block h-7 w-10 animate-pulse rounded bg-muted"
+              />
+            ) : (
+              value
+            )}
           </dd>
         </div>
       ))}

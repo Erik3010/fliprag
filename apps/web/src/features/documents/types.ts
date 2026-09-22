@@ -1,14 +1,16 @@
 export type SourceDocument = {
   id: string
   name: string
-  /** Null until the file has been read, which does not happen in phase 1. */
+  originalFilename: string | null
+  sizeBytes: number | null
+  /** Null when the page tree could not be read at upload. */
   pageCount: number | null
-  sizeBytes: number
-  addedAt: string
+  createdAt: string
 }
 
 export type PendingUpload = {
   name: string
   sizeBytes: number
+  /** 0 to 100. */
   progress: number
 }

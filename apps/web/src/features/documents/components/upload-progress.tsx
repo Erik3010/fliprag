@@ -24,7 +24,7 @@ export function UploadProgress({ upload, onCancel }: UploadProgressProps) {
         <span className="flex min-w-0 flex-1 flex-col gap-0.5">
           <span className="truncate font-medium">{upload.name}</span>
           <span className="font-mono text-muted-foreground text-xs">
-            {documentSize(upload.sizeBytes)} · {percent}% · not sent to a server yet
+            {documentSize(upload.sizeBytes)} · {percent}%
           </span>
         </span>
 

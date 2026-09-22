@@ -5,18 +5,25 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@fliprag/ui/components/dropdown-menu'
-import { Check, FileText, MoreVertical, Pencil, Trash2 } from 'lucide-react'
+import { Check, ExternalLink, FileText, MoreVertical, Pencil, Trash2 } from 'lucide-react'
 import { documentMeta } from '@/features/documents/format'
 import type { SourceDocument } from '@/features/documents/types'
 
 type DocumentRowProps = {
   document: SourceDocument
   justRenamed: boolean
+  onOpen: (document: SourceDocument) => void
   onRename: (document: SourceDocument) => void
   onDelete: (document: SourceDocument) => void
 }
 
-export function DocumentRow({ document, justRenamed, onRename, onDelete }: DocumentRowProps) {
+export function DocumentRow({
+  document,
+  justRenamed,
+  onOpen,
+  onRename,
+  onDelete,
+}: DocumentRowProps) {
   return (
     <article className="flex flex-wrap items-center gap-3.5 rounded-xl border bg-card px-4 py-3.5 shadow-xs">
       <span
@@ -47,6 +54,10 @@ export function DocumentRow({ document, justRenamed, onRename, onDelete }: Docum
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end">
+            <DropdownMenuItem onSelect={() => onOpen(document)}>
+              <ExternalLink aria-hidden="true" />
+              Open
+            </DropdownMenuItem>
             <DropdownMenuItem onSelect={() => onRename(document)}>
               <Pencil aria-hidden="true" />
               Rename

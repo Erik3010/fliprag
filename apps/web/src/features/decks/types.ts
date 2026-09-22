@@ -16,8 +16,9 @@ export type DeckDetail = Deck & {
   status: DeckStatus
 }
 
+/** Null while a count is still being fetched. A count is never drawn as zero on the way. */
 export type LibraryCounts = {
-  decks: number
-  cards: number
-  documents: number
+  decks: number | null
+  cards: number | null
+  documents: number | null
 }

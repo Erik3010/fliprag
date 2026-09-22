@@ -2,13 +2,17 @@ import { DrizzleQueryError } from 'drizzle-orm'
 import { Hono } from 'hono'
 import { HTTPException } from 'hono/http-exception'
 import { HttpError } from './lib/http-error.js'
+import { requireAuth } from './middleware/require-auth.js'
 import { authRoutes } from './routes/auth.js'
+import { documentRoutes } from './routes/documents.js'
 import { healthRoutes } from './routes/health.js'
 
 export const app = new Hono()
   .basePath('/api')
   .route('/health', healthRoutes)
   .route('/auth', authRoutes)
+  .use('/documents/*', requireAuth)
+  .route('/documents', documentRoutes)
 
 app.onError((error, c) => {
   if (error instanceof HttpError) {

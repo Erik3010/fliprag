@@ -3,6 +3,7 @@ import type { Credentials } from '@fliprag/schemas/auth'
 import { eq } from 'drizzle-orm'
 import { hashPassword, signToken, verifyPassword } from '../lib/auth.js'
 import { HttpError } from '../lib/http-error.js'
+import { pgErrorCode, UNIQUE_VIOLATION } from '../lib/pg-error.js'
 
 export type AuthUser = { id: string; email: string }
 
@@ -14,12 +15,6 @@ async function session(user: AuthUser): Promise<Session> {
 
 // One message for a wrong email and a wrong password, so the answer does not say which exists.
 const NO_MATCH = 'That email and password do not match.'
-
-// Postgres unique_violation. Drizzle wraps the driver error, so the code is on `cause`.
-function isDuplicate(error: unknown) {
-  const cause = error instanceof Error && error.cause ? error.cause : error
-  return typeof cause === 'object' && cause !== null && 'code' in cause && cause.code === '23505'
-}
 
 export async function signup(credentials: Credentials): Promise<Session> {
   const email = credentials.email.toLowerCase()
@@ -36,7 +31,7 @@ export async function signup(credentials: Credentials): Promise<Session> {
     }
     return session(user)
   } catch (error) {
-    if (isDuplicate(error)) {
+    if (pgErrorCode(error) === UNIQUE_VIOLATION) {
       throw new HttpError(409, 'An account with that email already exists. Sign in instead.')
     }
     throw error

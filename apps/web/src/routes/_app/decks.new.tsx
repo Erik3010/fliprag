@@ -2,15 +2,14 @@ import { Button } from '@fliprag/ui/components/button'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ChevronLeft, Upload } from 'lucide-react'
 import { NewDeckForm } from '@/features/decks/components/new-deck-form'
-import { placeholderDocuments } from '@/features/documents/placeholder'
+import { useDocuments } from '@/features/documents/hooks/use-documents'
 
 export const Route = createFileRoute('/_app/decks/new')({
   component: NewDeck,
 })
 
-// TODO: load the documents from the server. Placeholder rows until then.
 function NewDeck() {
-  const documents = placeholderDocuments
+  const { documents = [], loading } = useDocuments()
 
   return (
     <div className="flex flex-col gap-6">
@@ -26,13 +25,17 @@ function NewDeck() {
         <h1 className="font-semibold text-3xl tracking-tight">New deck</h1>
 
         <p className="text-muted-foreground text-sm">
-          {documents.length > 0
+          {documents.length > 0 || loading
             ? 'Pick the document it comes from, then say what it should cover.'
             : 'Every deck is made from one document.'}
         </p>
       </header>
 
-      {documents.length > 0 ? <NewDeckForm documents={documents} /> : <NoDocuments />}
+      {loading ? null : documents.length > 0 ? (
+        <NewDeckForm documents={documents} />
+      ) : (
+        <NoDocuments />
+      )}
     </div>
   )
 }

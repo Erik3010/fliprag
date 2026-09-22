@@ -15,6 +15,13 @@
       "when": 1790062239808,
       "tag": "0001_curious_masque",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790071861960,
+      "tag": "0002_thankful_karma",
+      "breakpoints": true
     }
   ]
 }

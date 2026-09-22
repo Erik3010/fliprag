@@ -8,7 +8,11 @@ export function documentSize(bytes: number) {
 }
 
 export function documentMeta(document: SourceDocument) {
-  const pages = document.pageCount === null ? 'pages read on open' : `${document.pageCount} pages`
-
-  return `${documentSize(document.sizeBytes)} · ${pages} · Added ${relativeDay(document.addedAt)}`
+  return [
+    document.sizeBytes === null ? null : documentSize(document.sizeBytes),
+    document.pageCount === null ? 'page count unknown' : `${document.pageCount} pages`,
+    `Added ${relativeDay(document.createdAt)}`,
+  ]
+    .filter(Boolean)
+    .join(' · ')
 }

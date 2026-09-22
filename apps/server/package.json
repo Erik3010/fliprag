@@ -17,6 +17,7 @@
     "bcryptjs": "^3.0.3",
     "drizzle-orm": "^0.45.3",
     "hono": "^4.13.8",
+    "pdf-lib": "^1.17.1",
     "zod": "catalog:"
   },
   "devDependencies": {
