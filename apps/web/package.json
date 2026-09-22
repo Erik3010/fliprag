@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^5.9.1",
     "@tanstack/react-query": "^5.103.2",
     "@tanstack/react-router": "^1.170.38",
+    "date-fns": "^4.4.0",
     "ky": "^2.1.0",
     "lucide-react": "^1.47.0",
     "react": "catalog:react",

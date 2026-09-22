@@ -1,10 +1,11 @@
+import { subDays } from 'date-fns'
 import type { SourceDocument } from '@/features/documents/types'
 
 // Stand-in rows so the screens can be built before the API exists. Nothing here is real.
 // Delete this file once documents are loaded from the server.
 
 function daysAgo(days: number) {
-  return new Date(Date.now() - days * 86_400_000).toISOString()
+  return subDays(new Date(), days).toISOString()
 }
 
 export const placeholderDocuments: SourceDocument[] = [

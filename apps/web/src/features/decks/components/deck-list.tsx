@@ -4,21 +4,7 @@ import { FileText } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
 import { DeckMark } from '@/features/decks/components/deck-mark'
 import type { Deck } from '@/features/decks/types'
-
-const relative = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
-
-function edited(iso: string) {
-  const days = Math.round((Date.parse(iso) - Date.now()) / 86_400_000)
-
-  if (days > -1) {
-    return 'Edited today'
-  }
-  if (days > -30) {
-    return `Edited ${relative.format(days, 'day')}`
-  }
-
-  return `Edited ${relative.format(Math.round(days / 30), 'month')}`
-}
+import { relativeDay } from '@/shared/relative-time'
 
 type DeckListProps = {
   decks: Deck[]
@@ -79,7 +65,7 @@ export function DeckList({ decks, empty, pageSize = 6 }: DeckListProps) {
                 {/* The column gap sets the smallest space above the rule, the auto margin takes any
                     slack, so every footer in a row sits on the same line whatever the title does. */}
                 <span className="mt-auto border-t border-dashed pt-3 text-muted-foreground text-xs">
-                  {edited(deck.updatedAt)}
+                  Edited {relativeDay(deck.updatedAt)}
                 </span>
               </Link>
             </li>
