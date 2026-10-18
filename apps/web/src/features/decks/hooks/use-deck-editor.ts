@@ -1,64 +1,64 @@
 import { toast } from '@fliprag/ui/components/sonner'
 import { useCallback, useReducer, useState } from 'react'
-import { cardsReducer } from '@/features/cards/reducer'
+import { type CardsAction, cardsReducer } from '@/features/cards/reducer'
 import type { Card } from '@/features/cards/types'
 import { useGenerationWalk } from '@/features/decks/hooks/use-generation-walk'
-import { useSaveStatus } from '@/features/decks/hooks/use-save-status'
 import { placeholderCards, placeholderDeckDetails } from '@/features/decks/placeholder'
 
 const UNDO_WINDOW_MS = 8000
 
 type Fields = { title: string; description: string }
 
-// Everything the editor screen needs, in one place. The deck's own fields, its cards, whether it
-// is still being made, and the saved indicator.
-// TODO: load the deck and its cards from the server, and put every edit through the API. Until
-// then edits live here and are gone on reload, the same as the documents screen.
+// TODO: load the deck and its cards from the server, and make save() the API call. Until then a
+// save only clears the unsaved mark, and everything is gone on reload.
 export function useDeckEditor(deckId: string) {
   const deck = placeholderDeckDetails.find((row) => row.id === deckId)
 
   const generation = useGenerationWalk(deck?.status)
-  const saves = useSaveStatus()
   const [fields, setFields] = useState<Fields>({
     title: deck?.title ?? '',
     description: deck?.description ?? '',
   })
   const [cards, dispatch] = useReducer(cardsReducer, placeholderCards[deckId] ?? [])
+  const [unsaved, setUnsaved] = useState(false)
 
-  // A `data-focus` key the card list moves focus to after a move or an add, then clears.
+  // A `data-focus` key the card list moves focus to after an add, then clears.
   const [focusKey, setFocusKey] = useState<string | null>(null)
   const clearFocus = useCallback(() => setFocusKey(null), [])
 
-  const setField = useCallback(
-    (key: keyof Fields, value: string) => {
-      saves.touch(key)
-      setFields((current) => ({ ...current, [key]: value }))
-    },
-    [saves.touch],
-  )
+  const change = useCallback((action: CardsAction) => {
+    dispatch(action)
+    setUnsaved(true)
+  }, [])
+
+  const setField = useCallback((key: keyof Fields, value: string) => {
+    setFields((current) => ({ ...current, [key]: value }))
+    setUnsaved(true)
+  }, [])
+
+  const save = useCallback(() => {
+    setUnsaved(false)
+    toast.success('Changes saved.')
+  }, [])
 
   const addCard = useCallback(() => {
     const id = crypto.randomUUID()
-    dispatch({ type: 'add', id })
+    change({ type: 'add', id })
     setFocusKey(`front-${id}`)
-  }, [])
+  }, [change])
 
   const updateCard = useCallback(
     (id: string, patch: Partial<Pick<Card, 'front' | 'back'>>) => {
-      saves.touch(`card-${id}`)
-      dispatch({ type: 'update', id, patch })
+      change({ type: 'update', id, patch })
     },
-    [saves.touch],
+    [change],
   )
 
-  // Focus follows the button that was pressed, so the same key moves the card again.
   const moveCard = useCallback(
-    (id: string, direction: -1 | 1) => {
-      dispatch({ type: 'move', id, direction })
-      setFocusKey(`${direction < 0 ? 'up' : 'down'}-${id}`)
-      saves.flash('order')
+    (id: string, to: number) => {
+      change({ type: 'move', id, to })
     },
-    [saves.flash],
+    [change],
   )
 
   // Deleting does not ask first. The toast is the way back, for as long as it stays on screen.
@@ -69,13 +69,13 @@ export function useDeckEditor(deckId: string) {
       if (!card) {
         return
       }
-      dispatch({ type: 'remove', id })
-      toast('Card deleted.', {
+      change({ type: 'remove', id })
+      toast.success('Card deleted.', {
         duration: UNDO_WINDOW_MS,
-        action: { label: 'Undo', onClick: () => dispatch({ type: 'restore', card, index }) },
+        action: { label: 'Undo', onClick: () => change({ type: 'restore', card, index }) },
       })
     },
-    [cards],
+    [cards, change],
   )
 
   return {
@@ -83,12 +83,12 @@ export function useDeckEditor(deckId: string) {
     ...fields,
     cards,
     generation,
-    savedKey: saves.savedKey,
+    unsaved,
+    save,
     focusKey,
     clearFocus,
     setTitle: (value: string) => setField('title', value),
     setDescription: (value: string) => setField('description', value),
-    commit: saves.commit,
     addCard,
     updateCard,
     moveCard,

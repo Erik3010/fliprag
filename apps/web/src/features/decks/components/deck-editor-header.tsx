@@ -1,6 +1,7 @@
 import { Button } from '@fliprag/ui/components/button'
 import { Link } from '@tanstack/react-router'
-import { Loader2, Play, Trash2 } from 'lucide-react'
+import { Loader2, Pencil, Play, Trash2 } from 'lucide-react'
+import { useRef } from 'react'
 import { generationSteps } from '@/features/decks/hooks/use-generation-walk'
 
 type DeckEditorHeaderProps = {
@@ -9,7 +10,6 @@ type DeckEditorHeaderProps = {
   cardCount: number
   generation: { walking: boolean; step: number; notConnected: boolean }
   onTitleChange: (value: string) => void
-  onTitleBlur: () => void
   onDelete: () => void
 }
 
@@ -19,24 +19,35 @@ export function DeckEditorHeader({
   cardCount,
   generation,
   onTitleChange,
-  onTitleBlur,
   onDelete,
 }: DeckEditorHeaderProps) {
   const canStudy = cardCount > 0
+  const titleInput = useRef<HTMLInputElement>(null)
 
   return (
     <header className="flex flex-col gap-3.5">
       <div className="flex flex-wrap items-start justify-between gap-5">
         <div className="flex min-w-0 flex-1 basis-80 flex-col gap-1.5">
-          {/* The title is edited where it is read. It only looks like a field once pointed at. */}
-          <input
-            value={title}
-            onChange={(event) => onTitleChange(event.currentTarget.value)}
-            onBlur={onTitleBlur}
-            aria-label="Deck title"
-            placeholder="Untitled deck"
-            className="-ml-2 w-full rounded-lg border border-transparent bg-transparent px-2 py-1 font-semibold text-3xl tracking-tight outline-none transition-colors placeholder:text-muted-foreground hover:bg-muted focus-visible:border-ring focus-visible:bg-card focus-visible:ring-3 focus-visible:ring-ring/50"
-          />
+          <div className="flex min-w-0 items-center gap-1">
+            <input
+              ref={titleInput}
+              value={title}
+              onChange={(event) => onTitleChange(event.currentTarget.value)}
+              aria-label="Deck title"
+              placeholder="Untitled deck"
+              className="-ml-2 field-sizing-content h-12 min-w-48 max-w-full rounded-lg border border-transparent bg-transparent px-2 py-1 font-semibold text-3xl tracking-tight outline-none transition-colors placeholder:text-muted-foreground hover:bg-muted focus-visible:border-ring focus-visible:bg-card focus-visible:ring-3 focus-visible:ring-ring/50"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              aria-label="Edit title"
+              className="shrink-0 text-muted-foreground"
+              onClick={() => titleInput.current?.focus()}
+            >
+              <Pencil aria-hidden="true" />
+            </Button>
+          </div>
 
           <div className="flex flex-wrap items-center gap-2.5 text-muted-foreground text-xs">
             <StatusPill generation={generation} />

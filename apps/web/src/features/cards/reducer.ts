@@ -3,7 +3,7 @@ import type { Card } from '@/features/cards/types'
 export type CardsAction =
   | { type: 'add'; id: string }
   | { type: 'update'; id: string; patch: Partial<Pick<Card, 'front' | 'back'>> }
-  | { type: 'move'; id: string; direction: -1 | 1 }
+  | { type: 'move'; id: string; to: number }
   | { type: 'remove'; id: string }
   | { type: 'restore'; card: Card; index: number }
 
@@ -18,13 +18,13 @@ export function cardsReducer(cards: Card[], action: CardsAction): Card[] {
 
     case 'move': {
       const from = cards.findIndex((card) => card.id === action.id)
-      const to = from + action.direction
-      if (from < 0 || to < 0 || to >= cards.length) {
+      const { to } = action
+      if (from < 0 || to < 0 || to >= cards.length || from === to) {
         return cards
       }
       const next = cards.slice()
-      next[from] = cards[to] as Card
-      next[to] = cards[from] as Card
+      const [card] = next.splice(from, 1)
+      next.splice(to, 0, card as Card)
       return next
     }
 

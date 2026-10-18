@@ -71,7 +71,7 @@ export function useDocumentLibrary() {
   const rename = useMutation({
     mutationFn: ({ id, name }: { id: string; name: string }) => renameDocument(id, { name }),
     onSuccess: refresh,
-    onError: (error) => toast(`The name was not saved. ${failureMessage(error)}`),
+    onError: (error) => toast.error(`The name was not saved. ${failureMessage(error)}`),
   })
 
   const remove = useMutation({
@@ -80,14 +80,14 @@ export function useDocumentLibrary() {
       toast.success('Document deleted successfully.')
       return refresh()
     },
-    onError: (error) => toast(`The document was not deleted. ${failureMessage(error)}`),
+    onError: (error) => toast.error(`The document was not deleted. ${failureMessage(error)}`),
   })
 
   const open = useCallback(async (id: string) => {
     try {
       window.open(await fetchDocumentFile(id), '_blank', 'noopener')
     } catch (error) {
-      toast(`The file could not be opened. ${failureMessage(error)}`)
+      toast.error(`The file could not be opened. ${failureMessage(error)}`)
     }
   }, [])
 

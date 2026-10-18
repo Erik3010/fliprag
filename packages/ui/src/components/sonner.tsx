@@ -1,4 +1,4 @@
-import { CheckIcon, InfoIcon, Loader2Icon, OctagonXIcon, TriangleAlertIcon } from 'lucide-react'
+import { CheckIcon, InfoIcon, Loader2Icon, TriangleAlertIcon, XIcon } from 'lucide-react'
 import { Toaster as Sonner, type ToasterProps, toast } from 'sonner'
 import { cn } from '../lib/utils'
 import { buttonVariants } from './button'
@@ -18,7 +18,11 @@ const Toaster = ({ ...props }: ToasterProps) => {
         ),
         info: <InfoIcon className="size-4 text-primary" />,
         warning: <TriangleAlertIcon className="size-4 text-secondary" />,
-        error: <OctagonXIcon className="size-4 text-destructive" />,
+        error: (
+          <span className="grid size-5 place-items-center rounded-full bg-destructive">
+            <XIcon className="size-3 text-destructive-foreground" strokeWidth={3} />
+          </span>
+        ),
         loading: <Loader2Icon className="size-4 animate-spin text-primary" />,
       }}
       toastOptions={{

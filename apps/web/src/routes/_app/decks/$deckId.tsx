@@ -11,6 +11,7 @@ import { DeckSource } from '@/features/decks/components/deck-source'
 import { DeleteDeckDialog } from '@/features/decks/components/delete-deck-dialog'
 import { GenerationNotice } from '@/features/decks/components/generation-notice'
 import { GenerationProgress } from '@/features/decks/components/generation-progress'
+import { UnsavedChangesBar } from '@/features/decks/components/unsaved-changes-bar'
 import { useDeckEditor } from '@/features/decks/hooks/use-deck-editor'
 
 export const Route = createFileRoute('/_app/decks/$deckId')({
@@ -55,7 +56,6 @@ function DeckEditor() {
         cardCount={cards.length}
         generation={generation}
         onTitleChange={editor.setTitle}
-        onTitleBlur={() => editor.commit('title')}
         onDelete={() => setConfirmingDelete(true)}
       />
 
@@ -65,14 +65,13 @@ function DeckEditor() {
         description={editor.description}
         topics={deck.topics}
         onDescriptionChange={editor.setDescription}
-        onDescriptionBlur={() => editor.commit('description')}
       />
 
       {generation.walking && <GenerationProgress step={generation.step} />}
       {generation.notConnected && <GenerationNotice />}
 
       <section aria-labelledby="cards-heading" className="flex flex-col gap-3.5">
-        <div className="flex items-center justify-between gap-4 border-b pb-3">
+        <div className="flex items-center justify-between gap-4">
           <h2 id="cards-heading" className="font-semibold text-lg tracking-tight">
             Cards
           </h2>
@@ -91,12 +90,13 @@ function DeckEditor() {
             focusKey={editor.focusKey}
             onFocused={editor.clearFocus}
             onChange={editor.updateCard}
-            onBlur={(id) => editor.commit(`card-${id}`)}
             onMove={editor.moveCard}
             onDelete={editor.removeCard}
           />
         )}
       </section>
+
+      <UnsavedChangesBar unsaved={editor.unsaved} onSave={editor.save} />
 
       {/* TODO: delete through the API. Until then leaving the screen is all there is to do. */}
       <DeleteDeckDialog

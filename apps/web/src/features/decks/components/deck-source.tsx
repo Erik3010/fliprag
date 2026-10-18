@@ -17,7 +17,7 @@ export function DeckSource({ documentName }: DeckSourceProps) {
       <DocumentIcon />
 
       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span className="text-muted-foreground text-xs">Made from</span>
+        <span className="text-muted-foreground text-xs">Source document</span>
         <span className="truncate font-medium text-sm">{documentName}</span>
       </span>
 
