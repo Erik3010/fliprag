@@ -1,5 +1,4 @@
 import { Button } from '@fliprag/ui/components/button'
-import { cn } from '@fliprag/ui/lib/utils'
 import { Link } from '@tanstack/react-router'
 import { Loader2, Play, Trash2 } from 'lucide-react'
 import { generationSteps } from '@/features/decks/hooks/use-generation-walk'
@@ -8,7 +7,6 @@ type DeckEditorHeaderProps = {
   deckId: string
   title: string
   cardCount: number
-  justSaved: boolean
   generation: { walking: boolean; step: number; notConnected: boolean }
   onTitleChange: (value: string) => void
   onTitleBlur: () => void
@@ -19,7 +17,6 @@ export function DeckEditorHeader({
   deckId,
   title,
   cardCount,
-  justSaved,
   generation,
   onTitleChange,
   onTitleBlur,
@@ -50,9 +47,7 @@ export function DeckEditorHeader({
 
             <span aria-hidden="true" className="size-1 rounded-full bg-border" />
 
-            <span role="status" className={cn(justSaved && 'font-medium text-primary')}>
-              {justSaved ? 'Saved just now' : 'All changes saved'}
-            </span>
+            <span>Not saved yet, changes are lost on reload</span>
           </div>
         </div>
 

@@ -4,7 +4,6 @@ import type { Card } from '@/features/cards/types'
 
 type CardListProps = {
   cards: Card[]
-  savedKey: string | null
   /** A `data-focus` key to move focus to once the list has rendered, or null. */
   focusKey: string | null
   onFocused: () => void
@@ -16,7 +15,6 @@ type CardListProps = {
 
 export function CardList({
   cards,
-  savedKey,
   focusKey,
   onFocused,
   onChange,
@@ -44,7 +42,6 @@ export function CardList({
             card={card}
             position={index + 1}
             total={cards.length}
-            saved={savedKey === `card-${card.id}`}
             onChange={(patch) => onChange(card.id, patch)}
             onBlur={() => onBlur(card.id)}
             onMove={(direction) => onMove(card.id, direction)}

@@ -51,7 +51,6 @@ function DeckEditor() {
         deckId={deck.id}
         title={editor.title}
         cardCount={cards.length}
-        justSaved={editor.savedKey !== null}
         generation={generation}
         onTitleChange={editor.setTitle}
         onTitleBlur={() => editor.commit('title')}
@@ -87,7 +86,6 @@ function DeckEditor() {
         ) : (
           <CardList
             cards={cards}
-            savedKey={editor.savedKey}
             focusKey={editor.focusKey}
             onFocused={editor.clearFocus}
             onChange={editor.updateCard}

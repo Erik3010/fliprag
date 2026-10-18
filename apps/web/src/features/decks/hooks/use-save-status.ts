@@ -2,8 +2,9 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 const SAVED_FLASH_MS = 2800
 
-// The "Saved just now" indicator. Fields are touched as they change and committed when left, so
-// leaving a field that was never changed is not a save. A move saves at once with flash().
+// Fields are touched as they change and committed when left, so leaving a field that was never
+// changed is not a save. A move saves at once with flash(). Nothing shows savedKey until a save
+// is real.
 // TODO: commit() and flash() are where the API calls go once there is one.
 export function useSaveStatus() {
   const [savedKey, setSavedKey] = useState<string | null>(null)

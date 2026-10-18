@@ -1,13 +1,12 @@
 import { Button } from '@fliprag/ui/components/button'
 import { Textarea } from '@fliprag/ui/components/textarea'
-import { ArrowDown, ArrowUp, Check, Trash2 } from 'lucide-react'
+import { ArrowDown, ArrowUp, Trash2 } from 'lucide-react'
 import type { Card } from '@/features/cards/types'
 
 type CardEditorProps = {
   card: Card
   position: number
   total: number
-  saved: boolean
   onChange: (patch: Partial<Pick<Card, 'front' | 'back'>>) => void
   onBlur: () => void
   onMove: (direction: -1 | 1) => void
@@ -22,7 +21,6 @@ export function CardEditor({
   card,
   position,
   total,
-  saved,
   onChange,
   onBlur,
   onMove,
@@ -40,13 +38,6 @@ export function CardEditor({
         <span className="whitespace-nowrap rounded-full bg-accent px-2.5 py-1 font-medium font-mono text-accent-foreground text-xs">
           Card {position} of {total}
         </span>
-
-        {saved && (
-          <span className="flex items-center gap-1.5 text-primary text-xs" role="status">
-            <Check className="size-3" aria-hidden="true" />
-            Saved
-          </span>
-        )}
 
         <span className="flex-1" />
 
