@@ -34,20 +34,20 @@ export function SourceDocumentField({ document, errorId, onBrowse }: SourceDocum
   return (
     <div
       className={cn(
-        'flex flex-wrap items-center gap-x-4 gap-y-3 rounded-lg border p-4',
+        'flex flex-wrap items-center gap-3 rounded-lg border p-3',
         errorId && 'border-destructive',
       )}
     >
       <span
         aria-hidden="true"
-        className="grid size-10 shrink-0 place-items-center rounded-lg border bg-card"
+        className="grid size-9 shrink-0 place-items-center rounded-lg bg-accent"
       >
-        <FilePlus className="size-4 text-muted-foreground" />
+        <FilePlus className="size-4 text-accent-foreground" />
       </span>
 
       <span className="flex min-w-0 flex-1 basis-56 flex-col gap-0.5">
-        <span className="font-semibold text-sm">Which document is this deck from?</span>
-        <span className="text-pretty text-muted-foreground text-xs leading-relaxed">
+        <span className="font-medium text-sm">Which document is this deck from?</span>
+        <span className="text-muted-foreground text-xs">
           Cards are written from this one document. It can't be swapped after the deck is made.
         </span>
       </span>
