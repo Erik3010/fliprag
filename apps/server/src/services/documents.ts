@@ -5,7 +5,7 @@ import { HttpError } from '../lib/http-error.js'
 import { FOREIGN_KEY_VIOLATION, pgErrorCode } from '../lib/pg-error.js'
 import { storage } from '../lib/storage.js'
 
-const columns = {
+export const documentColumns = {
   id: documents.id,
   name: documents.name,
   originalFilename: documents.originalFilename,
@@ -43,7 +43,7 @@ async function readPageCount(bytes: Uint8Array) {
 
 export function list(userId: string): Promise<Document[]> {
   return db
-    .select(columns)
+    .select(documentColumns)
     .from(documents)
     .where(eq(documents.userId, userId))
     .orderBy(desc(documents.createdAt))
@@ -69,7 +69,7 @@ export async function upload(userId: string, file: File): Promise<Document> {
         sizeBytes: file.size,
         pageCount,
       })
-      .returning(columns)
+      .returning(documentColumns)
 
     if (!row) {
       throw new Error('Insert returned no row.')
@@ -97,7 +97,11 @@ export async function getFile(userId: string, id: string) {
 }
 
 export async function rename(userId: string, id: string, name: string): Promise<Document> {
-  const [row] = await db.update(documents).set({ name }).where(owned(userId, id)).returning(columns)
+  const [row] = await db
+    .update(documents)
+    .set({ name })
+    .where(owned(userId, id))
+    .returning(documentColumns)
   if (!row) {
     throw new HttpError(404, NOT_FOUND)
   }

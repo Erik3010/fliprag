@@ -3,6 +3,7 @@ import type { NewDeck, UpdateDeck } from '@fliprag/schemas/deck'
 import { and, asc, count, desc, eq } from 'drizzle-orm'
 import { HttpError } from '../lib/http-error.js'
 import { FOREIGN_KEY_VIOLATION, INVALID_TEXT_REPRESENTATION, pgErrorCode } from '../lib/pg-error.js'
+import { type Document, documentColumns } from './documents.js'
 
 const columns = {
   id: decks.id,
@@ -27,12 +28,12 @@ export type Deck = {
 }
 
 export type DeckSummary = Deck & {
-  documentName: string
+  document: Document
   cardTotal: number
 }
 
 export type DeckDetail = Deck & {
-  documentName: string
+  document: Document
   progress: Pick<typeof deckProgress.$inferSelect, 'step' | 'status' | 'error'> | null
   cards: { id: string; front: string; back: string }[]
 }
@@ -54,12 +55,12 @@ function notFoundOnBadId(error: unknown): never {
 
 export function list(userId: string): Promise<DeckSummary[]> {
   return db
-    .select({ ...columns, documentName: documents.name, cardTotal: count(cards.id) })
+    .select({ ...columns, document: documentColumns, cardTotal: count(cards.id) })
     .from(decks)
     .innerJoin(documents, eq(documents.id, decks.documentId))
     .leftJoin(cards, eq(cards.deckId, decks.id))
     .where(eq(decks.userId, userId))
-    .groupBy(decks.id, documents.name)
+    .groupBy(decks.id, documents.id)
     .orderBy(desc(decks.updatedAt))
 }
 
@@ -100,7 +101,7 @@ export async function create(userId: string, details: NewDeck): Promise<Deck> {
 
 export async function get(userId: string, id: string): Promise<DeckDetail> {
   const [deck] = await db
-    .select({ ...columns, documentName: documents.name })
+    .select({ ...columns, document: documentColumns })
     .from(decks)
     .innerJoin(documents, eq(documents.id, decks.documentId))
     .where(owned(userId, id))
