@@ -9,7 +9,7 @@ type DeckEditorHeaderProps = {
   deckId: string
   title: string
   cardCount: number
-  generation: { walking: boolean; step: number; notConnected: boolean }
+  generation: { walking: boolean; step: number; error: string | null }
   onTitleChange: (value: string) => void
   onDelete: () => void
 }
@@ -110,11 +110,11 @@ function StatusPill({ generation }: Pick<DeckEditorHeaderProps, 'generation'>) {
     )
   }
 
-  if (generation.notConnected) {
+  if (generation.error) {
     return (
-      <span className="flex items-center gap-1.5 rounded-full border border-secondary bg-secondary/10 py-1 pr-2.5 pl-2 font-medium text-foreground">
-        <span aria-hidden="true" className="size-1.5 rounded-full bg-secondary" />
-        Generation not connected
+      <span className="flex items-center gap-1.5 rounded-full border border-destructive/40 bg-destructive/10 py-1 pr-2.5 pl-2 font-medium text-destructive">
+        <span aria-hidden="true" className="size-1.5 rounded-full bg-destructive" />
+        Generation failed
       </span>
     )
   }

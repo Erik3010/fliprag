@@ -7,7 +7,6 @@ import { CardListEmpty } from '@/features/cards/components/card-list-empty'
 import { DeckNotFound } from '@/features/decks/components/deck-not-found'
 import { DeleteDeckDialog } from '@/features/decks/components/editor/delete-dialog'
 import { DeckDetails } from '@/features/decks/components/editor/details'
-import { GenerationNotice } from '@/features/decks/components/editor/generation-notice'
 import { GenerationProgress } from '@/features/decks/components/editor/generation-progress'
 import { DeckEditorHeader } from '@/features/decks/components/editor/header'
 import { DeckSource } from '@/features/decks/components/editor/source'
@@ -67,8 +66,9 @@ function DeckEditor() {
         onDescriptionChange={editor.setDescription}
       />
 
-      {generation.walking && <GenerationProgress step={generation.step} />}
-      {generation.notConnected && <GenerationNotice />}
+      {(generation.walking || generation.error) && (
+        <GenerationProgress step={generation.step} error={generation.error} />
+      )}
 
       <section aria-labelledby="cards-heading" className="flex flex-col gap-3.5">
         <div className="flex items-center justify-between gap-4">

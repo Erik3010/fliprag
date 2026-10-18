@@ -8,23 +8,28 @@ export const generationSteps = [
 ] as const
 
 const STEP_PACE_MS = 1500
+const LAST_STEP = generationSteps.length - 1
 
 export function useGenerationWalk(status: DeckStatus | undefined) {
   const [step, setStep] = useState(0)
-  const walking = status === 'generating' && step < generationSteps.length
+  const [failed, setFailed] = useState(false)
+  const walking = status === 'generating' && !failed
 
   useEffect(() => {
     if (!walking) {
       return
     }
-    const timer = setTimeout(() => setStep(step + 1), STEP_PACE_MS)
+    const timer = setTimeout(
+      () => (step < LAST_STEP ? setStep(step + 1) : setFailed(true)),
+      STEP_PACE_MS,
+    )
     return () => clearTimeout(timer)
   }, [walking, step])
 
   return {
     walking,
     step,
-    // The stand-in is done, and wrote no cards.
-    notConnected: status === 'generating' && !walking,
+    // The stand-in has no generator behind it, so it always fails on the last step.
+    error: status === 'generating' && failed ? 'Failed to write cards.' : null,
   }
 }
