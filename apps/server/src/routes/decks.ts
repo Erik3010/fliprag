@@ -6,6 +6,7 @@ import type { AuthEnv } from '../middleware/require-auth.js'
 import * as decks from '../services/decks.js'
 
 export const deckRoutes = new Hono<AuthEnv>()
+  .get('/', async (c) => c.json(await decks.list(c.get('userId'))))
   .post('/', zValidator('json', newDeckSchema, rejectInvalid), async (c) =>
     c.json(await decks.create(c.get('userId'), c.req.valid('json')), 201),
   )

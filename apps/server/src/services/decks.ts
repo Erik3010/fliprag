@@ -1,6 +1,6 @@
 import { cards, db, deckProgress, decks, documents } from '@fliprag/db'
 import type { NewDeck, UpdateDeck } from '@fliprag/schemas/deck'
-import { and, asc, eq } from 'drizzle-orm'
+import { and, asc, count, desc, eq } from 'drizzle-orm'
 import { HttpError } from '../lib/http-error.js'
 import { FOREIGN_KEY_VIOLATION, INVALID_TEXT_REPRESENTATION, pgErrorCode } from '../lib/pg-error.js'
 
@@ -26,6 +26,11 @@ export type Deck = {
   updatedAt: Date
 }
 
+export type DeckSummary = Deck & {
+  documentName: string
+  cardTotal: number
+}
+
 export type DeckDetail = Deck & {
   documentName: string
   progress: Pick<typeof deckProgress.$inferSelect, 'step' | 'status' | 'error'> | null
@@ -45,6 +50,17 @@ function notFoundOnBadId(error: unknown): never {
     throw new HttpError(404, NOT_FOUND)
   }
   throw error
+}
+
+export function list(userId: string): Promise<DeckSummary[]> {
+  return db
+    .select({ ...columns, documentName: documents.name, cardTotal: count(cards.id) })
+    .from(decks)
+    .innerJoin(documents, eq(documents.id, decks.documentId))
+    .leftJoin(cards, eq(cards.deckId, decks.id))
+    .where(eq(decks.userId, userId))
+    .groupBy(decks.id, documents.name)
+    .orderBy(desc(decks.updatedAt))
 }
 
 export async function create(userId: string, details: NewDeck): Promise<Deck> {
