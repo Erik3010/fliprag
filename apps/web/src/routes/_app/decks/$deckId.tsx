@@ -6,6 +6,7 @@ import { CardList } from '@/features/cards/components/card-list'
 import { CardListEmpty } from '@/features/cards/components/card-list-empty'
 import { DeckDetails } from '@/features/decks/components/deck-details'
 import { DeckEditorHeader } from '@/features/decks/components/deck-editor-header'
+import { DeckNotFound } from '@/features/decks/components/deck-not-found'
 import { DeckSource } from '@/features/decks/components/deck-source'
 import { DeleteDeckDialog } from '@/features/decks/components/delete-deck-dialog'
 import { GenerationNotice } from '@/features/decks/components/generation-notice'
@@ -13,6 +14,7 @@ import { GenerationProgress } from '@/features/decks/components/generation-progr
 import { useDeckEditor } from '@/features/decks/hooks/use-deck-editor'
 
 export const Route = createFileRoute('/_app/decks/$deckId')({
+  head: () => ({ meta: [{ title: 'Deck' }] }),
   component: DeckEditor,
 })
 
@@ -36,7 +38,7 @@ function DeckEditor() {
     return (
       <div className="flex flex-col gap-5">
         {back}
-        <NotFound />
+        <DeckNotFound />
       </div>
     )
   }
@@ -100,25 +102,9 @@ function DeckEditor() {
       <DeleteDeckDialog
         open={confirmingDelete}
         title={editor.title}
-        cardCount={cards.length}
-        documentName={deck.documentName}
         onCancel={() => setConfirmingDelete(false)}
         onConfirm={() => navigate({ to: '/' })}
       />
-    </div>
-  )
-}
-
-function NotFound() {
-  return (
-    <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed bg-card/60 px-8 py-14 text-center">
-      <p className="font-semibold text-lg tracking-tight">There is no deck here</p>
-      <p className="max-w-[42ch] text-pretty text-muted-foreground text-sm">
-        It may have been deleted, or the link may be wrong. Your decks are all on the home screen.
-      </p>
-      <Button asChild size="lg" className="mt-2 px-5">
-        <Link to="/">All decks</Link>
-      </Button>
     </div>
   )
 }

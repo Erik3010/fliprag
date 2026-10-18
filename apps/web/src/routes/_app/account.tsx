@@ -5,6 +5,7 @@ import { useSignOut } from '@/features/auth/hooks/use-sign-out'
 import { useAuthStore } from '@/store/auth'
 
 export const Route = createFileRoute('/_app/account')({
+  head: () => ({ meta: [{ title: 'Account' }] }),
   component: Account,
 })
 

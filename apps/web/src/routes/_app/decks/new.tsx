@@ -1,15 +1,45 @@
 import { Button } from '@fliprag/ui/components/button'
+import { EmptyState } from '@fliprag/ui/components/empty-state'
+import { ErrorState } from '@fliprag/ui/components/error-state'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ChevronLeft, Upload } from 'lucide-react'
 import { NewDeckForm } from '@/features/decks/components/new-deck-form'
 import { useDocuments } from '@/features/documents/hooks/use-documents'
 
 export const Route = createFileRoute('/_app/decks/new')({
+  head: () => ({ meta: [{ title: 'New deck' }] }),
   component: NewDeck,
 })
 
 function NewDeck() {
-  const { documents = [], loading } = useDocuments()
+  const { documents = [], loading, error, retry } = useDocuments()
+
+  function content() {
+    if (error) {
+      return <ErrorState title="Documents could not be loaded" detail={error} onRetry={retry} />
+    }
+
+    if (loading) {
+      return <div aria-hidden="true" className="h-96 animate-pulse rounded-xl bg-muted" />
+    }
+
+    if (documents.length === 0) {
+      return (
+        <EmptyState
+          icon={<Upload className="size-5 text-accent-foreground" />}
+          title="No documents yet"
+          description="A document is required to create a flashcard deck."
+          action={
+            <Button asChild size="lg" className="px-5">
+              <Link to="/documents">Upload a document</Link>
+            </Button>
+          }
+        />
+      )
+    }
+
+    return <NewDeckForm documents={documents} />
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -25,38 +55,13 @@ function NewDeck() {
         <h1 className="font-semibold text-3xl tracking-tight">New deck</h1>
 
         <p className="text-muted-foreground text-sm">
-          {documents.length > 0 || loading
+          {documents.length > 0 || loading || error
             ? 'Pick the document it comes from, then say what it should cover.'
             : 'Every deck is made from one document.'}
         </p>
       </header>
 
-      {loading ? null : documents.length > 0 ? (
-        <NewDeckForm documents={documents} />
-      ) : (
-        <NoDocuments />
-      )}
-    </div>
-  )
-}
-
-function NoDocuments() {
-  return (
-    <div className="flex flex-col items-center gap-3.5 rounded-xl border bg-card px-8 py-11 text-center shadow-xs">
-      <span aria-hidden="true" className="grid size-12 place-items-center rounded-xl bg-accent">
-        <Upload className="size-5 text-accent-foreground" />
-      </span>
-
-      <p className="font-semibold text-lg tracking-tight">Upload a PDF to start</p>
-
-      <p className="max-w-[40ch] text-pretty text-muted-foreground text-sm">
-        A deck is always made from one document. Add the lecture, chapter, or paper you want to
-        study, then come back here.
-      </p>
-
-      <Button asChild size="lg" className="mt-1.5 px-5">
-        <Link to="/documents">Go to Documents</Link>
-      </Button>
+      {content()}
     </div>
   )
 }

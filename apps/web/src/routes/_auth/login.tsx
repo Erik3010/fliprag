@@ -5,6 +5,7 @@ import { CredentialsForm } from '@/features/auth/components/credentials-form'
 import { useLogin } from '@/features/auth/hooks/use-login'
 
 export const Route = createFileRoute('/_auth/login')({
+  head: () => ({ meta: [{ title: 'Sign in' }] }),
   component: Login,
 })
 

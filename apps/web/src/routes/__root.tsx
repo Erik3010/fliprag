@@ -1,4 +1,4 @@
-import { createRootRoute, Outlet } from '@tanstack/react-router'
+import { createRootRoute, HeadContent, Outlet } from '@tanstack/react-router'
 import { type ComponentType, lazy, Suspense } from 'react'
 
 type DevtoolsProps = {
@@ -20,6 +20,7 @@ export const Route = createRootRoute({
 function RootLayout() {
   return (
     <>
+      <HeadContent />
       <Outlet />
       <Suspense>
         <Devtools position="bottom-right" />

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { cn } from '../lib/utils'
 
 type EmptyStateProps = {
-  icon: ReactNode
+  icon?: ReactNode
   title: string
   description: string
   action: ReactNode
@@ -18,12 +18,14 @@ export function EmptyState({ icon, title, description, action, note, className }
         className,
       )}
     >
-      <span
-        aria-hidden="true"
-        className="grid size-11 shrink-0 place-items-center rounded-lg bg-accent"
-      >
-        {icon}
-      </span>
+      {icon && (
+        <span
+          aria-hidden="true"
+          className="grid size-11 shrink-0 place-items-center rounded-lg bg-accent"
+        >
+          {icon}
+        </span>
+      )}
 
       <p className="font-semibold text-lg tracking-tight">{title}</p>
 

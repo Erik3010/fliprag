@@ -13,6 +13,7 @@ import { useDocumentLibrary } from '@/features/documents/hooks/use-document-libr
 import type { SourceDocument } from '@/features/documents/types'
 
 export const Route = createFileRoute('/_app/documents')({
+  head: () => ({ meta: [{ title: 'Documents' }] }),
   component: Documents,
 })
 

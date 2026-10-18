@@ -11,31 +11,18 @@ import {
 type DeleteDeckDialogProps = {
   open: boolean
   title: string
-  cardCount: number
-  documentName: string
   onCancel: () => void
   onConfirm: () => void
 }
 
-export function DeleteDeckDialog({
-  open,
-  title,
-  cardCount,
-  documentName,
-  onCancel,
-  onConfirm,
-}: DeleteDeckDialogProps) {
-  const name = title.trim() || 'This deck'
-  const cards = cardCount === 1 ? 'its card' : `its ${cardCount} cards`
-
+export function DeleteDeckDialog({ open, title, onCancel, onConfirm }: DeleteDeckDialogProps) {
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onCancel()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete this deck?</DialogTitle>
+          <DialogTitle>Delete {title.trim() ? `“${title.trim()}”` : 'this deck'}?</DialogTitle>
           <DialogDescription>
-            {cardCount > 0 ? `“${name}” and ${cards} go for good.` : `“${name}” goes for good.`}{' '}
-            {documentName} stays in your documents.
+            Are you sure? This deck and its cards will be deleted.
           </DialogDescription>
         </DialogHeader>
 

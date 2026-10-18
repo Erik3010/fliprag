@@ -14,6 +14,7 @@ import { NewDeckBanner } from '../-components/new-deck-banner'
 import { UploadPromptDialog } from '../-components/upload-prompt-dialog'
 
 export const Route = createFileRoute('/_app/')({
+  head: () => ({ meta: [{ title: 'Home' }] }),
   component: Home,
 })
 
