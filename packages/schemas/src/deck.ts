@@ -18,3 +18,8 @@ export const newDeckSchema = z.object({
 })
 
 export type NewDeck = z.infer<typeof newDeckSchema>
+
+// Topics and the source document are what the deck was made from, so they never change.
+export const updateDeckSchema = newDeckSchema.pick({ title: true, description: true }).partial()
+
+export type UpdateDeck = z.infer<typeof updateDeckSchema>

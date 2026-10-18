@@ -1,5 +1,5 @@
 import { cards, db, deckProgress, decks, documents } from '@fliprag/db'
-import type { NewDeck } from '@fliprag/schemas/deck'
+import type { NewDeck, UpdateDeck } from '@fliprag/schemas/deck'
 import { and, asc, eq } from 'drizzle-orm'
 import { HttpError } from '../lib/http-error.js'
 import { FOREIGN_KEY_VIOLATION, INVALID_TEXT_REPRESENTATION, pgErrorCode } from '../lib/pg-error.js'
@@ -34,6 +34,18 @@ export type DeckDetail = Deck & {
 
 const NOT_FOUND = 'There is no such deck.'
 const NO_DOCUMENT = 'There is no such document.'
+
+function owned(userId: string, id: string) {
+  return and(eq(decks.id, id), eq(decks.userId, userId))
+}
+
+// An id that is not a uuid at all is as missing as one that is.
+function notFoundOnBadId(error: unknown): never {
+  if (pgErrorCode(error) === INVALID_TEXT_REPRESENTATION) {
+    throw new HttpError(404, NOT_FOUND)
+  }
+  throw error
+}
 
 export async function create(userId: string, details: NewDeck): Promise<Deck> {
   const document = await db.query.documents.findFirst({
@@ -75,14 +87,8 @@ export async function get(userId: string, id: string): Promise<DeckDetail> {
     .select({ ...columns, documentName: documents.name })
     .from(decks)
     .innerJoin(documents, eq(documents.id, decks.documentId))
-    .where(and(eq(decks.id, id), eq(decks.userId, userId)))
-    .catch((error: unknown) => {
-      // An id that is not a uuid at all is as missing as one that is.
-      if (pgErrorCode(error) === INVALID_TEXT_REPRESENTATION) {
-        throw new HttpError(404, NOT_FOUND)
-      }
-      throw error
-    })
+    .where(owned(userId, id))
+    .catch(notFoundOnBadId)
 
   if (!deck) {
     throw new HttpError(404, NOT_FOUND)
@@ -101,4 +107,34 @@ export async function get(userId: string, id: string): Promise<DeckDetail> {
   ])
 
   return { ...deck, progress: progress ?? null, cards: deckCards }
+}
+
+export async function update(userId: string, id: string, changes: UpdateDeck): Promise<Deck> {
+  const [row] = await db
+    .update(decks)
+    .set({
+      title: changes.title,
+      description: changes.description === undefined ? undefined : changes.description || null,
+      updatedAt: new Date(),
+    })
+    .where(owned(userId, id))
+    .returning(columns)
+    .catch(notFoundOnBadId)
+
+  if (!row) {
+    throw new HttpError(404, NOT_FOUND)
+  }
+  return row
+}
+
+export async function remove(userId: string, id: string) {
+  const [deleted] = await db
+    .delete(decks)
+    .where(owned(userId, id))
+    .returning({ id: decks.id })
+    .catch(notFoundOnBadId)
+
+  if (!deleted) {
+    throw new HttpError(404, NOT_FOUND)
+  }
 }
