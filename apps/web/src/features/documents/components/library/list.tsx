@@ -1,6 +1,6 @@
 import { ErrorState } from '@fliprag/ui/components/error-state'
 import type { ReactNode } from 'react'
-import { DocumentRow } from '@/features/documents/components/document-row'
+import { DocumentRow } from '@/features/documents/components/library/row'
 import type { SourceDocument } from '@/features/documents/types'
 
 type DocumentListProps = {

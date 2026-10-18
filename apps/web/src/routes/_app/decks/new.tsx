@@ -3,7 +3,7 @@ import { EmptyState } from '@fliprag/ui/components/empty-state'
 import { ErrorState } from '@fliprag/ui/components/error-state'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ChevronLeft, Upload } from 'lucide-react'
-import { NewDeckForm } from '@/features/decks/components/new-deck-form'
+import { NewDeckForm } from '@/features/decks/components/create/form'
 import { useDocuments } from '@/features/documents/hooks/use-documents'
 
 export const Route = createFileRoute('/_app/decks/new')({

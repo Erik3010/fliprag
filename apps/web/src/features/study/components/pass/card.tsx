@@ -2,7 +2,7 @@ import { Button } from '@fliprag/ui/components/button'
 import { ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react'
 import type { ReactNode } from 'react'
 import type { Card } from '@/features/cards/types'
-import { FlipCard } from '@/features/study/components/flip-card'
+import { FlipCard } from '@/features/study/components/pass/flip-card'
 import type { PassOrder } from '@/features/study/hooks/use-study-pass'
 
 type PassCardProps = {

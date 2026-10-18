@@ -1,7 +1,7 @@
 import type { Card } from '@/features/cards/types'
-import { PassCard } from '@/features/study/components/pass-card'
-import { PassEnd } from '@/features/study/components/pass-end'
-import { PassStart } from '@/features/study/components/pass-start'
+import { PassCard } from '@/features/study/components/pass/card'
+import { PassEnd } from '@/features/study/components/pass/end'
+import { PassStart } from '@/features/study/components/pass/start'
 import { StudyHeader } from '@/features/study/components/study-header'
 import { useStudyPass } from '@/features/study/hooks/use-study-pass'
 

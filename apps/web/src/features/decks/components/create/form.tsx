@@ -11,7 +11,7 @@ import { Link } from '@tanstack/react-router'
 import { ArrowRight, Info } from 'lucide-react'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { SourceDocumentField } from '@/features/decks/components/source-document-field'
+import { SourceDocumentField } from '@/features/decks/components/create/source-document-field'
 import { DocumentPicker } from '@/features/documents/components/document-picker'
 import type { SourceDocument } from '@/features/documents/types'
 
