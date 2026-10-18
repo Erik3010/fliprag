@@ -11,8 +11,6 @@ type FlipCardProps = {
 const face =
   'absolute inset-0 flex flex-col gap-4 rounded-2xl border p-6 shadow-lg backface-hidden sm:p-7'
 
-// The whole card is the flip button. Both faces are in the DOM so the turn can be drawn; the one
-// facing away is hidden from assistive tech so only the visible side is read.
 export function FlipCard({ card, flipped, onFlip }: FlipCardProps) {
   const button = useRef<HTMLButtonElement>(null)
 

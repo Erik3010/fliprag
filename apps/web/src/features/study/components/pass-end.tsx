@@ -23,7 +23,7 @@ export function PassEnd({ deckId, total, order, onAgain }: PassEndProps) {
 
   return (
     <div className="flex flex-col items-center gap-3.5 rounded-2xl border bg-card px-6 py-9 text-center shadow-xs sm:px-8">
-      <span aria-hidden="true" className="grid size-12 place-items-center rounded-xl bg-accent">
+      <span aria-hidden="true" className="grid size-12 place-items-center rounded-full bg-accent">
         <Check className="size-5 text-accent-foreground" strokeWidth={2.25} />
       </span>
 
@@ -31,16 +31,15 @@ export function PassEnd({ deckId, total, order, onAgain }: PassEndProps) {
 
       <p className="max-w-[42ch] text-pretty text-muted-foreground text-sm">
         You went through all {total} cards{' '}
-        {shuffled ? 'in a shuffled order' : "in the deck's order"}. Nothing was recorded about which
-        ones were hard, so another pass starts clean.
+        {shuffled ? 'in a shuffled order' : "in the deck's order"}.
       </p>
 
       <div className="flex flex-wrap justify-center gap-2.5 pt-2">
         <Button ref={again} type="button" size="lg" onClick={() => onAgain(order)} className="px-5">
-          {shuffled ? 'Go again, shuffled' : 'Go again, deck order'}
+          {shuffled ? 'Start again, shuffled' : 'Start again, deck order'}
         </Button>
         <Button type="button" variant="outline" size="lg" onClick={() => onAgain(other)}>
-          {shuffled ? 'Go again in deck order' : 'Go again, shuffled'}
+          {shuffled ? 'Start again in deck order' : 'Start again, shuffled'}
         </Button>
       </div>
 
@@ -49,7 +48,7 @@ export function PassEnd({ deckId, total, order, onAgain }: PassEndProps) {
         params={{ deckId }}
         className="mt-1.5 rounded-sm font-medium text-primary text-sm outline-offset-2 outline-ring hover:text-accent-foreground focus-visible:outline-2"
       >
-        Back to the deck
+        Back to the deck details
       </Link>
     </div>
   )
