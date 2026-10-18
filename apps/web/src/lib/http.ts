@@ -15,8 +15,7 @@ export const api = ky.create({
       },
     ],
     afterResponse: [
-      // A 401 on a request that carried a token means the token is no longer good. A 401 on
-      // login is a wrong password, which carries none.
+      // Sign out only if a token was sent. A 401 on login is just a wrong password.
       ({ request, response }) => {
         if (response.status === 401 && request.headers.has('Authorization')) {
           useAuthStore.getState().signOut()
