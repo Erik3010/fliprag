@@ -33,3 +33,5 @@ export function useGenerationWalk(status: DeckStatus | undefined) {
     error: status === 'generating' && failed ? 'Failed to write cards.' : null,
   }
 }
+
+export type Generation = ReturnType<typeof useGenerationWalk>

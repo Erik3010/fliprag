@@ -3,7 +3,6 @@ import { Button } from '@fliprag/ui/components/button'
 import { FieldError } from '@fliprag/ui/components/field-error'
 import { Input } from '@fliprag/ui/components/input'
 import { Label } from '@fliprag/ui/components/label'
-import { Slider } from '@fliprag/ui/components/slider'
 import { Textarea } from '@fliprag/ui/components/textarea'
 import { cn } from '@fliprag/ui/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -11,6 +10,8 @@ import { Link } from '@tanstack/react-router'
 import { ArrowRight, Info } from 'lucide-react'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { CardCountField } from '@/features/decks/components/create/card-count-field'
+import { OptionalBadge } from '@/features/decks/components/create/optional-badge'
 import { SourceDocumentField } from '@/features/decks/components/create/source-document-field'
 import { DocumentPicker } from '@/features/documents/components/document-picker'
 import type { SourceDocument } from '@/features/documents/types'
@@ -71,9 +72,7 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
         <div className="flex flex-col gap-2">
           <Label htmlFor="deck-description" className="gap-1.5">
             Description
-            <span className="rounded-full bg-muted/60 px-1.5 py-px font-normal text-[0.6875rem] text-muted-foreground leading-4">
-              Optional
-            </span>
+            <OptionalBadge />
           </Label>
           <Textarea
             id="deck-description"
@@ -103,9 +102,7 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
         <div className="flex flex-col gap-2">
           <Label htmlFor="deck-topics" className="gap-1.5">
             Topics to cover
-            <span className="rounded-full bg-muted/60 px-1.5 py-px font-normal text-[0.6875rem] text-muted-foreground leading-4">
-              Optional
-            </span>
+            <OptionalBadge />
           </Label>
           <Input
             id="deck-topics"
@@ -118,38 +115,7 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
           control={control}
           name="cardCount"
           render={({ field }) => (
-            <div className="flex flex-col gap-2.5">
-              <div className="flex items-center justify-between gap-4">
-                <span className="font-medium text-sm">Cards to ask for</span>
-                <span className="min-w-14 rounded-md bg-accent px-2.5 py-1 text-center text-accent-foreground text-sm tabular-nums">
-                  {field.value}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <span aria-hidden="true" className="text-muted-foreground text-xs">
-                  {bounds.min}
-                </span>
-                <Slider
-                  aria-label="Cards to ask for"
-                  min={bounds.min}
-                  max={bounds.max}
-                  step={1}
-                  value={[field.value]}
-                  onValueChange={(value) => field.onChange(value[0] ?? bounds.default)}
-                  onBlur={field.onBlur}
-                  className="flex-1"
-                />
-                <span aria-hidden="true" className="text-muted-foreground text-xs">
-                  {bounds.max}
-                </span>
-              </div>
-
-              <p className="text-pretty text-muted-foreground text-xs leading-relaxed">
-                <span className="font-medium text-foreground">Note:</span> This is a maximum. A
-                short document may produce fewer cards.
-              </p>
-            </div>
+            <CardCountField value={field.value} onChange={field.onChange} onBlur={field.onBlur} />
           )}
         />
       </section>

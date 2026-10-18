@@ -1,29 +1,15 @@
 import { Button } from '@fliprag/ui/components/button'
 import { cn } from '@fliprag/ui/lib/utils'
 import { type ErrorComponentProps, useRouter } from '@tanstack/react-router'
-import { Loader2, LogOut, RefreshCw } from 'lucide-react'
+import { LogOut, RefreshCw } from 'lucide-react'
 import { useSignOut } from '@/features/auth/hooks/use-sign-out'
 import { failureMessage } from '@/lib/http'
 
-export function CheckingSession({ className }: { className?: string }) {
-  return (
-    <div
-      role="status"
-      className={cn(
-        'flex items-center justify-center gap-2.5 text-muted-foreground text-sm',
-        className,
-      )}
-    >
-      <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-      Checking your sign-in
-    </div>
-  )
+type SessionCheckFailedProps = Pick<ErrorComponentProps, 'error'> & {
+  className?: string
 }
 
-export function SessionCheckFailed({
-  error,
-  className,
-}: Pick<ErrorComponentProps, 'error'> & { className?: string }) {
+export function SessionCheckFailed({ error, className }: SessionCheckFailedProps) {
   const router = useRouter()
   const signOut = useSignOut()
 

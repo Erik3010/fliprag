@@ -1,6 +1,7 @@
 import { createFileRoute, type ErrorComponentProps, Outlet } from '@tanstack/react-router'
 import { requireSession } from '@/features/auth/guard'
-import { CheckingSession, SessionCheckFailed } from '../-components/session-check'
+import { CheckingSession } from '../-components/checking-session'
+import { SessionCheckFailed } from '../-components/session-check-failed'
 
 export const Route = createFileRoute('/_focus')({
   beforeLoad: requireSession,

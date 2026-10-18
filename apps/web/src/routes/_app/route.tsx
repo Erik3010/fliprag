@@ -2,7 +2,8 @@ import { createFileRoute, type ErrorComponentProps, Outlet } from '@tanstack/rea
 import type { ReactNode } from 'react'
 import { requireSession } from '@/features/auth/guard'
 import { AppSidebar } from '../-components/app-sidebar'
-import { CheckingSession, SessionCheckFailed } from '../-components/session-check'
+import { CheckingSession } from '../-components/checking-session'
+import { SessionCheckFailed } from '../-components/session-check-failed'
 
 export const Route = createFileRoute('/_app')({
   beforeLoad: requireSession,
