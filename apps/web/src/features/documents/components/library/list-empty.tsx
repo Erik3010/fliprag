@@ -11,7 +11,7 @@ export function DocumentListEmpty({ onPick }: DocumentListEmptyProps) {
     <EmptyState
       icon={<Upload className="size-5 text-accent-foreground" />}
       title="No documents yet"
-      description="Upload the your PDF documents here to start creating flashcard decks"
+      description="Upload a PDF to start creating flashcard decks."
       action={
         <Button type="button" size="lg" onClick={onPick}>
           Upload your first document

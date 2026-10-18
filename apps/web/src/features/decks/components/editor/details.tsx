@@ -30,9 +30,7 @@ export function DeckDetails({ description, topics, onDescriptionChange }: DeckDe
         {topics.trim() ? (
           <p className="text-pretty text-sm leading-relaxed">{topics}</p>
         ) : (
-          <p className="text-muted-foreground text-sm">
-            No topics were set, so the whole document was used.
-          </p>
+          <p className="text-muted-foreground text-sm">No topics set</p>
         )}
       </div>
     </section>
