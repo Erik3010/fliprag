@@ -11,9 +11,8 @@ import { Link } from '@tanstack/react-router'
 import { ArrowRight, Info } from 'lucide-react'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { DocumentIcon } from '@/features/documents/components/document-icon'
+import { SourceDocumentField } from '@/features/decks/components/source-document-field'
 import { DocumentPicker } from '@/features/documents/components/document-picker'
-import { documentMeta } from '@/features/documents/format'
 import type { SourceDocument } from '@/features/documents/types'
 
 const card = 'flex flex-col rounded-xl border bg-card p-5 shadow-xs'
@@ -39,7 +38,7 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
       title: '',
       description: '',
       topics: '',
-      documentId: documents[0]?.id ?? '',
+      documentId: '',
       cardCount: bounds.default,
     },
   })
@@ -61,7 +60,7 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
           <Label htmlFor="deck-title">Title</Label>
           <Input
             id="deck-title"
-            placeholder="Cellular respiration"
+            placeholder="e.g. The solar system"
             aria-invalid={errors.title ? true : undefined}
             aria-describedby={errors.title ? 'deck-title-error' : undefined}
             {...register('title')}
@@ -70,14 +69,16 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="deck-description">
+          <Label htmlFor="deck-description" className="gap-1.5">
             Description
-            <span className="font-normal text-muted-foreground text-xs">optional</span>
+            <span className="rounded-full bg-muted/60 px-1.5 py-px font-normal text-[0.6875rem] text-muted-foreground leading-4">
+              Optional
+            </span>
           </Label>
           <Textarea
             id="deck-description"
             rows={3}
-            placeholder="What this deck is for, in a line or two."
+            placeholder="e.g. For my science exam"
             {...register('description')}
           />
         </div>
@@ -89,42 +90,26 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
           <span className="text-muted-foreground text-xs">One per deck</span>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setPickerOpen(true)}
-          aria-describedby={errors.documentId ? 'deck-document-error' : undefined}
-          className="flex w-full items-center gap-3 rounded-lg border p-3 text-left outline-offset-2 outline-ring transition-colors hover:border-ring hover:bg-muted/50 focus-visible:outline-2"
-        >
-          <DocumentIcon />
-
-          <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-            <span
-              className={cn('truncate font-medium text-sm', !document && 'text-muted-foreground')}
-            >
-              {document ? document.name : 'No document chosen'}
-            </span>
-            <span className="text-muted-foreground text-xs">
-              {document ? documentMeta(document) : 'Required, pick one from your uploads'}
-            </span>
-          </span>
-
-          <span className="shrink-0 font-semibold text-primary text-xs">
-            {document ? 'Change' : 'Choose'}
-          </span>
-        </button>
+        <SourceDocumentField
+          document={document}
+          errorId={errors.documentId ? 'deck-document-error' : undefined}
+          onBrowse={() => setPickerOpen(true)}
+        />
 
         <FieldError id="deck-document-error" message={errors.documentId?.message} />
       </section>
 
       <section className={cn(card, 'gap-5')}>
         <div className="flex flex-col gap-2">
-          <Label htmlFor="deck-topics">
+          <Label htmlFor="deck-topics" className="gap-1.5">
             Topics to cover
-            <span className="font-normal text-muted-foreground text-xs">optional</span>
+            <span className="rounded-full bg-muted/60 px-1.5 py-px font-normal text-[0.6875rem] text-muted-foreground leading-4">
+              Optional
+            </span>
           </Label>
           <Input
             id="deck-topics"
-            placeholder="glycolysis, ATP yield, electron transport chain"
+            placeholder="e.g. planets, the sun, moons"
             {...register('topics')}
           />
         </div>
@@ -161,8 +146,8 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
               </div>
 
               <p className="text-pretty text-muted-foreground text-xs leading-relaxed">
-                A request, not a promise. If the document does not hold enough to write about you
-                get fewer cards, and a deck is never padded to reach the number.
+                <span className="font-medium text-foreground">Note:</span> This is a maximum. A
+                short document may produce fewer cards.
               </p>
             </div>
           )}

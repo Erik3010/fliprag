@@ -4,11 +4,13 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@fliprag/ui/components/dialog'
 import { cn } from '@fliprag/ui/lib/utils'
 import { Check, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { documentMeta } from '@/features/documents/format'
 import type { SourceDocument } from '@/features/documents/types'
 
@@ -27,6 +29,17 @@ export function DocumentPicker({
   onOpenChange,
   onSelect,
 }: DocumentPickerProps) {
+  const [highlighted, setHighlighted] = useState(selectedId)
+
+  // Each opening starts from the current choice, not from a row clicked and then cancelled.
+  useEffect(() => {
+    if (open) {
+      setHighlighted(selectedId)
+    }
+  }, [open, selectedId])
+
+  const chosen = documents.find((doc) => doc.id === highlighted)
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent showCloseButton={false} className="gap-0 p-0 sm:max-w-lg">
@@ -48,15 +61,16 @@ export function DocumentPicker({
 
         <div className="flex max-h-[60vh] flex-col gap-2 overflow-y-auto px-5 pt-4 pb-5">
           {documents.map((doc) => {
-            const active = doc.id === selectedId
+            const active = doc.id === highlighted
 
             return (
               <button
                 key={doc.id}
                 type="button"
-                onClick={() => onSelect(doc)}
+                aria-pressed={active}
+                onClick={() => setHighlighted(doc.id)}
                 className={cn(
-                  'flex w-full items-center gap-3 rounded-lg border p-3.5 text-left outline-offset-2 outline-ring transition-colors focus-visible:outline-2',
+                  'flex w-full cursor-pointer items-center gap-3 rounded-lg border p-3.5 text-left outline-offset-2 outline-ring transition-colors focus-visible:outline-2',
                   active ? 'border-primary bg-accent/55' : 'hover:border-ring hover:bg-muted/50',
                 )}
               >
@@ -78,6 +92,17 @@ export function DocumentPicker({
             )
           })}
         </div>
+
+        <DialogFooter className="border-t px-5 py-4">
+          <DialogClose asChild>
+            <Button type="button" variant="outline">
+              Cancel
+            </Button>
+          </DialogClose>
+          <Button type="button" disabled={!chosen} onClick={() => chosen && onSelect(chosen)}>
+            Choose document
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )
