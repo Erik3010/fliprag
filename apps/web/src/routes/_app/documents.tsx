@@ -23,8 +23,8 @@ function Documents() {
   const [toRename, setToRename] = useState<SourceDocument | null>(null)
   const [renamedId, setRenamedId] = useState<string | null>(null)
 
-  // No accept or maxSize here: library.start() refuses a file with a message naming the rule, so a
-  // rejected file is passed on rather than dropped silently.
+  // No accept or maxSize here, so a wrong file reaches library.start() and gets a message
+  // instead of being dropped silently.
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     multiple: false,
     noClick: true,

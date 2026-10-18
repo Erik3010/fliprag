@@ -3,14 +3,15 @@ import { useCallback, useReducer, useState } from 'react'
 import { type CardsAction, cardsReducer } from '@/features/cards/reducer'
 import type { Card } from '@/features/cards/types'
 import { useGenerationWalk } from '@/features/decks/hooks/use-generation-walk'
+import { useSaveShortcut } from '@/features/decks/hooks/use-save-shortcut'
 import { placeholderCards, placeholderDeckDetails } from '@/features/decks/placeholder'
 
 const UNDO_WINDOW_MS = 8000
 
 type Fields = { title: string; description: string }
 
-// TODO: load the deck and its cards from the server, and make save() the API call. Until then a
-// save only clears the unsaved mark, and everything is gone on reload.
+// TODO: load the deck from the server and make save() call the API. Until then saving only
+// hides the bar, and a reload loses everything.
 export function useDeckEditor(deckId: string) {
   const deck = placeholderDeckDetails.find((row) => row.id === deckId)
 
@@ -22,7 +23,6 @@ export function useDeckEditor(deckId: string) {
   const [cards, dispatch] = useReducer(cardsReducer, placeholderCards[deckId] ?? [])
   const [unsaved, setUnsaved] = useState(false)
 
-  // A `data-focus` key the card list moves focus to after an add, then clears.
   const [focusKey, setFocusKey] = useState<string | null>(null)
   const clearFocus = useCallback(() => setFocusKey(null), [])
 
@@ -40,6 +40,8 @@ export function useDeckEditor(deckId: string) {
     setUnsaved(false)
     toast.success('Changes saved.')
   }, [])
+
+  useSaveShortcut(save, unsaved)
 
   const addCard = useCallback(() => {
     const id = crypto.randomUUID()
@@ -61,7 +63,7 @@ export function useDeckEditor(deckId: string) {
     [change],
   )
 
-  // Deleting does not ask first. The toast is the way back, for as long as it stays on screen.
+  // No confirm on delete: the toast's Undo is the way back.
   const removeCard = useCallback(
     (id: string) => {
       const index = cards.findIndex((card) => card.id === id)

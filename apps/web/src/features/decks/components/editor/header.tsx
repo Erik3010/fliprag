@@ -99,8 +99,6 @@ export function DeckEditorHeader({
   )
 }
 
-// Reads the same three ways the deck can be: still being made, made by a stand-in that wrote
-// nothing, or written by hand. Phase 2 adds the one that means generation finished.
 function StatusPill({ generation }: Pick<DeckEditorHeaderProps, 'generation'>) {
   if (generation.walking) {
     return (

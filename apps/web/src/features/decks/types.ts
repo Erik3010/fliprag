@@ -6,7 +6,6 @@ export type Deck = {
   updatedAt: string
 }
 
-/** Whether the deck is still being made. Phase 1 walks the steps with a stand-in. */
 export type DeckStatus = 'generating' | 'ready'
 
 export type DeckDetail = Deck & {
@@ -16,7 +15,7 @@ export type DeckDetail = Deck & {
   status: DeckStatus
 }
 
-/** Null while a count is still being fetched. A count is never drawn as zero on the way. */
+/** Null while loading, so a count is never shown as 0 by mistake. */
 export type LibraryCounts = {
   decks: number | null
   cards: number | null

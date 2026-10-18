@@ -25,11 +25,11 @@ export const api = ky.create({
   },
 })
 
-// Every server error is { message }, see apps/server/README.md.
+// The server sends every error as { message }.
 type ErrorBody = { message?: string }
 
 export function failureMessage(error: unknown): string {
-  // ky consumes the response to populate `data`, so error.response.json() never works here.
+  // ky has already read the body into `data`, so error.response.json() would fail here.
   if (error instanceof HTTPError) {
     const body = typeof error.data === 'object' && error.data ? (error.data as ErrorBody) : null
 

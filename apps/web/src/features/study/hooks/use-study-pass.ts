@@ -30,7 +30,7 @@ function shuffle(cards: Card[]) {
   return out
 }
 
-// A pass is never persisted: every arrival starts the deck again from the top.
+// Nothing is saved: every visit starts again from the first card.
 function passReducer(state: PassState, action: PassAction): PassState {
   switch (action.type) {
     case 'pick':
@@ -54,7 +54,7 @@ function passReducer(state: PassState, action: PassAction): PassState {
   }
 }
 
-// What each key does in each phase. Anything not listed falls through to the browser.
+// Keys not listed are left to the browser.
 const keys: Partial<Record<PassPhase, Record<string, 'begin' | 'flip' | 'next' | 'prev'>>> = {
   start: { Enter: 'begin' },
   card: { ' ': 'flip', ArrowRight: 'next', ArrowLeft: 'prev' },
@@ -76,8 +76,7 @@ export function useStudyPass(cards: Card[]) {
 
   const { phase, order, queue, index, flipped } = state
 
-  // The keyboard drives all of it. The key is swallowed so it cannot also press whichever
-  // button has focus, and nothing fires while the person is typing in a field.
+  // preventDefault stops the key from also pressing the focused button. Ignored while typing.
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
       const type = keys[phase]?.[event.key]

@@ -15,8 +15,7 @@ export function deleteDocument(id: string) {
   return api.delete(`documents/${id}`)
 }
 
-// The file route needs the Bearer header, which a plain link cannot send, so the bytes are
-// fetched and handed to the browser as a blob URL.
+// A plain link can't send the Bearer header, so the file is fetched and opened as a blob URL.
 export async function fetchDocumentFile(id: string) {
   const blob = await api.get(`documents/${id}/file`).blob()
   return URL.createObjectURL(blob)
@@ -27,8 +26,8 @@ type UploadOptions = {
   signal: AbortSignal
 }
 
-// XMLHttpRequest rather than ky: fetch only reports upload progress over HTTP/2, and the dev
-// proxy is HTTP/1.1. Errors are thrown as Error(message) so failureMessage reads them the same.
+// XMLHttpRequest, not ky: fetch only reports upload progress over HTTP/2, and the dev proxy is
+// HTTP/1.1. Errors are thrown as Error(message) so failureMessage can read them.
 export function uploadDocument(file: File, { onProgress, signal }: UploadOptions) {
   return new Promise<SourceDocument>((resolve, reject) => {
     const xhr = new XMLHttpRequest()

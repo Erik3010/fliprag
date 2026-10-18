@@ -16,7 +16,7 @@ export function PassEnd({ deckId, total, order, onAgain }: PassEndProps) {
   const other: PassOrder = shuffled ? 'deck' : 'shuffle'
   const again = useRef<HTMLButtonElement>(null)
 
-  // Finish was pressed on a button that is now gone, so focus moves to the next thing to press.
+  // The Finish button just disappeared, so focus moves to Start again.
   useEffect(() => {
     again.current?.focus()
   }, [])

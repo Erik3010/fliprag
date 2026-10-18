@@ -5,9 +5,7 @@ type DeckSourceProps = {
   documentName: string
 }
 
-// The document is what the deck was made from, so it is named here and not changeable. A deck
-// from a different document is a new deck.
-// TODO: open the file itself once one is stored. It points at the documents list until then.
+// TODO: open the document's file instead of the documents list.
 export function DeckSource({ documentName }: DeckSourceProps) {
   return (
     <Link

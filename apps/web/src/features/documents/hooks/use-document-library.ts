@@ -12,7 +12,7 @@ import { documentsQueryKey, useDocuments } from '@/features/documents/hooks/use-
 import type { PendingUpload } from '@/features/documents/types'
 import { failureMessage } from '@/lib/http'
 
-// Checked before anything is sent, so the refusal names the rule the file broke.
+// Checked before upload, so the message can name the rule the file broke.
 export function rejectReason(file: File) {
   if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
     return `${file.name} is not a PDF. Only PDFs can be uploaded.`

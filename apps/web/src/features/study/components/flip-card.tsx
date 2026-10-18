@@ -14,7 +14,7 @@ const face =
 export function FlipCard({ card, flipped, onFlip }: FlipCardProps) {
   const button = useRef<HTMLButtonElement>(null)
 
-  // The pass starts here, so focus lands here rather than on the Start button that just went.
+  // The Start button just disappeared, so focus moves to the card.
   useEffect(() => {
     button.current?.focus()
   }, [])

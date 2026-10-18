@@ -7,7 +7,7 @@ export type CardsAction =
   | { type: 'remove'; id: string }
   | { type: 'restore'; card: Card; index: number }
 
-// The card list of one deck, in order. Pure, so the same moves can run against the API later.
+// Pure, so the same changes can be sent to the API later.
 export function cardsReducer(cards: Card[], action: CardsAction): Card[] {
   switch (action.type) {
     case 'add':

@@ -4,14 +4,14 @@ import { ChevronLeft, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { CardList } from '@/features/cards/components/card-list'
 import { CardListEmpty } from '@/features/cards/components/card-list-empty'
-import { DeckDetails } from '@/features/decks/components/deck-details'
-import { DeckEditorHeader } from '@/features/decks/components/deck-editor-header'
 import { DeckNotFound } from '@/features/decks/components/deck-not-found'
-import { DeckSource } from '@/features/decks/components/deck-source'
-import { DeleteDeckDialog } from '@/features/decks/components/delete-deck-dialog'
-import { GenerationNotice } from '@/features/decks/components/generation-notice'
-import { GenerationProgress } from '@/features/decks/components/generation-progress'
-import { UnsavedChangesBar } from '@/features/decks/components/unsaved-changes-bar'
+import { DeleteDeckDialog } from '@/features/decks/components/editor/delete-dialog'
+import { DeckDetails } from '@/features/decks/components/editor/details'
+import { GenerationNotice } from '@/features/decks/components/editor/generation-notice'
+import { GenerationProgress } from '@/features/decks/components/editor/generation-progress'
+import { DeckEditorHeader } from '@/features/decks/components/editor/header'
+import { DeckSource } from '@/features/decks/components/editor/source'
+import { UnsavedChangesBar } from '@/features/decks/components/editor/unsaved-changes-bar'
 import { useDeckEditor } from '@/features/decks/hooks/use-deck-editor'
 
 export const Route = createFileRoute('/_app/decks/$deckId')({
@@ -98,7 +98,7 @@ function DeckEditor() {
 
       <UnsavedChangesBar unsaved={editor.unsaved} onSave={editor.save} />
 
-      {/* TODO: delete through the API. Until then leaving the screen is all there is to do. */}
+      {/* TODO: delete the deck through the API. For now, confirming only goes home. */}
       <DeleteDeckDialog
         open={confirmingDelete}
         title={editor.title}

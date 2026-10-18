@@ -2,7 +2,6 @@ import { createFileRoute, type ErrorComponentProps, Outlet } from '@tanstack/rea
 import { requireSession } from '@/features/auth/guard'
 import { CheckingSession, SessionCheckFailed } from '../-components/session-check'
 
-// Signed-in screens that take over the whole window, with no sidebar.
 export const Route = createFileRoute('/_focus')({
   beforeLoad: requireSession,
   component: Outlet,

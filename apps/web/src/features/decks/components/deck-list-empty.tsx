@@ -7,8 +7,6 @@ type DeckListEmptyProps = {
   hasDocument: boolean
 }
 
-// Two states share this panel. Without a document there is nothing to build a deck from, so it asks
-// for a PDF instead of for a deck.
 export function DeckListEmpty({ hasDocument }: DeckListEmptyProps) {
   const content = hasDocument
     ? {

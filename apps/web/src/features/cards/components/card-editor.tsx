@@ -14,8 +14,6 @@ type CardEditorProps = {
   onDelete: () => void
 }
 
-// Both faces are edited the same way, in a plain box that a small editor with bold and italic
-// takes the place of in a later phase.
 const face =
   'min-h-20 bg-background transition-[color,background-color,box-shadow] duration-150 hover:bg-card focus-visible:bg-card'
 

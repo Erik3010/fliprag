@@ -21,7 +21,7 @@ type RenameDocumentDialogProps = {
 export function RenameDocumentDialog({ document, onCancel, onSave }: RenameDocumentDialogProps) {
   const [name, setName] = useState('')
 
-  // Start each opening from the document's current name rather than whatever was typed last time.
+  // Reset to the current name on every open, not what was typed last time.
   useEffect(() => {
     if (document) {
       setName(document.name)

@@ -45,7 +45,6 @@ export function CardList({
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   )
 
-  // After an add, focus goes to the front of the card that was just added.
   useEffect(() => {
     if (!focusKey) {
       return
@@ -56,7 +55,7 @@ export function CardList({
 
   const position = (id: UniqueIdentifier) => cards.findIndex((card) => card.id === id) + 1
 
-  // The defaults read out the card ids, which are uuids. Positions are what a person can follow.
+  // The default announcements read out card ids (uuids), so these use positions instead.
   const announcements: Announcements = {
     onDragStart: ({ active }) => `Picked up card ${position(active.id)} of ${cards.length}.`,
     onDragOver: ({ active, over }) =>

@@ -49,8 +49,6 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
   const complete = watch('title').trim().length > 0 && document !== undefined
 
   return (
-    // The submit button is never disabled. A disabled button refuses without saying why, and the
-    // two things this form needs are the two things it is asking for.
     <form
       onSubmit={handleSubmit(() => setSubmitted(true))}
       noValidate

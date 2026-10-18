@@ -7,7 +7,6 @@ type GenerationProgressProps = {
   step: number
 }
 
-// Steps rather than a spinner, so slow can be told apart from stuck.
 export function GenerationProgress({ step }: GenerationProgressProps) {
   return (
     <section

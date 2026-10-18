@@ -1,7 +1,5 @@
 import { Info } from 'lucide-react'
 
-// Shown once the stand-in has walked its steps. The one warning on the screen, so it takes the
-// secondary colour rather than the accent the informational notices use.
 export function GenerationNotice() {
   return (
     <div

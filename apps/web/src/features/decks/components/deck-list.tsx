@@ -1,8 +1,8 @@
+import { BrandMark } from '@fliprag/ui/components/brand-mark'
 import { Button } from '@fliprag/ui/components/button'
 import { Link } from '@tanstack/react-router'
 import { FileText } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
-import { DeckMark } from '@/features/decks/components/deck-mark'
 import type { Deck } from '@/features/decks/types'
 import { relativeDay } from '@/lib/date'
 
@@ -48,7 +48,7 @@ export function DeckList({ decks, empty, pageSize = 6 }: DeckListProps) {
                 className="flex h-full flex-col gap-3.5 rounded-xl border bg-card p-5 shadow-xs outline-offset-2 outline-ring transition-all duration-150 hover:-translate-y-0.5 hover:border-ring hover:shadow-lg focus-visible:outline-2"
               >
                 <span className="flex items-start justify-between gap-3">
-                  <DeckMark />
+                  <BrandMark />
                   <span className="whitespace-nowrap rounded-full bg-accent px-2.5 py-1 font-medium text-accent-foreground text-xs">
                     {deck.cardCount} cards
                   </span>

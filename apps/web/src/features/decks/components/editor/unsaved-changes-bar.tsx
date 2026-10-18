@@ -1,5 +1,4 @@
 import { Button } from '@fliprag/ui/components/button'
-import { useEffect } from 'react'
 
 type UnsavedChangesBarProps = {
   unsaved: boolean
@@ -10,21 +9,6 @@ const shortcut =
   typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.userAgent) ? '⌘S' : 'Ctrl S'
 
 export function UnsavedChangesBar({ unsaved, onSave }: UnsavedChangesBarProps) {
-  // Bound even with nothing to save, so the browser's own save-page dialog never opens here.
-  useEffect(() => {
-    function onKey(event: KeyboardEvent) {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 's') {
-        event.preventDefault()
-        if (unsaved) {
-          onSave()
-        }
-      }
-    }
-
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [unsaved, onSave])
-
   if (!unsaved) {
     return null
   }

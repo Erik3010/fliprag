@@ -2,8 +2,7 @@ import { subDays } from 'date-fns'
 import type { Card } from '@/features/cards/types'
 import type { Deck, DeckDetail } from '@/features/decks/types'
 
-// Stand-in rows so the home screen and the editor can be built before the API exists. Nothing
-// here is real. Delete this file once decks and cards are loaded from the server.
+// TODO: delete this file once the deck and card APIs exist. Everything in it is fake.
 
 function daysAgo(days: number) {
   return subDays(new Date(), days).toISOString()
@@ -26,7 +25,7 @@ const documents = {
   lecture2: 'c6d1b8e4-7f2a-4c39-a5e8-c3f6b9e4d903',
 }
 
-// Keyed by deck id. Decks with no entry open on the empty state.
+// Decks missing from here have no cards.
 export const placeholderCards: Record<string, Card[]> = {
   [decks.cellularRespiration]: [
     {
@@ -62,7 +61,7 @@ export const placeholderCards: Record<string, Card[]> = {
 type Row = Omit<DeckDetail, 'cardCount'>
 
 const rows: Row[] = [
-  // The one deck still being made, so the editor's progress steps have something to walk.
+  // Still generating, so the editor's progress steps can be seen.
   {
     id: decks.nerveImpulses,
     title: 'Nerve impulses',
@@ -146,7 +145,7 @@ const rows: Row[] = [
   },
 ]
 
-// Counted from the cards above, so home and the editor never disagree about a deck.
+// Counted from the cards above, so home and the editor always agree.
 export const placeholderDeckDetails: DeckDetail[] = rows.map((row) => ({
   ...row,
   cardCount: placeholderCards[row.id]?.length ?? 0,
