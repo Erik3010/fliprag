@@ -11,7 +11,7 @@ import { DeckDetails } from '@/features/decks/components/editor/details'
 import { GenerationProgress } from '@/features/decks/components/editor/generation-progress'
 import { DeckEditorHeader } from '@/features/decks/components/editor/header'
 import { DeckSource } from '@/features/decks/components/editor/source'
-import { UnsavedChangesBar } from '@/features/decks/components/editor/unsaved-changes-bar'
+import { DeckEditorToolbar } from '@/features/decks/components/editor/toolbar'
 import { useDeckEditor } from '@/features/decks/hooks/use-deck-editor'
 
 export const Route = createFileRoute('/_app/decks/$deckId')({
@@ -50,10 +50,15 @@ function DeckEditor() {
 
   return (
     <div className="flex flex-col gap-5">
-      {back}
+      <DeckEditorToolbar
+        back={back}
+        deckId={deck.id}
+        canStudy={cards.length > 0}
+        unsaved={editor.unsaved}
+        onSave={editor.save}
+      />
 
       <DeckEditorHeader
-        deckId={deck.id}
         title={editor.title}
         cardCount={cards.length}
         generation={generation}
@@ -109,8 +114,6 @@ function DeckEditor() {
           setDeletingCardId(null)
         }}
       />
-
-      <UnsavedChangesBar unsaved={editor.unsaved} onSave={editor.save} />
 
       {/* TODO: delete the deck through the API. For now, confirming only goes home. */}
       <DeleteDeckDialog

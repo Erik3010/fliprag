@@ -1,12 +1,9 @@
 import { Button } from '@fliprag/ui/components/button'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@fliprag/ui/components/tooltip'
-import { Link } from '@tanstack/react-router'
-import { Loader2, Pencil, Play, Trash2 } from 'lucide-react'
+import { Loader2, Pencil, Trash2 } from 'lucide-react'
 import { useRef } from 'react'
 import { generationSteps } from '@/features/decks/hooks/use-generation-walk'
 
 type DeckEditorHeaderProps = {
-  deckId: string
   title: string
   cardCount: number
   generation: { walking: boolean; step: number; error: string | null }
@@ -15,14 +12,12 @@ type DeckEditorHeaderProps = {
 }
 
 export function DeckEditorHeader({
-  deckId,
   title,
   cardCount,
   generation,
   onTitleChange,
   onDelete,
 }: DeckEditorHeaderProps) {
-  const canStudy = cardCount > 0
   const titleInput = useRef<HTMLInputElement>(null)
 
   return (
@@ -60,30 +55,6 @@ export function DeckEditorHeader({
         </div>
 
         <div className="flex shrink-0 items-center gap-2.5">
-          {canStudy ? (
-            <Button asChild size="lg" className="px-4">
-              <Link to="/decks/$deckId/study" params={{ deckId }}>
-                <Play aria-hidden="true" />
-                Study
-              </Link>
-            </Button>
-          ) : (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  type="button"
-                  size="lg"
-                  aria-disabled="true"
-                  className="cursor-not-allowed px-4 opacity-50"
-                >
-                  <Play aria-hidden="true" />
-                  Study
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Add at least one card to study</TooltipContent>
-            </Tooltip>
-          )}
-
           <Button
             type="button"
             variant="outline"
