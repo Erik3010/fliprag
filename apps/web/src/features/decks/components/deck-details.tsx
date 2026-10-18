@@ -5,7 +5,7 @@ type DeckDetailsProps = {
   onDescriptionBlur: () => void
 }
 
-const label = 'font-mono text-muted-foreground text-xs uppercase tracking-widest'
+const label = 'font-medium text-muted-foreground text-xs'
 
 // The description is edited in place. The topics are shown and not editable: cards written
 // against one set of topics do not become cards about another by changing the label.

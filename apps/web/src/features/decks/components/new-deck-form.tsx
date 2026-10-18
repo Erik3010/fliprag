@@ -107,7 +107,7 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
             >
               {document ? document.name : 'No document chosen'}
             </span>
-            <span className="font-mono text-muted-foreground text-xs">
+            <span className="text-muted-foreground text-xs">
               {document ? documentMeta(document) : 'Required, pick one from your uploads'}
             </span>
           </span>
@@ -140,13 +140,13 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
             <div className="flex flex-col gap-2.5">
               <div className="flex items-center justify-between gap-4">
                 <span className="font-medium text-sm">Cards to ask for</span>
-                <span className="min-w-14 rounded-md bg-accent px-2.5 py-1 text-center font-mono text-accent-foreground text-sm tabular-nums">
+                <span className="min-w-14 rounded-md bg-accent px-2.5 py-1 text-center text-accent-foreground text-sm tabular-nums">
                   {field.value}
                 </span>
               </div>
 
               <div className="flex items-center gap-3">
-                <span aria-hidden="true" className="font-mono text-muted-foreground text-xs">
+                <span aria-hidden="true" className="text-muted-foreground text-xs">
                   {bounds.min}
                 </span>
                 <Slider
@@ -159,7 +159,7 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
                   onBlur={field.onBlur}
                   className="flex-1"
                 />
-                <span aria-hidden="true" className="font-mono text-muted-foreground text-xs">
+                <span aria-hidden="true" className="text-muted-foreground text-xs">
                   {bounds.max}
                 </span>
               </div>

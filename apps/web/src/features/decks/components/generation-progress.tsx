@@ -16,7 +16,7 @@ export function GenerationProgress({ step }: GenerationProgressProps) {
     >
       <div className="flex flex-wrap items-baseline justify-between gap-4">
         <h2 className="font-semibold tracking-tight">Making this deck</h2>
-        <span className="font-mono text-muted-foreground text-xs">
+        <span className="text-muted-foreground text-xs">
           Step {Math.min(step + 1, generationSteps.length)} of {generationSteps.length}
         </span>
       </div>
@@ -55,7 +55,7 @@ export function GenerationProgress({ step }: GenerationProgressProps) {
 
               <span
                 className={cn(
-                  'font-mono text-xs uppercase tracking-widest',
+                  'text-xs',
                   done && 'text-primary',
                   running && 'text-accent-foreground',
                   !done && !running && 'text-muted-foreground',

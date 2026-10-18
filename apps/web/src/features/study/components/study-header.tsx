@@ -23,9 +23,7 @@ export function StudyHeader({ deckId, deckTitle }: StudyHeaderProps) {
 
         <div className="flex min-w-0 flex-col">
           <span className="truncate font-semibold text-sm tracking-tight">{deckTitle}</span>
-          <span className="font-mono text-muted-foreground text-xs uppercase tracking-widest">
-            Studying
-          </span>
+          <span className="text-muted-foreground text-xs">Studying</span>
         </div>
       </div>
 

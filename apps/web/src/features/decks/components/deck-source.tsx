@@ -22,9 +22,7 @@ export function DeckSource({ documentName }: DeckSourceProps) {
       </span>
 
       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span className="font-mono text-muted-foreground text-xs uppercase tracking-widest">
-          Made from
-        </span>
+        <span className="text-muted-foreground text-xs">Made from</span>
         <span className="truncate font-medium text-sm">{documentName}</span>
       </span>
 

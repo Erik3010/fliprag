@@ -36,9 +36,7 @@ export function FlipCard({ card, flipped, onFlip }: FlipCardProps) {
         )}
       >
         <span aria-hidden={flipped} className={cn(face, 'bg-card')}>
-          <span className="font-mono text-muted-foreground text-xs uppercase tracking-widest">
-            Front
-          </span>
+          <span className="font-medium text-muted-foreground text-xs">Front</span>
           <span className="flex min-h-0 flex-1 items-center overflow-auto text-pretty font-medium text-xl leading-snug tracking-tight sm:text-2xl">
             {card.front.trim() || 'This card has no front yet.'}
           </span>
@@ -46,9 +44,7 @@ export function FlipCard({ card, flipped, onFlip }: FlipCardProps) {
         </span>
 
         <span aria-hidden={!flipped} className={cn(face, 'rotate-y-180 border-ring bg-accent')}>
-          <span className="font-mono text-accent-foreground text-xs uppercase tracking-widest">
-            Back
-          </span>
+          <span className="font-medium text-accent-foreground text-xs">Back</span>
           <span className="flex min-h-0 flex-1 items-center overflow-auto text-pretty text-lg leading-relaxed sm:text-xl">
             {card.back.trim() || 'This card has no back yet.'}
           </span>

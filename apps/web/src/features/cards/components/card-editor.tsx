@@ -35,7 +35,7 @@ export function CardEditor({
       className="flex flex-col gap-3 rounded-xl border bg-card px-4 pt-3.5 pb-4 shadow-xs"
     >
       <div className="flex items-center gap-2.5">
-        <span className="whitespace-nowrap rounded-full bg-accent px-2.5 py-1 font-medium font-mono text-accent-foreground text-xs">
+        <span className="whitespace-nowrap rounded-full bg-accent px-2.5 py-1 font-medium text-accent-foreground text-xs">
           Card {position} of {total}
         </span>
 

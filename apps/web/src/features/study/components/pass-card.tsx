@@ -36,7 +36,7 @@ export function PassCard({
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
         <div className="flex items-baseline justify-between gap-4">
-          <span className="font-mono text-xs">
+          <span className="text-xs tabular-nums">
             Card {position} of {total}
           </span>
           <span className="rounded-full border bg-muted px-2.5 py-0.5 font-medium text-xs">
@@ -96,9 +96,7 @@ export function PassCard({
 function Hint({ keyName, children }: { keyName: string; children: ReactNode }) {
   return (
     <span className="flex items-center gap-1.5">
-      <kbd className="rounded-md border bg-card px-2 py-0.5 font-mono text-xs shadow-xs">
-        {keyName}
-      </kbd>
+      <kbd className="rounded-md border bg-card px-2 py-0.5 text-xs shadow-xs">{keyName}</kbd>
       {children}
     </span>
   )

@@ -35,7 +35,7 @@ export function DocumentRow({
 
       <span className="flex min-w-0 flex-1 basis-64 flex-col gap-1">
         <span className="truncate font-medium">{document.name}</span>
-        <span className="font-mono text-muted-foreground text-xs">{documentMeta(document)}</span>
+        <span className="text-muted-foreground text-xs">{documentMeta(document)}</span>
       </span>
 
       <span className="flex shrink-0 items-center gap-2">

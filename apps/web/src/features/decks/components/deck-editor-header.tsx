@@ -41,7 +41,7 @@ export function DeckEditorHeader({
           <div className="flex flex-wrap items-center gap-2.5 text-muted-foreground text-xs">
             <StatusPill generation={generation} />
 
-            <span className="font-mono">
+            <span>
               {cardCount} {cardCount === 1 ? 'card' : 'cards'}
             </span>
 

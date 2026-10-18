@@ -29,7 +29,7 @@ function Home() {
     <div className="flex flex-col gap-7">
       <header className="flex flex-wrap items-center justify-between gap-6">
         <div>
-          <p className="font-mono text-muted-foreground text-xs uppercase tracking-widest">
+          <p className="text-muted-foreground text-xs uppercase tracking-widest">
             {format(new Date(), 'EEEE d MMMM')}
           </p>
 
@@ -134,9 +134,7 @@ function Counts({ counts }: { counts: LibraryCounts }) {
           key={label}
           className="flex flex-col gap-1.5 rounded-lg border bg-card px-5 py-4 shadow-xs"
         >
-          <dt className="font-mono text-muted-foreground text-xs uppercase tracking-widest">
-            {label}
-          </dt>
+          <dt className="text-muted-foreground text-xs uppercase tracking-widest">{label}</dt>
           <dd className="font-semibold text-3xl leading-none tracking-tight tabular-nums">
             {value === null ? (
               <output

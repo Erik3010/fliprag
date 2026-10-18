@@ -27,7 +27,7 @@ export function DeckList({ decks, empty, pageSize = 6 }: DeckListProps) {
         </h2>
 
         {decks.length > 0 && (
-          <p className="font-mono text-muted-foreground text-xs">
+          <p className="text-muted-foreground text-xs">
             {start + 1} to {start + shown.length} of {decks.length}
           </p>
         )}
@@ -46,7 +46,7 @@ export function DeckList({ decks, empty, pageSize = 6 }: DeckListProps) {
               >
                 <span className="flex items-start justify-between gap-3">
                   <DeckMark />
-                  <span className="whitespace-nowrap rounded-full bg-accent px-2.5 py-1 font-medium font-mono text-accent-foreground text-xs">
+                  <span className="whitespace-nowrap rounded-full bg-accent px-2.5 py-1 font-medium text-accent-foreground text-xs">
                     {deck.cardCount} cards
                   </span>
                 </span>

@@ -74,9 +74,7 @@ export function DocumentPicker({
 
                 <span className="flex min-w-0 flex-1 flex-col gap-1">
                   <span className="truncate font-medium text-sm">{doc.name}</span>
-                  <span className="font-mono text-muted-foreground text-xs">
-                    {documentMeta(doc)}
-                  </span>
+                  <span className="text-muted-foreground text-xs">{documentMeta(doc)}</span>
                 </span>
               </button>
             )

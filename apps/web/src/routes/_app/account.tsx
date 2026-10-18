@@ -23,9 +23,7 @@ function Account() {
 
       <section className="flex flex-wrap items-center justify-between gap-5 rounded-xl border bg-card p-5 shadow-xs">
         <div className="flex min-w-0 flex-col gap-1">
-          <span className="font-mono text-muted-foreground text-xs uppercase tracking-widest">
-            Signed in as
-          </span>
+          <span className="text-muted-foreground text-xs">Signed in as</span>
           <span className="truncate font-medium">{user?.email}</span>
         </div>
 
