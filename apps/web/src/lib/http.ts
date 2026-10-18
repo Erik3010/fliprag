@@ -33,12 +33,12 @@ export function failureMessage(error: unknown): string {
   if (error instanceof HTTPError) {
     const body = typeof error.data === 'object' && error.data ? (error.data as ErrorBody) : null
 
-    return body?.message ?? `The server answered ${error.response.status}.`
+    return body?.message ?? `Request failed with status ${error.response.status}.`
   }
 
   if (error instanceof Error) {
     return error.message
   }
 
-  return 'The request failed before it got a reply.'
+  return 'Network error. The server could not be reached.'
 }

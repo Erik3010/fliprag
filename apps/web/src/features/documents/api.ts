@@ -53,13 +53,13 @@ export function uploadDocument(file: File, { onProgress, signal }: UploadOptions
       if (xhr.status === 401) {
         useAuthStore.getState().signOut()
       }
-      let message = `The server answered ${xhr.status}.`
+      let message = `Request failed with status ${xhr.status}.`
       try {
         message = JSON.parse(xhr.responseText).message ?? message
       } catch {}
       reject(new Error(message))
     }
-    xhr.onerror = () => reject(new Error('The upload failed before it got a reply.'))
+    xhr.onerror = () => reject(new Error('Network error. The server could not be reached.'))
     xhr.onabort = () => reject(new DOMException('The upload was cancelled.', 'AbortError'))
 
     signal.addEventListener('abort', () => xhr.abort(), { once: true })
