@@ -10,16 +10,16 @@ function isPdf(file: File) {
 
 export const uploadDocumentSchema = z.object({
   file: z
-    .file('Choose a file to upload.')
-    .refine(isPdf, 'Only PDFs can be uploaded.')
+    .file('File is required.')
+    .refine(isPdf, 'Only PDF files are supported.')
     .refine(
       (file) => file.size <= uploadLimit.bytes,
-      `That file is larger than ${uploadLimit.label}. Upload a smaller one.`,
+      `File exceeds the ${uploadLimit.label} limit.`,
     ),
 })
 
 export const renameDocumentSchema = z.object({
-  name: z.string().trim().min(1, 'Give the document a name.'),
+  name: z.string().trim().min(1, 'Name is required.'),
 })
 
 export type RenameDocument = z.infer<typeof renameDocumentSchema>
