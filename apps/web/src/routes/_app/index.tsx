@@ -19,6 +19,7 @@ export const Route = createFileRoute('/_app/')({
 })
 
 function Home() {
+  // TODO: load the decks and the card count from the server instead of the placeholder rows.
   const decks = placeholderDecks
   const { documents, error, retry } = useDocuments()
   const name = useAuthStore((state) => state.user?.name)

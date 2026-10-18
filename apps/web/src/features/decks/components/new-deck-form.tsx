@@ -48,6 +48,8 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
   const document = documents.find((doc) => doc.id === documentId)
   const complete = watch('title').trim().length > 0 && document !== undefined
 
+  // TODO: create the deck through the API, then open its editor. For now submitting only shows a
+  // notice.
   return (
     <form
       onSubmit={handleSubmit(() => setSubmitted(true))}
