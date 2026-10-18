@@ -44,8 +44,8 @@ export type DeckDetail = Deck & {
   cards: { id: string; front: string; back: string }[]
 }
 
-const NOT_FOUND = 'There is no such deck.'
-const NO_DOCUMENT = 'There is no such document.'
+const NOT_FOUND = 'Deck not found.'
+const NO_DOCUMENT = 'Document not found.'
 
 function owned(userId: string, id: string) {
   return and(eq(decks.id, id), eq(decks.userId, userId))
@@ -158,7 +158,7 @@ export async function update(userId: string, id: string, changes: UpdateDeck): P
     .catch((error: unknown) => {
       // A new card's id is already taken by a card in another deck.
       if (pgErrorCode(error) === UNIQUE_VIOLATION) {
-        throw new HttpError(409, 'A card id is already in use. Reload the deck and try again.')
+        throw new HttpError(409, 'Card id already exists.')
       }
       throw error
     })

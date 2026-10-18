@@ -9,7 +9,7 @@ const BEARER = 'Bearer '
 export const requireAuth = createMiddleware<AuthEnv>(async (c, next) => {
   const header = c.req.header('Authorization')
   if (!header?.startsWith(BEARER)) {
-    throw new HttpError(401, 'Sign in to continue.')
+    throw new HttpError(401, 'Authentication required.')
   }
 
   let userId: string

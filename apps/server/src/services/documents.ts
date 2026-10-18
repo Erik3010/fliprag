@@ -23,7 +23,7 @@ export type Document = {
   createdAt: Date
 }
 
-const NOT_FOUND = 'There is no such document.'
+const NOT_FOUND = 'Document not found.'
 
 function owned(userId: string, id: string) {
   return and(eq(documents.id, id), eq(documents.userId, userId))
@@ -113,7 +113,7 @@ export async function remove(userId: string, id: string) {
     .returning({ storageKey: documents.storageKey })
     .catch((error: unknown) => {
       if (pgErrorCode(error) === FOREIGN_KEY_VIOLATION) {
-        throw new HttpError(409, 'This document has decks made from it. Delete those first.')
+        throw new HttpError(409, 'Document is in use by one or more decks.')
       }
       throw error
     })

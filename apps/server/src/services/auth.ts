@@ -33,7 +33,7 @@ export async function signup(details: Signup): Promise<Session> {
     return session(user)
   } catch (error) {
     if (pgErrorCode(error) === UNIQUE_VIOLATION) {
-      throw new HttpError(409, 'An account with that email already exists. Sign in instead.')
+      throw new HttpError(409, 'Email is already registered.')
     }
     throw error
   }
@@ -47,7 +47,7 @@ export async function me(userId: string): Promise<AuthUser> {
   })
 
   if (!user) {
-    throw new HttpError(401, 'Sign in to continue.')
+    throw new HttpError(401, 'Authentication required.')
   }
 
   return user

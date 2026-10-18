@@ -45,6 +45,6 @@ function reason(cause: unknown) {
   return cause.message || ('code' in cause ? String(cause.code) : cause.name)
 }
 
-app.notFound((c) => c.json({ message: 'There is no such route.' }, 404))
+app.notFound((c) => c.json({ message: 'Route not found.' }, 404))
 
 export type AppType = typeof app
