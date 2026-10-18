@@ -24,11 +24,14 @@ export function DeckList({ decks, empty, pageSize = 6 }: DeckListProps) {
       <div className="flex items-baseline justify-between gap-4 border-b pb-3">
         <h2 id="decks-heading" className="font-semibold text-lg tracking-tight">
           Your decks
+          {decks.length > 0 && (
+            <span className="ml-1.5 font-medium text-muted-foreground">({decks.length})</span>
+          )}
         </h2>
 
-        {decks.length > 0 && (
+        {pageCount > 1 && (
           <p className="text-muted-foreground text-xs">
-            {start + 1} to {start + shown.length} of {decks.length}
+            Page {page + 1} of {pageCount}
           </p>
         )}
       </div>
@@ -62,8 +65,6 @@ export function DeckList({ decks, empty, pageSize = 6 }: DeckListProps) {
                   </span>
                 </span>
 
-                {/* The column gap sets the smallest space above the rule, the auto margin takes any
-                    slack, so every footer in a row sits on the same line whatever the title does. */}
                 <span className="mt-auto border-t border-dashed pt-3 text-muted-foreground text-xs">
                   Edited {relativeDay(deck.updatedAt)}
                 </span>
@@ -75,22 +76,24 @@ export function DeckList({ decks, empty, pageSize = 6 }: DeckListProps) {
 
       {pageCount > 1 && (
         <div className="flex justify-end gap-2 pt-1.5">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setPage((current) => current - 1)}
-            disabled={page === 0}
-          >
-            Previous
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setPage((current) => current + 1)}
-            disabled={page >= pageCount - 1}
-          >
-            Next
-          </Button>
+          {page > 0 && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setPage((current) => current - 1)}
+            >
+              Previous
+            </Button>
+          )}
+          {page < pageCount - 1 && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setPage((current) => current + 1)}
+            >
+              Next
+            </Button>
+          )}
         </div>
       )}
     </section>

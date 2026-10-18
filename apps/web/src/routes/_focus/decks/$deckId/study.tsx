@@ -10,8 +10,7 @@ import { PassStart } from '@/features/study/components/pass-start'
 import { StudyHeader } from '@/features/study/components/study-header'
 import { useStudyPass } from '@/features/study/hooks/use-study-pass'
 
-// Outside /_app on purpose: studying takes over the screen, with no sidebar.
-export const Route = createFileRoute('/decks/$deckId/study')({
+export const Route = createFileRoute('/_focus/decks/$deckId/study')({
   component: Study,
 })
 

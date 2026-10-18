@@ -14,13 +14,13 @@ export function DeckListEmpty({ hasDocument }: DeckListEmptyProps) {
     ? {
         title: 'No decks yet',
         body: 'Make your first deck from one of your documents.',
-        action: 'Create a deck',
+        action: 'Create a flashcard deck',
         to: '/decks/new' as const,
       }
     : {
         title: 'No documents yet',
-        body: 'Upload a PDF first. A deck is made from a document, and cannot exist without one.',
-        action: 'Upload a PDF',
+        body: 'A document is required to create a flashcard deck.',
+        action: 'Upload a document',
         to: '/documents' as const,
       }
 

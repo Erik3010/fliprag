@@ -20,10 +20,10 @@ type DocumentRowProps = {
 
 export function DocumentRow({ document, renamed, onOpen, onRename, onDelete }: DocumentRowProps) {
   return (
-    <article className="flex flex-wrap items-center gap-3.5 rounded-xl border bg-card px-4 py-3.5 shadow-xs">
+    <article className="flex items-start gap-3.5 rounded-xl border bg-card px-4 py-3.5 shadow-xs sm:items-center">
       <DocumentIcon />
 
-      <span className="flex min-w-0 flex-1 basis-64 flex-col gap-1">
+      <span className="flex min-w-0 flex-1 flex-col gap-1">
         <button
           type="button"
           onClick={() => onOpen(document)}

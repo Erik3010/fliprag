@@ -3,7 +3,7 @@ import { HTTPError } from 'ky'
 import { me } from '@/features/auth/api'
 import { useAuthStore } from '@/store/auth'
 
-// beforeLoad for /_app. Calls /me once per page load, so a token that expired while the tab was
+// beforeLoad for /_app and /_focus. Calls /me once per page load, so a token that expired while the tab was
 // closed is caught before any screen renders on it.
 export async function requireSession() {
   const session = useAuthStore.getState()

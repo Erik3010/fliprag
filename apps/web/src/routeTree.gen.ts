@@ -9,64 +9,69 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AppRouteImport } from './routes/_app'
-import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as AppRouteRouteImport } from './routes/_app/route'
+import { Route as AuthRouteRouteImport } from './routes/_auth/route'
+import { Route as FocusRouteRouteImport } from './routes/_focus/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppAccountRouteImport } from './routes/_app/account'
 import { Route as AppDocumentsRouteImport } from './routes/_app/documents'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
-import { Route as AppDecksDeckIdRouteImport } from './routes/_app/decks.$deckId'
-import { Route as AppDecksNewRouteImport } from './routes/_app/decks.new'
-import { Route as DecksDeckIdStudyRouteImport } from './routes/decks.$deckId.study'
+import { Route as AppDecksDeckIdRouteImport } from './routes/_app/decks/$deckId'
+import { Route as AppDecksNewRouteImport } from './routes/_app/decks/new'
+import { Route as FocusDecksDeckIdStudyRouteImport } from './routes/_focus/decks/$deckId/study'
 
-const AppRoute = AppRouteImport.update({
+const AppRouteRoute = AppRouteRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthRoute = AuthRouteImport.update({
+const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/_auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FocusRouteRoute = FocusRouteRouteImport.update({
+  id: '/_focus',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const AppAccountRoute = AppAccountRouteImport.update({
   id: '/account',
   path: '/account',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const AppDocumentsRoute = AppDocumentsRouteImport.update({
   id: '/documents',
   path: '/documents',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
   id: '/signup',
   path: '/signup',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AppDecksDeckIdRoute = AppDecksDeckIdRouteImport.update({
   id: '/decks/$deckId',
   path: '/decks/$deckId',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const AppDecksNewRoute = AppDecksNewRouteImport.update({
   id: '/decks/new',
   path: '/decks/new',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => AppRouteRoute,
 } as any)
-const DecksDeckIdStudyRoute = DecksDeckIdStudyRouteImport.update({
+const FocusDecksDeckIdStudyRoute = FocusDecksDeckIdStudyRouteImport.update({
   id: '/decks/$deckId/study',
   path: '/decks/$deckId/study',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => FocusRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -77,7 +82,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof AuthSignupRoute
   '/decks/$deckId': typeof AppDecksDeckIdRoute
   '/decks/new': typeof AppDecksNewRoute
-  '/decks/$deckId/study': typeof DecksDeckIdStudyRoute
+  '/decks/$deckId/study': typeof FocusDecksDeckIdStudyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
@@ -87,12 +92,13 @@ export interface FileRoutesByTo {
   '/signup': typeof AuthSignupRoute
   '/decks/$deckId': typeof AppDecksDeckIdRoute
   '/decks/new': typeof AppDecksNewRoute
-  '/decks/$deckId/study': typeof DecksDeckIdStudyRoute
+  '/decks/$deckId/study': typeof FocusDecksDeckIdStudyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_app': typeof AppRouteWithChildren
-  '/_auth': typeof AuthRouteWithChildren
+  '/_app': typeof AppRouteRouteWithChildren
+  '/_auth': typeof AuthRouteRouteWithChildren
+  '/_focus': typeof FocusRouteRouteWithChildren
   '/_app/account': typeof AppAccountRoute
   '/_app/documents': typeof AppDocumentsRoute
   '/_auth/login': typeof AuthLoginRoute
@@ -100,7 +106,7 @@ export interface FileRoutesById {
   '/_app/': typeof AppIndexRoute
   '/_app/decks/$deckId': typeof AppDecksDeckIdRoute
   '/_app/decks/new': typeof AppDecksNewRoute
-  '/decks/$deckId/study': typeof DecksDeckIdStudyRoute
+  '/_focus/decks/$deckId/study': typeof FocusDecksDeckIdStudyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -127,6 +133,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_app'
     | '/_auth'
+    | '/_focus'
     | '/_app/account'
     | '/_app/documents'
     | '/_auth/login'
@@ -134,13 +141,13 @@ export interface FileRouteTypes {
     | '/_app/'
     | '/_app/decks/$deckId'
     | '/_app/decks/new'
-    | '/decks/$deckId/study'
+    | '/_focus/decks/$deckId/study'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AppRoute: typeof AppRouteWithChildren
-  AuthRoute: typeof AuthRouteWithChildren
-  DecksDeckIdStudyRoute: typeof DecksDeckIdStudyRoute
+  AppRouteRoute: typeof AppRouteRouteWithChildren
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  FocusRouteRoute: typeof FocusRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -149,14 +156,21 @@ declare module '@tanstack/react-router' {
       id: '/_app'
       path: ''
       fullPath: '/'
-      preLoaderRoute: typeof AppRouteImport
+      preLoaderRoute: typeof AppRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
       id: '/_auth'
       path: ''
       fullPath: '/'
-      preLoaderRoute: typeof AuthRouteImport
+      preLoaderRoute: typeof AuthRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_focus': {
+      id: '/_focus'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof FocusRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/': {
@@ -164,61 +178,61 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AppIndexRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppRouteRoute
     }
     '/_app/account': {
       id: '/_app/account'
       path: '/account'
       fullPath: '/account'
       preLoaderRoute: typeof AppAccountRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppRouteRoute
     }
     '/_app/documents': {
       id: '/_app/documents'
       path: '/documents'
       fullPath: '/documents'
       preLoaderRoute: typeof AppDocumentsRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppRouteRoute
     }
     '/_auth/login': {
       id: '/_auth/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/signup': {
       id: '/_auth/signup'
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof AuthSignupRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_app/decks/$deckId': {
       id: '/_app/decks/$deckId'
       path: '/decks/$deckId'
       fullPath: '/decks/$deckId'
       preLoaderRoute: typeof AppDecksDeckIdRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppRouteRoute
     }
     '/_app/decks/new': {
       id: '/_app/decks/new'
       path: '/decks/new'
       fullPath: '/decks/new'
       preLoaderRoute: typeof AppDecksNewRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppRouteRoute
     }
-    '/decks/$deckId/study': {
-      id: '/decks/$deckId/study'
+    '/_focus/decks/$deckId/study': {
+      id: '/_focus/decks/$deckId/study'
       path: '/decks/$deckId/study'
       fullPath: '/decks/$deckId/study'
-      preLoaderRoute: typeof DecksDeckIdStudyRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof FocusDecksDeckIdStudyRouteImport
+      parentRoute: typeof FocusRouteRoute
     }
   }
 }
 
-interface AppRouteChildren {
+interface AppRouteRouteChildren {
   AppAccountRoute: typeof AppAccountRoute
   AppDocumentsRoute: typeof AppDocumentsRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -226,7 +240,7 @@ interface AppRouteChildren {
   AppDecksNewRoute: typeof AppDecksNewRoute
 }
 
-const AppRouteChildren: AppRouteChildren = {
+const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppAccountRoute: AppAccountRoute,
   AppDocumentsRoute: AppDocumentsRoute,
   AppIndexRoute: AppIndexRoute,
@@ -234,24 +248,40 @@ const AppRouteChildren: AppRouteChildren = {
   AppDecksNewRoute: AppDecksNewRoute,
 }
 
-const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
+)
 
-interface AuthRouteChildren {
+interface AuthRouteRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
   AuthSignupRoute: typeof AuthSignupRoute
 }
 
-const AuthRouteChildren: AuthRouteChildren = {
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
   AuthSignupRoute: AuthSignupRoute,
 }
 
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
+
+interface FocusRouteRouteChildren {
+  FocusDecksDeckIdStudyRoute: typeof FocusDecksDeckIdStudyRoute
+}
+
+const FocusRouteRouteChildren: FocusRouteRouteChildren = {
+  FocusDecksDeckIdStudyRoute: FocusDecksDeckIdStudyRoute,
+}
+
+const FocusRouteRouteWithChildren = FocusRouteRoute._addFileChildren(
+  FocusRouteRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
-  AppRoute: AppRouteWithChildren,
-  AuthRoute: AuthRouteWithChildren,
-  DecksDeckIdStudyRoute: DecksDeckIdStudyRoute,
+  AppRouteRoute: AppRouteRouteWithChildren,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
+  FocusRouteRoute: FocusRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

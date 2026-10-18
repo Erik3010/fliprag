@@ -46,7 +46,7 @@ function Home() {
         <Button asChild variant="outline">
           <Link to="/documents">
             <Upload aria-hidden="true" />
-            Upload PDF
+            Upload document
           </Link>
         </Button>
       </header>

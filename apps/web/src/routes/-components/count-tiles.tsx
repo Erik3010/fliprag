@@ -8,7 +8,7 @@ export function CountTiles({ counts }: { counts: LibraryCounts }) {
   ]
 
   return (
-    <dl className="grid grid-cols-3 gap-3.5">
+    <dl className="grid gap-3.5 sm:grid-cols-3">
       {tiles.map(({ label, value }) => (
         <div
           key={label}
