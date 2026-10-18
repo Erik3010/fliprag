@@ -30,7 +30,7 @@ function NewDeck() {
           title="No documents yet"
           description="A document is required to create a flashcard deck."
           action={
-            <Button asChild size="lg" className="px-5">
+            <Button asChild size="lg">
               <Link to="/documents">Upload a document</Link>
             </Button>
           }

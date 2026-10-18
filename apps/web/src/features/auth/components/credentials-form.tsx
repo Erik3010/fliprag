@@ -51,7 +51,7 @@ export function CredentialsForm({ submitLabel, onSubmit, pending, error }: Crede
 
       <FieldError message={error} />
 
-      <Button type="submit" disabled={pending} className="min-h-11 w-full">
+      <Button type="submit" size="lg" disabled={pending} className="w-full">
         {submitLabel}
       </Button>
     </form>

@@ -35,7 +35,7 @@ export function PassEnd({ deckId, total, order, onAgain }: PassEndProps) {
       </p>
 
       <div className="flex flex-wrap justify-center gap-2.5 pt-2">
-        <Button ref={again} type="button" size="lg" onClick={() => onAgain(order)} className="px-5">
+        <Button ref={again} type="button" size="lg" onClick={() => onAgain(order)}>
           {shuffled ? 'Start again, shuffled' : 'Start again, deck order'}
         </Button>
         <Button type="button" variant="outline" size="lg" onClick={() => onAgain(other)}>

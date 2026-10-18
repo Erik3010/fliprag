@@ -166,7 +166,7 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
             <Link to="/">Cancel</Link>
           </Button>
 
-          <Button type="submit" size="lg" className="px-5">
+          <Button type="submit" size="lg">
             Create deck
             <ArrowRight aria-hidden="true" />
           </Button>

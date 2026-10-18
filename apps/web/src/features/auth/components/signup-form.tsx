@@ -64,7 +64,7 @@ export function SignupForm({ onSubmit, pending, error }: SignupFormProps) {
 
       <FieldError message={error} />
 
-      <Button type="submit" disabled={pending} className="min-h-11 w-full">
+      <Button type="submit" size="lg" disabled={pending} className="w-full">
         Create account
       </Button>
     </form>

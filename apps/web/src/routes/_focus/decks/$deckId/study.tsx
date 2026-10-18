@@ -28,7 +28,7 @@ function Study() {
           title="Nothing to study yet"
           description={`${deck.title} has no cards. Write the first one in the editor and come back.`}
           action={
-            <Button asChild size="lg" className="px-5">
+            <Button asChild size="lg">
               <Link to="/decks/$deckId" params={{ deckId }}>
                 <ChevronLeft aria-hidden="true" />
                 Back to the deck

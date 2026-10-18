@@ -13,7 +13,7 @@ export function DocumentListEmpty({ onPick }: DocumentListEmptyProps) {
       title="No documents yet"
       description="Upload the your PDF documents here to start creating flashcard decks"
       action={
-        <Button type="button" size="lg" onClick={onPick} className="px-5">
+        <Button type="button" size="lg" onClick={onPick}>
           Upload your first document
         </Button>
       }

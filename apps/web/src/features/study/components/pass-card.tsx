@@ -72,7 +72,7 @@ export function PassCard({
           variant="outline"
           size="lg"
           onClick={onFlip}
-          className="border-primary px-4 font-semibold text-accent-foreground hover:bg-accent hover:text-accent-foreground"
+          className="border-primary font-semibold text-accent-foreground hover:bg-accent hover:text-accent-foreground"
         >
           <RefreshCw aria-hidden="true" />
           {flipped ? 'Show the front' : 'Flip to the back'}

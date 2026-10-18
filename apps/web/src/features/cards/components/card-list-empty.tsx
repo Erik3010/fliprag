@@ -14,7 +14,7 @@ export function CardListEmpty({ onAdd }: CardListEmptyProps) {
       title="No cards in this deck"
       description="Write the first one by hand: a question on the front, the answer on the back."
       action={
-        <Button type="button" size="lg" onClick={onAdd} className="px-5">
+        <Button type="button" size="lg" onClick={onAdd}>
           <Plus aria-hidden="true" />
           Write the first card
         </Button>

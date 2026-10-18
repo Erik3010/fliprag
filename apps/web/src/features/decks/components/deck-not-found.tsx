@@ -8,7 +8,7 @@ export function DeckNotFound({ className }: { className?: string }) {
       title="There is no deck here"
       description="This deck was deleted or the link is invalid."
       action={
-        <Button asChild size="lg" className="px-5">
+        <Button asChild size="lg">
           <Link to="/">All decks</Link>
         </Button>
       }

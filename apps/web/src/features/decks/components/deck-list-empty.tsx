@@ -28,7 +28,7 @@ export function DeckListEmpty({ hasDocument }: DeckListEmptyProps) {
       title={content.title}
       description={content.body}
       action={
-        <Button asChild size="lg" className="px-5">
+        <Button asChild size="lg">
           <Link to={content.to}>{content.action}</Link>
         </Button>
       }

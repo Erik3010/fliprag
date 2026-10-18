@@ -54,7 +54,7 @@ export function PassStart({ deckTitle, total, order, onPickOrder, onStart }: Pas
       </div>
 
       <div className="flex flex-wrap items-center gap-3.5">
-        <Button type="button" size="lg" onClick={onStart} className="px-5">
+        <Button type="button" size="lg" onClick={onStart}>
           Start studying
           <ArrowRight aria-hidden="true" />
         </Button>
