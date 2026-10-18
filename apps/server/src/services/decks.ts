@@ -1,8 +1,14 @@
 import { cards, db, deckProgress, decks, documents } from '@fliprag/db'
+import type { CardInput } from '@fliprag/schemas/card'
 import type { NewDeck, UpdateDeck } from '@fliprag/schemas/deck'
-import { and, asc, count, desc, eq } from 'drizzle-orm'
+import { and, asc, count, desc, eq, notInArray } from 'drizzle-orm'
 import { HttpError } from '../lib/http-error.js'
-import { FOREIGN_KEY_VIOLATION, INVALID_TEXT_REPRESENTATION, pgErrorCode } from '../lib/pg-error.js'
+import {
+  FOREIGN_KEY_VIOLATION,
+  INVALID_TEXT_REPRESENTATION,
+  pgErrorCode,
+  UNIQUE_VIOLATION,
+} from '../lib/pg-error.js'
 import { type Document, documentColumns } from './documents.js'
 
 const columns = {
@@ -126,22 +132,59 @@ export async function get(userId: string, id: string): Promise<DeckDetail> {
   return { ...deck, progress: progress ?? null, cards: deckCards }
 }
 
-export async function update(userId: string, id: string, changes: UpdateDeck): Promise<Deck> {
-  const [row] = await db
-    .update(decks)
-    .set({
-      title: changes.title,
-      description: changes.description === undefined ? undefined : changes.description || null,
-      updatedAt: new Date(),
-    })
-    .where(owned(userId, id))
-    .returning(columns)
-    .catch(notFoundOnBadId)
+type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0]
 
-  if (!row) {
-    throw new HttpError(404, NOT_FOUND)
+export async function update(userId: string, id: string, changes: UpdateDeck): Promise<DeckDetail> {
+  await db
+    .transaction(async (tx) => {
+      const [row] = await tx
+        .update(decks)
+        .set({
+          title: changes.title,
+          description: changes.description === undefined ? undefined : changes.description || null,
+          updatedAt: new Date(),
+        })
+        .where(owned(userId, id))
+        .returning({ id: decks.id })
+        .catch(notFoundOnBadId)
+
+      if (!row) {
+        throw new HttpError(404, NOT_FOUND)
+      }
+      if (changes.cards) {
+        await replaceCards(tx, id, changes.cards)
+      }
+    })
+    .catch((error: unknown) => {
+      // A new card's id is already taken by a card in another deck.
+      if (pgErrorCode(error) === UNIQUE_VIOLATION) {
+        throw new HttpError(409, 'A card id is already in use. Reload the deck and try again.')
+      }
+      throw error
+    })
+
+  return get(userId, id)
+}
+
+async function replaceCards(tx: Transaction, deckId: string, list: CardInput[]) {
+  const existing = await tx.select({ id: cards.id }).from(cards).where(eq(cards.deckId, deckId))
+  const known = new Set(existing.map((card) => card.id))
+
+  const kept = list.map((card) => card.id)
+  await tx.delete(cards).where(and(eq(cards.deckId, deckId), notInArray(cards.id, kept)))
+
+  for (const [position, card] of list.entries()) {
+    if (known.has(card.id)) {
+      await tx
+        .update(cards)
+        .set({ front: card.front, back: card.back, position, updatedAt: new Date() })
+        .where(eq(cards.id, card.id))
+    } else {
+      await tx
+        .insert(cards)
+        .values({ id: card.id, deckId, front: card.front, back: card.back, position })
+    }
   }
-  return row
 }
 
 export async function remove(userId: string, id: string) {
