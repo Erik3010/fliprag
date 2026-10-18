@@ -5,7 +5,6 @@ export type CardsAction =
   | { type: 'update'; id: string; patch: Partial<Pick<Card, 'front' | 'back'>> }
   | { type: 'move'; id: string; to: number }
   | { type: 'remove'; id: string }
-  | { type: 'restore'; card: Card; index: number }
 
 // Pure, so the same changes can be sent to the API later.
 export function cardsReducer(cards: Card[], action: CardsAction): Card[] {
@@ -30,11 +29,5 @@ export function cardsReducer(cards: Card[], action: CardsAction): Card[] {
 
     case 'remove':
       return cards.filter((card) => card.id !== action.id)
-
-    case 'restore': {
-      const next = cards.slice()
-      next.splice(Math.min(action.index, next.length), 0, action.card)
-      return next
-    }
   }
 }

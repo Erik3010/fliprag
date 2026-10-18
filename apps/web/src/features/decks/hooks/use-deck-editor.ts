@@ -6,8 +6,6 @@ import { useGenerationWalk } from '@/features/decks/hooks/use-generation-walk'
 import { useSaveShortcut } from '@/features/decks/hooks/use-save-shortcut'
 import { placeholderCards, placeholderDeckDetails } from '@/features/decks/placeholder'
 
-const UNDO_WINDOW_MS = 8000
-
 type Fields = { title: string; description: string }
 
 // TODO: load the deck from the server and make save() call the API. Until then saving only
@@ -63,21 +61,12 @@ export function useDeckEditor(deckId: string) {
     [change],
   )
 
-  // No confirm on delete: the toast's Undo is the way back.
   const removeCard = useCallback(
     (id: string) => {
-      const index = cards.findIndex((card) => card.id === id)
-      const card = cards[index]
-      if (!card) {
-        return
-      }
       change({ type: 'remove', id })
-      toast.success('Card deleted.', {
-        duration: UNDO_WINDOW_MS,
-        action: { label: 'Undo', onClick: () => change({ type: 'restore', card, index }) },
-      })
+      toast.success('Card deleted.')
     },
-    [cards, change],
+    [change],
   )
 
   return {

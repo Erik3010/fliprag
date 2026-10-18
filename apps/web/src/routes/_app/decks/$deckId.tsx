@@ -4,6 +4,7 @@ import { ChevronLeft, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { CardList } from '@/features/cards/components/card-list'
 import { CardListEmpty } from '@/features/cards/components/card-list-empty'
+import { DeleteCardDialog } from '@/features/cards/components/delete-card-dialog'
 import { DeckNotFound } from '@/features/decks/components/deck-not-found'
 import { DeleteDeckDialog } from '@/features/decks/components/editor/delete-dialog'
 import { DeckDetails } from '@/features/decks/components/editor/details'
@@ -23,6 +24,7 @@ function DeckEditor() {
   const navigate = useNavigate()
   const editor = useDeckEditor(deckId)
   const [confirmingDelete, setConfirmingDelete] = useState(false)
+  const [deletingCardId, setDeletingCardId] = useState<string | null>(null)
 
   const back = (
     <Link
@@ -44,6 +46,7 @@ function DeckEditor() {
   }
 
   const { deck, cards, generation } = editor
+  const deletingIndex = cards.findIndex((card) => card.id === deletingCardId)
 
   return (
     <div className="flex flex-col gap-5">
@@ -91,10 +94,21 @@ function DeckEditor() {
             onFocused={editor.clearFocus}
             onChange={editor.updateCard}
             onMove={editor.moveCard}
-            onDelete={editor.removeCard}
+            onDelete={setDeletingCardId}
           />
         )}
       </section>
+
+      <DeleteCardDialog
+        position={deletingIndex < 0 ? null : deletingIndex + 1}
+        onCancel={() => setDeletingCardId(null)}
+        onConfirm={() => {
+          if (deletingCardId) {
+            editor.removeCard(deletingCardId)
+          }
+          setDeletingCardId(null)
+        }}
+      />
 
       <UnsavedChangesBar unsaved={editor.unsaved} onSave={editor.save} />
 
