@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { decks } from './decks.js'
 
-export const progressSteps = ['reading', 'finding', 'writing'] as const
+export const progressSteps = ['finding', 'writing'] as const
 export const progressStatuses = ['waiting', 'running', 'done', 'failed'] as const
 
 export const deckProgress = pgTable('deck_progress', {

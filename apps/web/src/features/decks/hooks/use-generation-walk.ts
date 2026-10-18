@@ -3,7 +3,6 @@ import type { DeckStatus } from '@/features/decks/types'
 
 // TODO (phase 2): replace this timer with progress from the server. The steps stay the same.
 export const generationSteps = [
-  'Reading the document',
   'Finding the passages that match the topics',
   'Writing the cards',
 ] as const
