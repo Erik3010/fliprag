@@ -1,4 +1,5 @@
 import { redirect } from '@tanstack/react-router'
+import { HTTPError } from 'ky'
 import { me } from '@/features/auth/api'
 import { useAuthStore } from '@/store/auth'
 
@@ -14,9 +15,13 @@ export async function requireSession() {
   if (!session.user) {
     try {
       session.setUser(await me())
-    } catch {
-      session.signOut()
-      throw redirect({ to: '/login' })
+    } catch (error) {
+      // Only a 401 says the token is bad. A server that is down or failing keeps the token.
+      if (error instanceof HTTPError && error.response.status === 401) {
+        session.signOut()
+        throw redirect({ to: '/login' })
+      }
+      throw error
     }
   }
 }

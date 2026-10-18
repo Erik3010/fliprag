@@ -1,12 +1,20 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { Loader2 } from 'lucide-react'
+import { Button } from '@fliprag/ui/components/button'
+import {
+  createFileRoute,
+  type ErrorComponentProps,
+  Outlet,
+  useRouter,
+} from '@tanstack/react-router'
+import { Loader2, RefreshCw } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { requireSession } from '@/features/auth/guard'
+import { failureMessage } from '@/lib/http'
 import { AppSidebar } from './-components/app-sidebar'
 
 export const Route = createFileRoute('/_app')({
   beforeLoad: requireSession,
   component: AppLayout,
+  errorComponent: SessionCheckFailed,
   pendingComponent: CheckingSession,
   // Under 150 ms nobody sees a blank; past it the frame shows, and stays long enough not to blink.
   pendingMs: 150,
@@ -32,6 +40,28 @@ function CheckingSession() {
       >
         <Loader2 className="size-4 animate-spin" aria-hidden="true" />
         Checking your sign-in
+      </div>
+    </Frame>
+  )
+}
+
+function SessionCheckFailed({ error }: ErrorComponentProps) {
+  const router = useRouter()
+
+  return (
+    <Frame>
+      <div
+        role="alert"
+        className="flex min-h-[calc(100dvh-5rem)] flex-col items-center justify-center gap-3 text-center"
+      >
+        <p className="font-medium text-sm">Your sign-in could not be checked</p>
+        <p className="max-w-[42ch] text-pretty text-muted-foreground text-xs">
+          {failureMessage(error)}
+        </p>
+        <Button type="button" variant="outline" size="sm" onClick={() => router.invalidate()}>
+          <RefreshCw aria-hidden="true" />
+          Try again
+        </Button>
       </div>
     </Frame>
   )
