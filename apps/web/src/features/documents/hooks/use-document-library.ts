@@ -24,7 +24,6 @@ export function useDocumentLibrary() {
   const queryClient = useQueryClient()
   const list = useDocuments()
   const [upload, setUpload] = useState<PendingUpload | null>(null)
-  const [rejected, setRejected] = useState<string | null>(null)
   const controller = useRef<AbortController>(undefined)
 
   const refresh = useCallback(
@@ -38,11 +37,10 @@ export function useDocumentLibrary() {
     async (file: File) => {
       const reason = rejectReason(file)
       if (reason) {
-        setRejected(reason)
+        toast.error(reason)
         return
       }
 
-      setRejected(null)
       controller.current?.abort()
       controller.current = new AbortController()
       setUpload({ name: file.name, sizeBytes: file.size, progress: 0 })
@@ -55,7 +53,7 @@ export function useDocumentLibrary() {
         await refresh()
       } catch (error) {
         if (!(error instanceof DOMException && error.name === 'AbortError')) {
-          setRejected(`Failed to upload ${file.name}. ${failureMessage(error)}`)
+          toast.error(`Failed to upload ${file.name}. ${failureMessage(error)}`)
         }
       } finally {
         setUpload(null)
@@ -84,8 +82,6 @@ export function useDocumentLibrary() {
   return {
     ...list,
     upload,
-    rejected,
-    dismissRejection: () => setRejected(null),
     start,
     cancel: () => controller.current?.abort(),
     rename: (id: string, name: string) => rename.mutate({ id, name }),

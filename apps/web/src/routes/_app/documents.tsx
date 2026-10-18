@@ -1,5 +1,4 @@
 import { Button } from '@fliprag/ui/components/button'
-import { FieldError } from '@fliprag/ui/components/field-error'
 import { createFileRoute } from '@tanstack/react-router'
 import { Plus, Upload } from 'lucide-react'
 import { useState } from 'react'
@@ -53,8 +52,6 @@ function Documents() {
           Upload document
         </Button>
       </header>
-
-      <FieldError message={library.rejected ?? undefined} />
 
       <section
         {...getRootProps()}
