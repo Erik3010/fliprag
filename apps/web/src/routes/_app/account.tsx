@@ -26,7 +26,6 @@ function Account() {
         <div className="flex min-w-0 flex-col gap-1">
           <span className="text-muted-foreground text-xs">Signed in as</span>
           <span className="truncate font-medium">{user?.name}</span>
-          <span className="truncate text-muted-foreground text-sm">{user?.email}</span>
         </div>
 
         <Button type="button" variant="outline" onClick={signOut}>
