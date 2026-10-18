@@ -1,12 +1,10 @@
 import {
-  type Announcements,
   closestCenter,
   DndContext,
   type DragEndEvent,
   KeyboardSensor,
   type Modifier,
   PointerSensor,
-  type UniqueIdentifier,
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
@@ -46,30 +44,17 @@ export function CardList({
   )
 
   useEffect(() => {
-    if (!focusKey) {
-      return
-    }
+    if (!focusKey) return
     list.current?.querySelector<HTMLElement>(`[data-focus="${focusKey}"]`)?.focus()
     onFocused()
   }, [focusKey, onFocused])
 
-  const position = (id: UniqueIdentifier) => cards.findIndex((card) => card.id === id) + 1
-
-  // The default announcements read out card ids (uuids), so these use positions instead.
-  const announcements: Announcements = {
-    onDragStart: ({ active }) => `Picked up card ${position(active.id)} of ${cards.length}.`,
-    onDragOver: ({ active, over }) =>
-      over ? `Card ${position(active.id)} is over position ${position(over.id)}.` : undefined,
-    onDragEnd: ({ active, over }) =>
-      over
-        ? `Card ${position(active.id)} dropped at position ${position(over.id)}.`
-        : `Card ${position(active.id)} dropped.`,
-    onDragCancel: ({ active }) => `Moving cancelled. Card ${position(active.id)} stays put.`,
-  }
-
   function handleDragEnd({ active, over }: DragEndEvent) {
     if (over && active.id !== over.id) {
-      onMove(String(active.id), position(over.id) - 1)
+      onMove(
+        String(active.id),
+        cards.findIndex((card) => card.id === over.id),
+      )
     }
   }
 
@@ -78,7 +63,6 @@ export function CardList({
       sensors={sensors}
       collisionDetection={closestCenter}
       modifiers={[verticalOnly]}
-      accessibility={{ announcements }}
       onDragEnd={handleDragEnd}
     >
       <SortableContext items={cards} strategy={verticalListSortingStrategy}>
