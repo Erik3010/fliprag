@@ -10,11 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as SignupRouteImport } from './routes/signup'
+import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppAccountRouteImport } from './routes/_app/account'
 import { Route as AppDocumentsRouteImport } from './routes/_app/documents'
+import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AppDecksDeckIdRouteImport } from './routes/_app/decks.$deckId'
 import { Route as AppDecksNewRouteImport } from './routes/_app/decks.new'
 import { Route as DecksDeckIdStudyRouteImport } from './routes/decks.$deckId.study'
@@ -23,14 +24,8 @@ const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SignupRoute = SignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
+const AuthRoute = AuthRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
@@ -47,6 +42,16 @@ const AppDocumentsRoute = AppDocumentsRouteImport.update({
   id: '/documents',
   path: '/documents',
   getParentRoute: () => AppRoute,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthSignupRoute = AuthSignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => AuthRoute,
 } as any)
 const AppDecksDeckIdRoute = AppDecksDeckIdRouteImport.update({
   id: '/decks/$deckId',
@@ -66,20 +71,20 @@ const DecksDeckIdStudyRoute = DecksDeckIdStudyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
-  '/login': typeof LoginRoute
-  '/signup': typeof SignupRoute
   '/account': typeof AppAccountRoute
   '/documents': typeof AppDocumentsRoute
+  '/login': typeof AuthLoginRoute
+  '/signup': typeof AuthSignupRoute
   '/decks/$deckId': typeof AppDecksDeckIdRoute
   '/decks/new': typeof AppDecksNewRoute
   '/decks/$deckId/study': typeof DecksDeckIdStudyRoute
 }
 export interface FileRoutesByTo {
-  '/login': typeof LoginRoute
-  '/signup': typeof SignupRoute
+  '/': typeof AppIndexRoute
   '/account': typeof AppAccountRoute
   '/documents': typeof AppDocumentsRoute
-  '/': typeof AppIndexRoute
+  '/login': typeof AuthLoginRoute
+  '/signup': typeof AuthSignupRoute
   '/decks/$deckId': typeof AppDecksDeckIdRoute
   '/decks/new': typeof AppDecksNewRoute
   '/decks/$deckId/study': typeof DecksDeckIdStudyRoute
@@ -87,10 +92,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
-  '/login': typeof LoginRoute
-  '/signup': typeof SignupRoute
+  '/_auth': typeof AuthRouteWithChildren
   '/_app/account': typeof AppAccountRoute
   '/_app/documents': typeof AppDocumentsRoute
+  '/_auth/login': typeof AuthLoginRoute
+  '/_auth/signup': typeof AuthSignupRoute
   '/_app/': typeof AppIndexRoute
   '/_app/decks/$deckId': typeof AppDecksDeckIdRoute
   '/_app/decks/new': typeof AppDecksNewRoute
@@ -100,30 +106,31 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/login'
-    | '/signup'
     | '/account'
     | '/documents'
+    | '/login'
+    | '/signup'
     | '/decks/$deckId'
     | '/decks/new'
     | '/decks/$deckId/study'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/login'
-    | '/signup'
+    | '/'
     | '/account'
     | '/documents'
-    | '/'
+    | '/login'
+    | '/signup'
     | '/decks/$deckId'
     | '/decks/new'
     | '/decks/$deckId/study'
   id:
     | '__root__'
     | '/_app'
-    | '/login'
-    | '/signup'
+    | '/_auth'
     | '/_app/account'
     | '/_app/documents'
+    | '/_auth/login'
+    | '/_auth/signup'
     | '/_app/'
     | '/_app/decks/$deckId'
     | '/_app/decks/new'
@@ -132,8 +139,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
-  LoginRoute: typeof LoginRoute
-  SignupRoute: typeof SignupRoute
+  AuthRoute: typeof AuthRouteWithChildren
   DecksDeckIdStudyRoute: typeof DecksDeckIdStudyRoute
 }
 
@@ -146,18 +152,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupRouteImport
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/': {
@@ -180,6 +179,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/documents'
       preLoaderRoute: typeof AppDocumentsRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/_auth/login': {
+      id: '/_auth/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/signup': {
+      id: '/_auth/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof AuthSignupRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_app/decks/$deckId': {
       id: '/_app/decks/$deckId'
@@ -223,10 +236,21 @@ const AppRouteChildren: AppRouteChildren = {
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
+interface AuthRouteChildren {
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthSignupRoute: typeof AuthSignupRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthLoginRoute: AuthLoginRoute,
+  AuthSignupRoute: AuthSignupRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
-  LoginRoute: LoginRoute,
-  SignupRoute: SignupRoute,
+  AuthRoute: AuthRouteWithChildren,
   DecksDeckIdStudyRoute: DecksDeckIdStudyRoute,
 }
 export const routeTree = rootRouteImport

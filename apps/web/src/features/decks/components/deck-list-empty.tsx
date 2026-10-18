@@ -1,4 +1,5 @@
 import { Button } from '@fliprag/ui/components/button'
+import { EmptyState } from '@fliprag/ui/components/empty-state'
 import { Link } from '@tanstack/react-router'
 import { FileText } from 'lucide-react'
 
@@ -24,21 +25,15 @@ export function DeckListEmpty({ hasDocument }: DeckListEmptyProps) {
       }
 
   return (
-    <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed bg-card/60 px-8 py-14 text-center">
-      <span
-        aria-hidden="true"
-        className="grid size-11 shrink-0 place-items-center rounded-lg bg-accent"
-      >
-        <FileText className="size-5 text-accent-foreground" />
-      </span>
-
-      <p className="font-semibold text-lg tracking-tight">{content.title}</p>
-
-      <p className="max-w-[42ch] text-pretty text-muted-foreground text-sm">{content.body}</p>
-
-      <Button asChild size="lg" className="mt-2 px-5">
-        <Link to={content.to}>{content.action}</Link>
-      </Button>
-    </div>
+    <EmptyState
+      icon={<FileText className="size-5 text-accent-foreground" />}
+      title={content.title}
+      description={content.body}
+      action={
+        <Button asChild size="lg" className="px-5">
+          <Link to={content.to}>{content.action}</Link>
+        </Button>
+      }
+    />
   )
 }

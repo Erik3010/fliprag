@@ -44,13 +44,13 @@ function Documents() {
         <div className="flex flex-col gap-1">
           <h1 className="font-semibold text-3xl tracking-tight">Documents</h1>
           <p className="text-muted-foreground text-sm">
-            Upload the PDFs you want to turn into flashcard decks.
+            Upload the documents you want to turn into flashcard decks.
           </p>
         </div>
 
         <Button type="button" onClick={open}>
           <Upload aria-hidden="true" />
-          Upload PDF
+          Upload document
         </Button>
       </header>
 
@@ -85,7 +85,7 @@ function Documents() {
             className="flex items-center justify-center gap-2 rounded-xl border border-dashed p-4 text-muted-foreground text-sm outline-offset-2 outline-ring hover:border-ring hover:text-foreground focus-visible:outline-2"
           >
             <Plus className="size-4" aria-hidden="true" />
-            Drop a PDF here, or choose a file
+            Drop a document here, or choose a file
           </button>
         )}
       </section>

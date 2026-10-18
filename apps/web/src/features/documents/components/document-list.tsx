@@ -1,5 +1,4 @@
-import { Button } from '@fliprag/ui/components/button'
-import { RefreshCw } from 'lucide-react'
+import { ErrorState } from '@fliprag/ui/components/error-state'
 import type { ReactNode } from 'react'
 import { DocumentRow } from '@/features/documents/components/document-row'
 import type { SourceDocument } from '@/features/documents/types'
@@ -31,7 +30,9 @@ export function DocumentList({
     <>
       {loading && <LoadingRows />}
 
-      {error && <LoadError detail={error} onRetry={onRetry} />}
+      {error && (
+        <ErrorState title="Documents could not be loaded" detail={error} onRetry={onRetry} />
+      )}
 
       {documents.map((document) => (
         <DocumentRow
@@ -62,23 +63,5 @@ function LoadingRows() {
         </div>
       ))}
     </output>
-  )
-}
-
-function LoadError({ detail, onRetry }: { detail: string; onRetry: () => void }) {
-  return (
-    <div
-      role="alert"
-      className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-destructive/40 bg-card px-4 py-3.5"
-    >
-      <span className="flex flex-col gap-0.5">
-        <span className="font-medium text-sm">Documents could not be loaded</span>
-        <span className="text-muted-foreground text-xs">{detail}</span>
-      </span>
-      <Button type="button" variant="outline" size="sm" onClick={onRetry}>
-        <RefreshCw aria-hidden="true" />
-        Try again
-      </Button>
-    </div>
   )
 }
