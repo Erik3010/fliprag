@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-export type AuthUser = { id: string; email: string }
+export type AuthUser = { id: string; name: string; email: string }
 
 type AuthState = {
   /** Persisted. Sent as a Bearer token on every request while set. */

@@ -1,11 +1,11 @@
 import { db, users } from '@fliprag/db'
-import type { Credentials } from '@fliprag/schemas/auth'
+import type { Credentials, Signup } from '@fliprag/schemas/auth'
 import { eq } from 'drizzle-orm'
 import { hashPassword, signToken, verifyPassword } from '../lib/auth.js'
 import { HttpError } from '../lib/http-error.js'
 import { pgErrorCode, UNIQUE_VIOLATION } from '../lib/pg-error.js'
 
-export type AuthUser = { id: string; email: string }
+export type AuthUser = { id: string; name: string; email: string }
 
 export type Session = { token: string; user: AuthUser }
 
@@ -16,15 +16,15 @@ async function session(user: AuthUser): Promise<Session> {
 // One message for a wrong email and a wrong password, so the answer does not say which exists.
 const NO_MATCH = 'That email and password do not match.'
 
-export async function signup(credentials: Credentials): Promise<Session> {
-  const email = credentials.email.toLowerCase()
-  const passwordHash = await hashPassword(credentials.password)
+export async function signup(details: Signup): Promise<Session> {
+  const email = details.email.toLowerCase()
+  const passwordHash = await hashPassword(details.password)
 
   try {
     const [user] = await db
       .insert(users)
-      .values({ email, passwordHash })
-      .returning({ id: users.id, email: users.email })
+      .values({ name: details.name, email, passwordHash })
+      .returning({ id: users.id, name: users.name, email: users.email })
 
     if (!user) {
       throw new Error('Insert returned no row.')
@@ -41,7 +41,7 @@ export async function signup(credentials: Credentials): Promise<Session> {
 // A valid token for a deleted user is a 401, not a 404: the next step is to sign in again.
 export async function me(userId: string): Promise<AuthUser> {
   const user = await db.query.users.findFirst({
-    columns: { id: true, email: true },
+    columns: { id: true, name: true, email: true },
     where: eq(users.id, userId),
   })
 
@@ -60,5 +60,5 @@ export async function login(credentials: Credentials): Promise<Session> {
     throw new HttpError(401, NO_MATCH)
   }
 
-  return session({ id: user.id, email: user.email })
+  return session({ id: user.id, name: user.name, email: user.email })
 }

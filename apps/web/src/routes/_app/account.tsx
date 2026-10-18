@@ -18,14 +18,15 @@ function Account() {
       <header className="flex flex-col gap-1">
         <h1 className="font-semibold text-3xl tracking-tight">Account</h1>
         <p className="text-muted-foreground text-sm">
-          Changing the email or password comes in a later phase.
+          Changing the name, email, or password comes in a later phase.
         </p>
       </header>
 
       <section className="flex flex-wrap items-center justify-between gap-5 rounded-xl border bg-card p-5 shadow-xs">
         <div className="flex min-w-0 flex-col gap-1">
           <span className="text-muted-foreground text-xs">Signed in as</span>
-          <span className="truncate font-medium">{user?.email}</span>
+          <span className="truncate font-medium">{user?.name}</span>
+          <span className="truncate text-muted-foreground text-sm">{user?.email}</span>
         </div>
 
         <Button type="button" variant="outline" onClick={signOut}>

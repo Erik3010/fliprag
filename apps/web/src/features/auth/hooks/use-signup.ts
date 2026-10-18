@@ -1,4 +1,4 @@
-import type { Credentials } from '@fliprag/schemas/auth'
+import type { Signup } from '@fliprag/schemas/auth'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { signup } from '@/features/auth/api'
@@ -17,7 +17,7 @@ export function useSignup() {
   })
 
   return {
-    submit: (credentials: Credentials) => mutation.mutate(credentials),
+    submit: (details: Signup) => mutation.mutate(details),
     pending: mutation.isPending,
     error: mutation.error ? failureMessage(mutation.error) : undefined,
   }

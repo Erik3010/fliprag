@@ -3,13 +3,14 @@ import { hashPassword } from './lib/auth.js'
 
 // The development users. docs/setup.md lists them. Safe to run again: existing rows are left alone.
 const seedUsers = [
-  { email: 'admin@example.com', password: 'password123' },
-  { email: 'user@example.com', password: 'password123' },
-  { email: 'guest@example.com', password: 'password123' },
+  { name: 'Admin', email: 'admin@example.com', password: 'password123' },
+  { name: 'User', email: 'user@example.com', password: 'password123' },
+  { name: 'Guest', email: 'guest@example.com', password: 'password123' },
 ]
 
 const rows = await Promise.all(
-  seedUsers.map(async ({ email, password }) => ({
+  seedUsers.map(async ({ name, email, password }) => ({
+    name,
     email,
     passwordHash: await hashPassword(password),
   })),

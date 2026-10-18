@@ -21,7 +21,7 @@ export const Route = createFileRoute('/_app/')({
 function Home() {
   const decks = placeholderDecks
   const { documents, error, retry } = useDocuments()
-  const email = useAuthStore((state) => state.user?.email)
+  const name = useAuthStore((state) => state.user?.name)
   const [uploadPromptOpen, setUploadPromptOpen] = useState(false)
 
   const counts = {
@@ -39,7 +39,7 @@ function Home() {
           </p>
 
           <h1 className="mt-1.5 text-balance font-semibold text-3xl tracking-tight wrap-anywhere">
-            {email ? `Welcome, ${email}` : 'Welcome'}
+            {name ? `Welcome, ${name}` : 'Welcome'}
           </h1>
         </div>
 

@@ -6,3 +6,9 @@ export const credentialsSchema = z.object({
 })
 
 export type Credentials = z.infer<typeof credentialsSchema>
+
+export const signupSchema = credentialsSchema.extend({
+  name: z.string().trim().min(1, 'Enter your name').max(80, 'Names are at most 80 characters'),
+})
+
+export type Signup = z.infer<typeof signupSchema>
