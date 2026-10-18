@@ -11,7 +11,7 @@ export function NewDeckBanner({ onClick }: NewDeckBannerProps) {
     <Link
       to="/decks/new"
       onClick={onClick}
-      className="flex items-center gap-5 rounded-xl bg-primary p-5 text-primary-foreground shadow-md outline-offset-2 outline-ring transition-all duration-150 hover:-translate-y-px hover:bg-[color-mix(in_oklch,var(--primary),var(--foreground)_12%)] focus-visible:outline-2"
+      className="flex items-center gap-5 rounded-xl bg-linear-to-br from-primary to-[color-mix(in_oklch,var(--primary),var(--foreground)_28%)] p-5 text-primary-foreground shadow-md outline-offset-2 outline-ring transition-all duration-150 hover:-translate-y-px hover:from-[color-mix(in_oklch,var(--primary),var(--foreground)_10%)] hover:to-[color-mix(in_oklch,var(--primary),var(--foreground)_36%)] focus-visible:outline-2"
     >
       <span
         aria-hidden="true"
