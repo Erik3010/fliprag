@@ -15,10 +15,10 @@ import { failureMessage } from '@/lib/http'
 // Checked before upload, so the message can name the rule the file broke.
 export function rejectReason(file: File) {
   if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
-    return `${file.name} is not a PDF. Only PDFs can be uploaded.`
+    return `${file.name} is not a PDF. Only PDF files are supported.`
   }
   if (file.size > uploadLimit.bytes) {
-    return `${file.name} is larger than ${uploadLimit.label}. Upload a smaller file.`
+    return `${file.name} exceeds the ${uploadLimit.label} limit.`
   }
 
   return null
@@ -59,7 +59,7 @@ export function useDocumentLibrary() {
         await refresh()
       } catch (error) {
         if (!(error instanceof DOMException && error.name === 'AbortError')) {
-          setRejected(`${file.name} was not uploaded. ${failureMessage(error)}`)
+          setRejected(`Failed to upload ${file.name}. ${failureMessage(error)}`)
         }
       } finally {
         setUpload(null)
@@ -71,7 +71,7 @@ export function useDocumentLibrary() {
   const rename = useMutation({
     mutationFn: ({ id, name }: { id: string; name: string }) => renameDocument(id, { name }),
     onSuccess: refresh,
-    onError: (error) => toast.error(`The name was not saved. ${failureMessage(error)}`),
+    onError: (error) => toast.error(`Failed to rename document. ${failureMessage(error)}`),
   })
 
   const remove = useMutation({
@@ -80,14 +80,14 @@ export function useDocumentLibrary() {
       toast.success('Document deleted successfully.')
       return refresh()
     },
-    onError: (error) => toast.error(`The document was not deleted. ${failureMessage(error)}`),
+    onError: (error) => toast.error(`Failed to delete document. ${failureMessage(error)}`),
   })
 
   const open = useCallback(async (id: string) => {
     try {
       window.open(await fetchDocumentFile(id), '_blank', 'noopener')
     } catch (error) {
-      toast.error(`The file could not be opened. ${failureMessage(error)}`)
+      toast.error(`Failed to open file. ${failureMessage(error)}`)
     }
   }, [])
 

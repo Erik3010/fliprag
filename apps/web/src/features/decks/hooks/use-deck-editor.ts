@@ -34,9 +34,9 @@ export function useDeckEditor(deck: DeckDetail) {
       queryClient.setQueryData(deckQueryKey(deck.id), saved)
       queryClient.invalidateQueries({ queryKey: decksQueryKey, exact: true })
       setUnsaved(false)
-      toast.success('Changes saved.')
+      toast.success('Changes saved successfully.')
     },
-    onError: (error) => toast.error(`The changes were not saved. ${failureMessage(error)}`),
+    onError: (error) => toast.error(`Failed to save changes. ${failureMessage(error)}`),
   })
 
   const removeMutation = useMutation({
@@ -44,10 +44,10 @@ export function useDeckEditor(deck: DeckDetail) {
     onSuccess: () => {
       queryClient.removeQueries({ queryKey: deckQueryKey(deck.id) })
       queryClient.invalidateQueries({ queryKey: decksQueryKey, exact: true })
-      toast.success('Deck deleted.')
+      toast.success('Deck deleted successfully.')
       navigate({ to: '/' })
     },
-    onError: (error) => toast.error(`The deck was not deleted. ${failureMessage(error)}`),
+    onError: (error) => toast.error(`Failed to delete deck. ${failureMessage(error)}`),
   })
 
   const saving = saveMutation.isPending
@@ -88,7 +88,7 @@ export function useDeckEditor(deck: DeckDetail) {
   const removeCard = useCallback(
     (id: string) => {
       change({ type: 'remove', id })
-      toast.success('Card deleted.')
+      toast.success('Card deleted successfully.')
     },
     [change],
   )
