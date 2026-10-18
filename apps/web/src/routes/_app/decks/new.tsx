@@ -40,14 +40,7 @@ function NewDeck() {
       )
     }
 
-    return (
-      <NewDeckForm
-        documents={documents}
-        onSubmit={create.submit}
-        pending={create.pending}
-        error={create.error}
-      />
-    )
+    return <NewDeckForm documents={documents} onSubmit={create.submit} pending={create.pending} />
   }
 
   return (

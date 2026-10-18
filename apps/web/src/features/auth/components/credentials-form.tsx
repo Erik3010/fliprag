@@ -10,10 +10,9 @@ type CredentialsFormProps = {
   submitLabel: string
   onSubmit: (credentials: Credentials) => void
   pending?: boolean
-  error?: string
 }
 
-export function CredentialsForm({ submitLabel, onSubmit, pending, error }: CredentialsFormProps) {
+export function CredentialsForm({ submitLabel, onSubmit, pending }: CredentialsFormProps) {
   const {
     register,
     handleSubmit,
@@ -48,8 +47,6 @@ export function CredentialsForm({ submitLabel, onSubmit, pending, error }: Crede
         />
         <FieldError id="password-error" message={errors.password?.message} />
       </div>
-
-      <FieldError message={error} />
 
       <Button type="submit" size="lg" disabled={pending} className="w-full">
         {submitLabel}

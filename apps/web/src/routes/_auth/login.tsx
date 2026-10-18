@@ -10,7 +10,7 @@ export const Route = createFileRoute('/_auth/login')({
 })
 
 function Login() {
-  const { submit, pending, error } = useLogin()
+  const { submit, pending } = useLogin()
 
   return (
     <>
@@ -22,12 +22,7 @@ function Login() {
           />
         </CardHeader>
         <CardContent>
-          <CredentialsForm
-            submitLabel="Sign in"
-            onSubmit={submit}
-            pending={pending}
-            error={error}
-          />
+          <CredentialsForm submitLabel="Sign in" onSubmit={submit} pending={pending} />
         </CardContent>
       </Card>
 

@@ -9,10 +9,9 @@ import { useForm } from 'react-hook-form'
 type SignupFormProps = {
   onSubmit: (details: Signup) => void
   pending?: boolean
-  error?: string
 }
 
-export function SignupForm({ onSubmit, pending, error }: SignupFormProps) {
+export function SignupForm({ onSubmit, pending }: SignupFormProps) {
   const {
     register,
     handleSubmit,
@@ -61,8 +60,6 @@ export function SignupForm({ onSubmit, pending, error }: SignupFormProps) {
         />
         <FieldError id="password-error" message={errors.password?.message} />
       </div>
-
-      <FieldError message={error} />
 
       <Button type="submit" size="lg" disabled={pending} className="w-full">
         Create account

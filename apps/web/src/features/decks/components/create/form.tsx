@@ -22,10 +22,9 @@ type NewDeckFormProps = {
   documents: SourceDocument[]
   onSubmit: (deck: NewDeck) => void
   pending: boolean
-  error?: string
 }
 
-export function NewDeckForm({ documents, onSubmit, pending, error }: NewDeckFormProps) {
+export function NewDeckForm({ documents, onSubmit, pending }: NewDeckFormProps) {
   const [pickerOpen, setPickerOpen] = useState(false)
 
   const {
@@ -49,7 +48,6 @@ export function NewDeckForm({ documents, onSubmit, pending, error }: NewDeckForm
   const documentId = watch('documentId')
   const document = documents.find((doc) => doc.id === documentId)
   const complete = watch('title').trim().length > 0 && document !== undefined
-  const hint = error ?? (complete ? null : 'A title and a source document are required.')
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-3.5">
@@ -118,12 +116,9 @@ export function NewDeckForm({ documents, onSubmit, pending, error }: NewDeckForm
       </section>
 
       <div className="flex flex-wrap items-center justify-between gap-4 pt-1">
-        {hint && (
-          <p
-            role={error && 'alert'}
-            className={cn('text-xs', error ? 'text-destructive' : 'text-muted-foreground')}
-          >
-            {hint}
+        {!complete && (
+          <p className="text-muted-foreground text-xs">
+            A title and a source document are required.
           </p>
         )}
 
