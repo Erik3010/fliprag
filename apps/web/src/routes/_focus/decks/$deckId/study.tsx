@@ -30,7 +30,7 @@ function Study() {
       ) : deck ? (
         <EmptyState
           title="Nothing to study yet"
-          description={`${deck.title} has no cards. Write the first one in the editor and come back.`}
+          description={`"${deck.title}" deck has no cards. Add cards in the editor to start studying.`}
           action={
             <Button asChild size="lg">
               <Link to="/decks/$deckId" params={{ deckId }}>
