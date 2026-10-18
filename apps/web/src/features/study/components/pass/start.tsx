@@ -1,5 +1,6 @@
 import { Button } from '@fliprag/ui/components/button'
 import { ChoiceCard, ChoiceGroup } from '@fliprag/ui/components/choice-group'
+import { Kbd } from '@fliprag/ui/components/kbd'
 import { ArrowRight } from 'lucide-react'
 import type { PassOrder } from '@/features/study/hooks/use-study-pass'
 
@@ -26,8 +27,8 @@ export function PassStart({ deckTitle, total, order, onPickOrder, onStart }: Pas
       <div className="flex flex-col gap-1.5">
         <h1 className="text-balance font-semibold text-2xl tracking-tight">{deckTitle}</h1>
         <p className="text-muted-foreground text-sm">
-          {total} {total === 1 ? 'card' : 'cards'} in this deck. Use Space to flip and the arrow
-          keys to move between cards.
+          {total} {total === 1 ? 'card' : 'cards'} in this deck. Press <Kbd>Space</Kbd> to flip and{' '}
+          <Kbd>←</Kbd> <Kbd>→</Kbd> to move between cards.
         </p>
       </div>
 
@@ -58,7 +59,9 @@ export function PassStart({ deckTitle, total, order, onPickOrder, onStart }: Pas
           Start studying
           <ArrowRight aria-hidden="true" />
         </Button>
-        <span className="text-muted-foreground text-xs">or press Enter</span>
+        <span className="text-muted-foreground text-xs">
+          or press <Kbd>Enter</Kbd>
+        </span>
       </div>
     </div>
   )

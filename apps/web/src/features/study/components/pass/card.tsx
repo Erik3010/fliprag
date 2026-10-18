@@ -1,4 +1,5 @@
 import { Button } from '@fliprag/ui/components/button'
+import { Kbd } from '@fliprag/ui/components/kbd'
 import { ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react'
 import type { ReactNode } from 'react'
 import type { Card } from '@/features/cards/types'
@@ -96,7 +97,7 @@ export function PassCard({
 function Hint({ keyName, children }: { keyName: string; children: ReactNode }) {
   return (
     <span className="flex items-center gap-1.5">
-      <kbd className="rounded-md border bg-card px-2 py-0.5 text-xs shadow-xs">{keyName}</kbd>
+      <Kbd>{keyName}</Kbd>
       {children}
     </span>
   )
