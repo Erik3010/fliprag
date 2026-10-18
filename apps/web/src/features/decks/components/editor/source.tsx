@@ -1,16 +1,16 @@
-import { Link } from '@tanstack/react-router'
 import { DocumentIcon } from '@/features/documents/components/document-icon'
 
 type DeckSourceProps = {
   documentName: string
+  onOpen: () => void
 }
 
-// TODO: open the document's file instead of the documents list.
-export function DeckSource({ documentName }: DeckSourceProps) {
+export function DeckSource({ documentName, onOpen }: DeckSourceProps) {
   return (
-    <Link
-      to="/documents"
-      className="flex items-center gap-3 rounded-xl border bg-card px-4 py-3 shadow-xs outline-offset-2 outline-ring transition-colors hover:border-ring focus-visible:outline-2"
+    <button
+      type="button"
+      onClick={onOpen}
+      className="flex cursor-pointer items-center gap-3 rounded-xl border bg-card px-4 py-3 text-left shadow-xs outline-offset-2 outline-ring transition-colors hover:border-ring focus-visible:outline-2"
     >
       <DocumentIcon />
 
@@ -20,6 +20,6 @@ export function DeckSource({ documentName }: DeckSourceProps) {
       </span>
 
       <span className="shrink-0 font-semibold text-primary text-xs">Open</span>
-    </Link>
+    </button>
   )
 }

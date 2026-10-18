@@ -10,6 +10,7 @@ import { deckQueryKey } from '@/features/decks/hooks/use-deck'
 import { decksQueryKey } from '@/features/decks/hooks/use-decks'
 import { useSaveShortcut } from '@/features/decks/hooks/use-save-shortcut'
 import type { DeckDetail } from '@/features/decks/types'
+import { useOpenDocument } from '@/features/documents/hooks/use-open-document'
 import { failureMessage } from '@/lib/http'
 
 type Fields = { title: string; description: string }
@@ -17,6 +18,7 @@ type Fields = { title: string; description: string }
 export function useDeckEditor(deck: DeckDetail) {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const openDocument = useOpenDocument()
 
   const [fields, setFields] = useState<Fields>({
     title: deck.title,
@@ -101,6 +103,7 @@ export function useDeckEditor(deck: DeckDetail) {
     saving,
     save,
     remove: () => removeMutation.mutate(),
+    openDocument: () => openDocument(deck.documentId),
     removing: removeMutation.isPending,
     focusKey,
     clearFocus,

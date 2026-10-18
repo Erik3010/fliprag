@@ -45,7 +45,7 @@ export function DeckEditor({ deck }: DeckEditorProps) {
         onDelete={() => setConfirmingDelete(true)}
       />
 
-      <DeckSource documentName={deck.document.name} />
+      <DeckSource documentName={deck.document.name} onOpen={editor.openDocument} />
 
       <DeckDetails
         description={editor.description}

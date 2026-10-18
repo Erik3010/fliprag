@@ -2,13 +2,9 @@ import { uploadLimit } from '@fliprag/schemas/document'
 import { toast } from '@fliprag/ui/components/sonner'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import {
-  deleteDocument,
-  fetchDocumentFile,
-  renameDocument,
-  uploadDocument,
-} from '@/features/documents/api'
+import { deleteDocument, renameDocument, uploadDocument } from '@/features/documents/api'
 import { documentsQueryKey, useDocuments } from '@/features/documents/hooks/use-documents'
+import { useOpenDocument } from '@/features/documents/hooks/use-open-document'
 import type { PendingUpload } from '@/features/documents/types'
 import { failureMessage } from '@/lib/http'
 
@@ -83,13 +79,7 @@ export function useDocumentLibrary() {
     onError: (error) => toast.error(`Failed to delete document. ${failureMessage(error)}`),
   })
 
-  const open = useCallback(async (id: string) => {
-    try {
-      window.open(await fetchDocumentFile(id), '_blank', 'noopener')
-    } catch (error) {
-      toast.error(`Failed to open file. ${failureMessage(error)}`)
-    }
-  }, [])
+  const open = useOpenDocument()
 
   return {
     ...list,
