@@ -122,7 +122,7 @@ function StatusPill({ generation }: Pick<DeckEditorHeaderProps, 'generation'>) {
   return (
     <span className="flex items-center gap-1.5 rounded-full border bg-muted py-1 pr-2.5 pl-2 font-medium text-foreground">
       <span aria-hidden="true" className="size-1.5 rounded-full bg-ring" />
-      Written by hand
+      Ready
     </span>
   )
 }
