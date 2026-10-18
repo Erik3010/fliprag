@@ -23,7 +23,6 @@ function Home() {
     cards: decks.reduce((total, deck) => total + deck.cardCount, 0),
     documents: documents?.length ?? null,
   }
-  const latest = documents?.[0]
 
   return (
     <div className="flex flex-col gap-7">
@@ -53,7 +52,7 @@ function Home() {
           className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-destructive/40 bg-card px-5 py-4"
         >
           <span className="flex flex-col gap-0.5">
-            <span className="font-medium text-sm">Your documents could not be loaded</span>
+            <span className="font-medium text-sm">Documents could not be loaded</span>
             <span className="text-muted-foreground text-xs">{error}</span>
           </span>
           <Button type="button" variant="outline" size="sm" onClick={retry}>
@@ -63,19 +62,19 @@ function Home() {
         </div>
       ) : documents === undefined ? (
         <div aria-hidden="true" className="h-24 animate-pulse rounded-xl bg-muted" />
-      ) : latest ? (
+      ) : documents.length > 0 ? (
         <NextStep
           to="/decks/new"
           icon={Plus}
-          title="Create a deck"
-          line={`From ${latest.name}. Cards are written by hand until generation is connected.`}
+          title="Create a flashcard deck"
+          line="Make a flashcard deck from one of your PDFs."
         />
       ) : (
         <NextStep
           to="/documents"
           icon={Upload}
           title="Upload a PDF"
-          line="A deck is made from a document, so this one comes first."
+          line="Flashcard decks are made from PDFs. Upload one first."
         />
       )}
 

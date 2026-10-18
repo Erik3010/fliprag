@@ -8,9 +8,10 @@ import { Textarea } from '@fliprag/ui/components/textarea'
 import { cn } from '@fliprag/ui/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
-import { ArrowRight, FileText, Info } from 'lucide-react'
+import { ArrowRight, Info } from 'lucide-react'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { DocumentIcon } from '@/features/documents/components/document-icon'
 import { DocumentPicker } from '@/features/documents/components/document-picker'
 import { documentMeta } from '@/features/documents/format'
 import type { SourceDocument } from '@/features/documents/types'
@@ -94,12 +95,7 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
           aria-describedby={errors.documentId ? 'deck-document-error' : undefined}
           className="flex w-full items-center gap-3 rounded-lg border p-3 text-left outline-offset-2 outline-ring transition-colors hover:border-ring hover:bg-muted/50 focus-visible:outline-2"
         >
-          <span
-            aria-hidden="true"
-            className="grid size-8 shrink-0 place-items-center rounded-lg bg-accent"
-          >
-            <FileText className="size-4 text-secondary" />
-          </span>
+          <DocumentIcon />
 
           <span className="flex min-w-0 flex-1 flex-col gap-0.5">
             <span

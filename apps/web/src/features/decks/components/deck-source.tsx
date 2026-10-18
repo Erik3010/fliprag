@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { FileText } from 'lucide-react'
+import { DocumentIcon } from '@/features/documents/components/document-icon'
 
 type DeckSourceProps = {
   documentName: string
@@ -14,12 +14,7 @@ export function DeckSource({ documentName }: DeckSourceProps) {
       to="/documents"
       className="flex items-center gap-3 rounded-xl border bg-card px-4 py-3 shadow-xs outline-offset-2 outline-ring transition-colors hover:border-ring focus-visible:outline-2"
     >
-      <span
-        aria-hidden="true"
-        className="grid size-8 shrink-0 place-items-center rounded-lg bg-accent"
-      >
-        <FileText className="size-4 text-secondary" />
-      </span>
+      <DocumentIcon />
 
       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
         <span className="text-muted-foreground text-xs">Made from</span>

@@ -29,8 +29,6 @@ export function DocumentPicker({
 }: DocumentPickerProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      {/* The close button is laid out in the header rather than positioned over the corner, so it
-          lines up with the title instead of sitting on its own inset. */}
       <DialogContent showCloseButton={false} className="gap-0 p-0 sm:max-w-lg">
         <DialogHeader className="flex-row items-start justify-between gap-4 border-b p-5">
           <span className="flex flex-col gap-1">

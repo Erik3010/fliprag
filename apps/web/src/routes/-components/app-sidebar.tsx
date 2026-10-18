@@ -8,9 +8,9 @@ const tabs = [
 ] as const
 
 const item =
-  'grid size-11 place-items-center rounded-md text-sidebar-foreground/70 outline-offset-2 outline-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:outline-2'
+  'grid size-11 place-items-center rounded-md text-sidebar-foreground/70 outline-offset-2 outline-sidebar-ring hover:bg-sidebar-border/60 hover:text-sidebar-accent-foreground focus-visible:outline-2'
 
-const itemActive = 'bg-sidebar-accent text-sidebar-accent-foreground'
+const itemActive = 'bg-sidebar-border data-[status=active]:text-sidebar-accent-foreground'
 
 export function AppSidebar() {
   return (

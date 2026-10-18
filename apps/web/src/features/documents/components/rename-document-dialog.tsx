@@ -36,6 +36,7 @@ export function RenameDocumentDialog({ document, onCancel, onSave }: RenameDocum
       <DialogContent>
         {document && (
           <form
+            className="grid gap-6"
             onSubmit={(event) => {
               event.preventDefault()
               if (trimmed && !unchanged) {
@@ -45,12 +46,10 @@ export function RenameDocumentDialog({ document, onCancel, onSave }: RenameDocum
           >
             <DialogHeader>
               <DialogTitle>Rename document</DialogTitle>
-              <DialogDescription>
-                This changes what the document is called here. The uploaded file keeps its own name.
-              </DialogDescription>
+              <DialogDescription>Enter a new name for this document.</DialogDescription>
             </DialogHeader>
 
-            <div className="my-6 flex flex-col gap-2">
+            <div className="flex flex-col gap-2">
               <Label htmlFor="document-name">Name</Label>
               <Input
                 id="document-name"

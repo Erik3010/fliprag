@@ -23,7 +23,9 @@ export function DeleteDocumentDialog({ document, onCancel, onConfirm }: DeleteDo
           <>
             <DialogHeader>
               <DialogTitle>Delete {document.name}?</DialogTitle>
-              <DialogDescription>The file goes for good. This cannot be undone.</DialogDescription>
+              <DialogDescription>
+                Are you sure want to delete this document? A document with decks cannot be deleted.
+              </DialogDescription>
             </DialogHeader>
 
             <DialogFooter>

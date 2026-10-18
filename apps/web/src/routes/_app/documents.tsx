@@ -1,10 +1,12 @@
 import { Button } from '@fliprag/ui/components/button'
 import { FieldError } from '@fliprag/ui/components/field-error'
 import { createFileRoute } from '@tanstack/react-router'
-import { Plus, RefreshCw, Upload } from 'lucide-react'
-import { type DragEvent, useRef, useState } from 'react'
+import { Plus, Upload } from 'lucide-react'
+import { useState } from 'react'
+import { useDropzone } from 'react-dropzone'
 import { DeleteDocumentDialog } from '@/features/documents/components/delete-document-dialog'
-import { DocumentRow } from '@/features/documents/components/document-row'
+import { DocumentList } from '@/features/documents/components/document-list'
+import { DocumentListEmpty } from '@/features/documents/components/document-list-empty'
 import { RenameDocumentDialog } from '@/features/documents/components/rename-document-dialog'
 import { UploadProgress } from '@/features/documents/components/upload-progress'
 import { useDocumentLibrary } from '@/features/documents/hooks/use-document-library'
@@ -16,28 +18,25 @@ export const Route = createFileRoute('/_app/documents')({
 
 function Documents() {
   const library = useDocumentLibrary()
-  const [dragging, setDragging] = useState(false)
-  const [pendingDelete, setPendingDelete] = useState<SourceDocument | null>(null)
-  const [renaming, setRenaming] = useState<SourceDocument | null>(null)
-  const [justRenamedId, setJustRenamedId] = useState<string | null>(null)
-  const fileInput = useRef<HTMLInputElement>(null)
+  const [toDelete, setToDelete] = useState<SourceDocument | null>(null)
+  const [toRename, setToRename] = useState<SourceDocument | null>(null)
+  const [renamedId, setRenamedId] = useState<string | null>(null)
+
+  // No accept or maxSize here: library.start() refuses a file with a message naming the rule, so a
+  // rejected file is passed on rather than dropped silently.
+  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
+    multiple: false,
+    noClick: true,
+    noKeyboard: true,
+    onDrop: (accepted, rejected) => {
+      const file = accepted[0] ?? rejected[0]?.file
+      if (file) {
+        library.start(file)
+      }
+    },
+  })
 
   const documents = library.documents ?? []
-  const { upload } = library
-  const isEmpty = !library.loading && !library.error && documents.length === 0 && !upload
-
-  function take(files: FileList | null) {
-    const file = files?.[0]
-    if (file) {
-      library.start(file)
-    }
-  }
-
-  function onDrop(event: DragEvent) {
-    event.preventDefault()
-    setDragging(false)
-    take(event.dataTransfer.files)
-  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -45,67 +44,44 @@ function Documents() {
         <div className="flex flex-col gap-1">
           <h1 className="font-semibold text-3xl tracking-tight">Documents</h1>
           <p className="text-muted-foreground text-sm">
-            {documents.length === 0
-              ? 'A deck is always made from one document.'
-              : `${documents.length} ${documents.length === 1 ? 'document' : 'documents'}, and every deck is made from one of these`}
+            Upload the PDFs you want to turn into flashcard decks.
           </p>
         </div>
 
-        <Button type="button" onClick={() => fileInput.current?.click()}>
+        <Button type="button" onClick={open}>
           <Upload aria-hidden="true" />
           Upload PDF
         </Button>
       </header>
 
-      <input
-        ref={fileInput}
-        type="file"
-        accept="application/pdf,.pdf"
-        className="sr-only"
-        onChange={(event) => {
-          take(event.currentTarget.files)
-          event.currentTarget.value = ''
-        }}
-      />
-
       <FieldError message={library.rejected ?? undefined} />
 
-      {/* biome-ignore lint/a11y/noStaticElementInteractions: the drop target is a convenience,
-          every action inside it is reachable from the Upload button and the row menus */}
       <section
-        onDragOver={(event) => {
-          event.preventDefault()
-          setDragging(true)
-        }}
-        onDragLeave={() => setDragging(false)}
-        onDrop={onDrop}
+        {...getRootProps()}
         className={`-m-2.5 flex flex-col gap-2.5 rounded-2xl p-2.5 transition-colors ${
-          dragging ? 'bg-accent/60 inset-ring-2 inset-ring-primary' : ''
+          isDragActive ? 'bg-accent/60 inset-ring-2 inset-ring-primary' : ''
         }`}
       >
-        {upload && <UploadProgress upload={upload} onCancel={library.cancel} />}
+        <input {...getInputProps({ accept: 'application/pdf,.pdf' })} />
 
-        {library.loading && <LoadingRows />}
+        {library.upload && <UploadProgress upload={library.upload} onCancel={library.cancel} />}
 
-        {library.error && <CouldNotLoad detail={library.error} onRetry={library.retry} />}
-
-        {documents.map((document) => (
-          <DocumentRow
-            key={document.id}
-            document={document}
-            justRenamed={document.id === justRenamedId}
-            onOpen={(doc) => library.open(doc.id)}
-            onRename={setRenaming}
-            onDelete={setPendingDelete}
-          />
-        ))}
-
-        {isEmpty && <NoDocumentsYet onPick={() => fileInput.current?.click()} />}
+        <DocumentList
+          documents={documents}
+          loading={library.loading}
+          error={library.error}
+          empty={!library.upload && <DocumentListEmpty onPick={open} />}
+          renamedId={renamedId}
+          onRetry={library.retry}
+          onOpen={(doc) => library.open(doc.id)}
+          onRename={setToRename}
+          onDelete={setToDelete}
+        />
 
         {documents.length > 0 && (
           <button
             type="button"
-            onClick={() => fileInput.current?.click()}
+            onClick={open}
             className="flex items-center justify-center gap-2 rounded-xl border border-dashed p-4 text-muted-foreground text-sm outline-offset-2 outline-ring hover:border-ring hover:text-foreground focus-visible:outline-2"
           >
             <Plus className="size-4" aria-hidden="true" />
@@ -115,79 +91,23 @@ function Documents() {
       </section>
 
       <RenameDocumentDialog
-        document={renaming}
-        onCancel={() => setRenaming(null)}
+        document={toRename}
+        onCancel={() => setToRename(null)}
         onSave={(id, name) => {
           library.rename(id, name)
-          setRenaming(null)
-          setJustRenamedId(id)
+          setToRename(null)
+          setRenamedId(id)
         }}
       />
 
       <DeleteDocumentDialog
-        document={pendingDelete}
-        onCancel={() => setPendingDelete(null)}
+        document={toDelete}
+        onCancel={() => setToDelete(null)}
         onConfirm={(id) => {
           library.remove(id)
-          setPendingDelete(null)
+          setToDelete(null)
         }}
       />
-    </div>
-  )
-}
-
-// Quiet placeholders the shape of a row. Never an empty list while the answer is on its way.
-function LoadingRows() {
-  return (
-    <output aria-label="Loading documents" className="flex flex-col gap-2.5">
-      {[0, 1, 2].map((row) => (
-        <div key={row} className="flex items-center gap-3.5 rounded-xl border bg-card px-4 py-3.5">
-          <span className="size-9 shrink-0 animate-pulse rounded-lg bg-muted" />
-          <span className="flex flex-1 flex-col gap-2">
-            <span className="h-4 w-1/2 animate-pulse rounded bg-muted" />
-            <span className="h-3 w-1/3 animate-pulse rounded bg-muted" />
-          </span>
-        </div>
-      ))}
-    </output>
-  )
-}
-
-function CouldNotLoad({ detail, onRetry }: { detail: string; onRetry: () => void }) {
-  return (
-    <div
-      role="alert"
-      className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-destructive/40 bg-card px-4 py-3.5"
-    >
-      <span className="flex flex-col gap-0.5">
-        <span className="font-medium text-sm">Your documents could not be loaded</span>
-        <span className="text-muted-foreground text-xs">{detail}</span>
-      </span>
-      <Button type="button" variant="outline" size="sm" onClick={onRetry}>
-        <RefreshCw aria-hidden="true" />
-        Try again
-      </Button>
-    </div>
-  )
-}
-
-function NoDocumentsYet({ onPick }: { onPick: () => void }) {
-  return (
-    <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed bg-card/60 px-8 py-14 text-center">
-      <span aria-hidden="true" className="grid size-12 place-items-center rounded-xl bg-accent">
-        <Upload className="size-5 text-accent-foreground" />
-      </span>
-
-      <p className="font-semibold text-lg tracking-tight">No documents yet</p>
-      <p className="max-w-md text-pretty text-muted-foreground text-sm">
-        Upload the lecture, chapter, or paper you want to study. Every deck is made from one of
-        these.
-      </p>
-
-      <Button type="button" size="lg" onClick={onPick} className="mt-2">
-        Upload your first PDF
-      </Button>
-      <p className="text-muted-foreground text-xs">or drop a file anywhere in this panel</p>
     </div>
   )
 }

@@ -1,10 +1,4 @@
-import {
-  CircleCheckIcon,
-  InfoIcon,
-  Loader2Icon,
-  OctagonXIcon,
-  TriangleAlertIcon,
-} from 'lucide-react'
+import { CheckIcon, InfoIcon, Loader2Icon, OctagonXIcon, TriangleAlertIcon } from 'lucide-react'
 import { Toaster as Sonner, type ToasterProps, toast } from 'sonner'
 import { cn } from '../lib/utils'
 import { buttonVariants } from './button'
@@ -17,7 +11,11 @@ const Toaster = ({ ...props }: ToasterProps) => {
       theme="light"
       className="toaster group"
       icons={{
-        success: <CircleCheckIcon className="size-4 text-primary" />,
+        success: (
+          <span className="grid size-5 place-items-center rounded-full bg-success">
+            <CheckIcon className="size-3 text-success-foreground" strokeWidth={3} />
+          </span>
+        ),
         info: <InfoIcon className="size-4 text-primary" />,
         warning: <TriangleAlertIcon className="size-4 text-secondary" />,
         error: <OctagonXIcon className="size-4 text-destructive" />,

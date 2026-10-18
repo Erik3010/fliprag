@@ -5,41 +5,37 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@fliprag/ui/components/dropdown-menu'
-import { Check, ExternalLink, FileText, MoreVertical, Pencil, Trash2 } from 'lucide-react'
+import { Check, ExternalLink, MoreVertical, Pencil, Trash2 } from 'lucide-react'
+import { DocumentIcon } from '@/features/documents/components/document-icon'
 import { documentMeta } from '@/features/documents/format'
 import type { SourceDocument } from '@/features/documents/types'
 
 type DocumentRowProps = {
   document: SourceDocument
-  justRenamed: boolean
+  renamed: boolean
   onOpen: (document: SourceDocument) => void
   onRename: (document: SourceDocument) => void
   onDelete: (document: SourceDocument) => void
 }
 
-export function DocumentRow({
-  document,
-  justRenamed,
-  onOpen,
-  onRename,
-  onDelete,
-}: DocumentRowProps) {
+export function DocumentRow({ document, renamed, onOpen, onRename, onDelete }: DocumentRowProps) {
   return (
     <article className="flex flex-wrap items-center gap-3.5 rounded-xl border bg-card px-4 py-3.5 shadow-xs">
-      <span
-        aria-hidden="true"
-        className="grid size-9 shrink-0 place-items-center rounded-lg bg-accent"
-      >
-        <FileText className="size-4 text-secondary" />
-      </span>
+      <DocumentIcon />
 
       <span className="flex min-w-0 flex-1 basis-64 flex-col gap-1">
-        <span className="truncate font-medium">{document.name}</span>
+        <button
+          type="button"
+          onClick={() => onOpen(document)}
+          className="cursor-pointer truncate rounded-sm text-left font-medium outline-offset-2 outline-ring hover:underline focus-visible:outline-2"
+        >
+          {document.name}
+        </button>
         <span className="text-muted-foreground text-xs">{documentMeta(document)}</span>
       </span>
 
       <span className="flex shrink-0 items-center gap-2">
-        {justRenamed && (
+        {renamed && (
           <span className="flex items-center gap-1.5 text-primary text-xs" role="status">
             <Check className="size-3" aria-hidden="true" />
             Renamed

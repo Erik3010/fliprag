@@ -76,7 +76,10 @@ export function useDocumentLibrary() {
 
   const remove = useMutation({
     mutationFn: deleteDocument,
-    onSuccess: refresh,
+    onSuccess: () => {
+      toast.success('Document deleted successfully.')
+      return refresh()
+    },
     onError: (error) => toast(`The document was not deleted. ${failureMessage(error)}`),
   })
 

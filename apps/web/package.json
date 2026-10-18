@@ -19,6 +19,7 @@
     "lucide-react": "^1.47.0",
     "react": "catalog:react",
     "react-dom": "catalog:react",
+    "react-dropzone": "^20.1.4",
     "react-hook-form": "^7.88.0",
     "zod": "catalog:",
     "zustand": "^5.0.15"
