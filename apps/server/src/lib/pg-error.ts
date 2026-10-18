@@ -6,3 +6,4 @@ export function pgErrorCode(error: unknown) {
 
 export const UNIQUE_VIOLATION = '23505'
 export const FOREIGN_KEY_VIOLATION = '23503'
+export const INVALID_TEXT_REPRESENTATION = '22P02'
