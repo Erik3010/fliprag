@@ -3,11 +3,12 @@ import { Button } from '@fliprag/ui/components/button'
 import { FieldError } from '@fliprag/ui/components/field-error'
 import { Input } from '@fliprag/ui/components/input'
 import { Label } from '@fliprag/ui/components/label'
+import { toast } from '@fliprag/ui/components/sonner'
 import { Textarea } from '@fliprag/ui/components/textarea'
 import { cn } from '@fliprag/ui/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
-import { ArrowRight, Info } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { CardCountField } from '@/features/decks/components/create/card-count-field'
@@ -24,7 +25,6 @@ type NewDeckFormProps = {
 
 export function NewDeckForm({ documents }: NewDeckFormProps) {
   const [pickerOpen, setPickerOpen] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
 
   const {
     register,
@@ -49,10 +49,10 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
   const complete = watch('title').trim().length > 0 && document !== undefined
 
   // TODO: create the deck through the API, then open its editor. For now submitting only shows a
-  // notice.
+  // toast.
   return (
     <form
-      onSubmit={handleSubmit(() => setSubmitted(true))}
+      onSubmit={handleSubmit(() => toast.info('Saving is not connected yet.'))}
       noValidate
       className="flex flex-col gap-3.5"
     >
@@ -138,20 +138,6 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
           </Button>
         </div>
       </div>
-
-      {submitted && (
-        <div className="flex items-center gap-3 rounded-xl border border-ring bg-accent px-4 py-3.5 text-accent-foreground text-sm">
-          <span
-            aria-hidden="true"
-            className="grid size-5 shrink-0 place-items-center rounded-full bg-primary"
-          >
-            <Info className="size-3 text-primary-foreground" />
-          </span>
-          <span>
-            The form is complete. Nothing is saved, because the deck API is not built yet.
-          </span>
-        </div>
-      )}
 
       <DocumentPicker
         documents={documents}
