@@ -17,7 +17,6 @@ export const Route = createFileRoute('/_app/')({
   component: Home,
 })
 
-// TODO: load decks and their counts from the server. Placeholder rows until then.
 function Home() {
   const decks = placeholderDecks
   const { documents, error, retry } = useDocuments()
