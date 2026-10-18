@@ -10,7 +10,6 @@ export type Probe =
 export function useServerHealth() {
   const query = useQuery({
     queryKey: ['server-health'],
-    retry: false,
     queryFn: async () => {
       try {
         return await fetchHealth()

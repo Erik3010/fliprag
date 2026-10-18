@@ -8,7 +8,7 @@ import { routeTree } from './routeTree.gen'
 import './styles.css'
 
 const router = createRouter({ routeTree })
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
 
 declare module '@tanstack/react-router' {
   interface Register {

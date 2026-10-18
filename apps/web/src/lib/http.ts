@@ -3,7 +3,7 @@ import { useAuthStore } from '@/store/auth'
 
 export const api = ky.create({
   prefix: '/api/',
-  retry: { limit: 2 },
+  retry: 0,
   timeout: 10_000,
   hooks: {
     beforeRequest: [

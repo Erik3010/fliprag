@@ -6,5 +6,5 @@ export type Health = {
 }
 
 export function fetchHealth() {
-  return api.get('health', { retry: 0 }).json<Health>()
+  return api.get('health').json<Health>()
 }
