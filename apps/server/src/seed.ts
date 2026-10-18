@@ -1,5 +1,5 @@
 import { client, db, users } from '@fliprag/db'
-import { hashPassword } from './lib/auth.js'
+import { hashPassword } from './lib/password.js'
 
 // The development users. docs/setup.md lists them. Safe to run again: existing rows are left alone.
 const seedUsers = [

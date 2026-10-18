@@ -1,15 +1,4 @@
-import bcrypt from 'bcryptjs'
 import { sign, verify } from 'hono/jwt'
-
-const COST = 12
-
-export function hashPassword(password: string) {
-  return bcrypt.hash(password, COST)
-}
-
-export function verifyPassword(password: string, hash: string) {
-  return bcrypt.compare(password, hash)
-}
 
 const TOKEN_DAYS = 7
 const ALGORITHM = 'HS256'

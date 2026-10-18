@@ -1,9 +1,10 @@
 import { db, users } from '@fliprag/db'
 import type { Credentials, Signup } from '@fliprag/schemas/auth'
 import { eq } from 'drizzle-orm'
-import { hashPassword, signToken, verifyPassword } from '../lib/auth.js'
 import { HttpError } from '../lib/http-error.js'
+import { hashPassword, verifyPassword } from '../lib/password.js'
 import { pgErrorCode, UNIQUE_VIOLATION } from '../lib/pg-error.js'
+import { signToken } from '../lib/token.js'
 
 export type AuthUser = { id: string; name: string; email: string }
 

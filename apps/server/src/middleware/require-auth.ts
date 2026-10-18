@@ -1,6 +1,6 @@
 import { createMiddleware } from 'hono/factory'
-import { verifyToken } from '../lib/auth.js'
 import { HttpError } from '../lib/http-error.js'
+import { verifyToken } from '../lib/token.js'
 
 export type AuthEnv = { Variables: { userId: string } }
 
