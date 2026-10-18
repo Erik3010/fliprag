@@ -1,4 +1,5 @@
 import { Button } from '@fliprag/ui/components/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@fliprag/ui/components/tooltip'
 import { Link } from '@tanstack/react-router'
 import { Loader2, Pencil, Play, Trash2 } from 'lucide-react'
 import { useRef } from 'react'
@@ -55,10 +56,6 @@ export function DeckEditorHeader({
             <span>
               {cardCount} {cardCount === 1 ? 'card' : 'cards'}
             </span>
-
-            <span aria-hidden="true" className="size-1 rounded-full bg-border" />
-
-            <span>Not saved yet, changes are lost on reload</span>
           </div>
         </div>
 
@@ -71,10 +68,20 @@ export function DeckEditorHeader({
               </Link>
             </Button>
           ) : (
-            <Button type="button" size="lg" className="px-4" disabled>
-              <Play aria-hidden="true" />
-              Study
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  size="lg"
+                  aria-disabled="true"
+                  className="cursor-not-allowed px-4 opacity-50"
+                >
+                  <Play aria-hidden="true" />
+                  Study
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Add at least one card to study</TooltipContent>
+            </Tooltip>
           )}
 
           <Button
@@ -89,12 +96,6 @@ export function DeckEditorHeader({
           </Button>
         </div>
       </div>
-
-      {!canStudy && (
-        <p className="text-muted-foreground text-xs">
-          Studying is off until this deck has at least one card.
-        </p>
-      )}
     </header>
   )
 }
