@@ -3,7 +3,6 @@ export type SourceDocument = {
   name: string
   originalFilename: string | null
   sizeBytes: number | null
-  /** Null when the page tree could not be read at upload. */
   pageCount: number | null
   createdAt: string
 }

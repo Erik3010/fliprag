@@ -19,7 +19,6 @@ export type Document = {
   name: string
   originalFilename: string | null
   sizeBytes: number | null
-  /** Null when the page tree could not be read. The file is kept either way. */
   pageCount: number | null
   createdAt: Date
 }
@@ -30,8 +29,7 @@ function owned(userId: string, id: string) {
   return and(eq(documents.id, id), eq(documents.userId, userId))
 }
 
-// The one thing phase 1 opens a PDF for. No text is read. A damaged file is accepted, as the PRD
-// says, and the count is null; phase 2's generator is the first thing that can object to it.
+// A damaged PDF is still accepted with a null count; phase 2's generator is what can reject it.
 async function readPageCount(bytes: Uint8Array) {
   try {
     const pdf = await PDFDocument.load(bytes, { ignoreEncryption: true })
