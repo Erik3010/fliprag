@@ -8,7 +8,6 @@ type DocumentListProps = {
   loading: boolean
   error?: string
   empty: ReactNode
-  renamedId: string | null
   onRetry: () => void
   onOpen: (document: SourceDocument) => void
   onRename: (document: SourceDocument) => void
@@ -20,7 +19,6 @@ export function DocumentList({
   loading,
   error,
   empty,
-  renamedId,
   onRetry,
   onOpen,
   onRename,
@@ -38,7 +36,6 @@ export function DocumentList({
         <DocumentRow
           key={document.id}
           document={document}
-          renamed={document.id === renamedId}
           onOpen={onOpen}
           onRename={onRename}
           onDelete={onDelete}

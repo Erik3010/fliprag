@@ -5,20 +5,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@fliprag/ui/components/dropdown-menu'
-import { Check, ExternalLink, MoreVertical, Pencil, Trash2 } from 'lucide-react'
+import { ExternalLink, MoreVertical, Pencil, Trash2 } from 'lucide-react'
 import { DocumentIcon } from '@/features/documents/components/document-icon'
 import { documentMeta } from '@/features/documents/format'
 import type { SourceDocument } from '@/features/documents/types'
 
 type DocumentRowProps = {
   document: SourceDocument
-  renamed: boolean
   onOpen: (document: SourceDocument) => void
   onRename: (document: SourceDocument) => void
   onDelete: (document: SourceDocument) => void
 }
 
-export function DocumentRow({ document, renamed, onOpen, onRename, onDelete }: DocumentRowProps) {
+export function DocumentRow({ document, onOpen, onRename, onDelete }: DocumentRowProps) {
   return (
     <article className="flex items-start gap-3.5 rounded-xl border bg-card px-4 py-3.5 shadow-xs sm:items-center">
       <DocumentIcon />
@@ -35,13 +34,6 @@ export function DocumentRow({ document, renamed, onOpen, onRename, onDelete }: D
       </span>
 
       <span className="flex shrink-0 items-center gap-2">
-        {renamed && (
-          <span className="flex items-center gap-1.5 text-primary text-xs" role="status">
-            <Check className="size-3" aria-hidden="true" />
-            Renamed
-          </span>
-        )}
-
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon-sm" aria-label={`More actions for ${document.name}`}>

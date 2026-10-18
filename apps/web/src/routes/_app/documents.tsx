@@ -21,7 +21,6 @@ function Documents() {
   const library = useDocumentLibrary()
   const [toDelete, setToDelete] = useState<SourceDocument | null>(null)
   const [toRename, setToRename] = useState<SourceDocument | null>(null)
-  const [renamedId, setRenamedId] = useState<string | null>(null)
 
   // No accept or maxSize here, so a wrong file reaches library.start() and gets a message
   // instead of being dropped silently.
@@ -72,7 +71,6 @@ function Documents() {
           loading={library.loading}
           error={library.error}
           empty={!library.upload && <DocumentListEmpty onPick={open} />}
-          renamedId={renamedId}
           onRetry={library.retry}
           onOpen={(doc) => library.open(doc.id)}
           onRename={setToRename}
@@ -97,7 +95,6 @@ function Documents() {
         onSave={(id, name) => {
           library.rename(id, name)
           setToRename(null)
-          setRenamedId(id)
         }}
       />
 
