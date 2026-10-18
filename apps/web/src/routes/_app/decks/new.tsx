@@ -7,7 +7,7 @@ import { NewDeckForm } from '@/features/decks/components/new-deck-form'
 import { useDocuments } from '@/features/documents/hooks/use-documents'
 
 export const Route = createFileRoute('/_app/decks/new')({
-  head: () => ({ meta: [{ title: 'New deck' }] }),
+  head: () => ({ meta: [{ title: 'Create deck' }] }),
   component: NewDeck,
 })
 
@@ -52,12 +52,12 @@ function NewDeck() {
           Home
         </Link>
 
-        <h1 className="font-semibold text-3xl tracking-tight">New deck</h1>
+        <h1 className="font-semibold text-3xl tracking-tight">Create deck</h1>
 
         <p className="text-muted-foreground text-sm">
           {documents.length > 0 || loading || error
-            ? 'Pick the document it comes from, then say what it should cover.'
-            : 'Every deck is made from one document.'}
+            ? 'Select a source document and the topics to cover.'
+            : 'A deck requires one source document.'}
         </p>
       </header>
 

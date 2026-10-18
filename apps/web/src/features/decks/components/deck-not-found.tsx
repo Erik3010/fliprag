@@ -6,7 +6,7 @@ export function DeckNotFound({ className }: { className?: string }) {
   return (
     <EmptyState
       title="There is no deck here"
-      description="It may have been deleted, or the link may be wrong. Your decks are all on the home screen."
+      description="This deck was deleted or the link is invalid."
       action={
         <Button asChild size="lg" className="px-5">
           <Link to="/">All decks</Link>

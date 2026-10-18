@@ -20,7 +20,7 @@ export function DeckDetails({ description, topics, onDescriptionChange }: DeckDe
           rows={2}
           value={description}
           onChange={(event) => onDescriptionChange(event.currentTarget.value)}
-          placeholder="What this deck is for."
+          placeholder="e.g. For my science exam"
           className="min-h-20 resize-y bg-background leading-relaxed transition-[color,background-color,box-shadow] duration-150 hover:bg-card focus-visible:bg-card"
         />
       </div>
