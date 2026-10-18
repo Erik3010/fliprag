@@ -16,16 +16,16 @@ export const Route = createFileRoute('/_app')({
   component: AppLayout,
   errorComponent: SessionCheckFailed,
   pendingComponent: CheckingSession,
-  // Under 150 ms nobody sees a blank; past it the frame shows, and stays long enough not to blink.
+  // Under 150 ms nobody sees a blank; past it the layout shows, and stays long enough not to blink.
   pendingMs: 150,
   pendingMinMs: 300,
 })
 
 function AppLayout() {
   return (
-    <Frame>
+    <PageLayout>
       <Outlet />
-    </Frame>
+    </PageLayout>
   )
 }
 
@@ -33,7 +33,7 @@ function AppLayout() {
 // shape; only the screen waits.
 function CheckingSession() {
   return (
-    <Frame>
+    <PageLayout>
       <div
         role="status"
         className="flex min-h-[calc(100dvh-5rem)] items-center justify-center gap-2.5 text-muted-foreground text-sm"
@@ -41,7 +41,7 @@ function CheckingSession() {
         <Loader2 className="size-4 animate-spin" aria-hidden="true" />
         Checking your sign-in
       </div>
-    </Frame>
+    </PageLayout>
   )
 }
 
@@ -49,7 +49,7 @@ function SessionCheckFailed({ error }: ErrorComponentProps) {
   const router = useRouter()
 
   return (
-    <Frame>
+    <PageLayout>
       <div
         role="alert"
         className="flex min-h-[calc(100dvh-5rem)] flex-col items-center justify-center gap-3 text-center"
@@ -63,11 +63,11 @@ function SessionCheckFailed({ error }: ErrorComponentProps) {
           Try again
         </Button>
       </div>
-    </Frame>
+    </PageLayout>
   )
 }
 
-function Frame({ children }: { children: ReactNode }) {
+function PageLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-dvh">
       <AppSidebar />
