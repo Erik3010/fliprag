@@ -16,7 +16,7 @@ export const requireAuth = createMiddleware<AuthEnv>(async (c, next) => {
   try {
     userId = await verifyToken(header.slice(BEARER.length))
   } catch {
-    throw new HttpError(401, 'Your sign-in has expired. Sign in again.')
+    throw new HttpError(401, 'Session expired.')
   }
 
   c.set('userId', userId)
