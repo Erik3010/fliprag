@@ -9,6 +9,7 @@ type DeckEditorToolbarProps = {
   deckId: string
   canStudy: boolean
   unsaved: boolean
+  saving: boolean
   onSave: () => void
 }
 
@@ -20,6 +21,7 @@ export function DeckEditorToolbar({
   deckId,
   canStudy,
   unsaved,
+  saving,
   onSave,
 }: DeckEditorToolbarProps) {
   return (
@@ -41,7 +43,7 @@ export function DeckEditorToolbar({
       </div>
 
       <div className="flex items-center gap-2.5">
-        <Button type="button" size="lg" disabled={!unsaved} onClick={onSave}>
+        <Button type="button" size="lg" disabled={!unsaved || saving} onClick={onSave}>
           Save changes
           <kbd className="hidden rounded bg-primary-foreground/15 px-1.5 py-0.5 font-sans text-[0.7rem] sm:inline">
             {shortcut}

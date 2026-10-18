@@ -6,7 +6,7 @@ import { Upload } from 'lucide-react'
 import { useState } from 'react'
 import { DeckList } from '@/features/decks/components/deck-list'
 import { DeckListEmpty } from '@/features/decks/components/deck-list-empty'
-import { placeholderDecks } from '@/features/decks/placeholder'
+import { useDecks } from '@/features/decks/hooks/use-decks'
 import { useDocuments } from '@/features/documents/hooks/use-documents'
 import { useAuthStore } from '@/store/auth'
 import { CountTiles } from '../-components/count-tiles'
@@ -19,15 +19,14 @@ export const Route = createFileRoute('/_app/')({
 })
 
 function Home() {
-  // TODO: load the decks and the card count from the server instead of the placeholder rows.
-  const decks = placeholderDecks
+  const { decks, error: decksError, retry: retryDecks } = useDecks()
   const { documents, error, retry } = useDocuments()
   const name = useAuthStore((state) => state.user?.name)
   const [uploadPromptOpen, setUploadPromptOpen] = useState(false)
 
   const counts = {
-    decks: decks.length,
-    cards: decks.reduce((total, deck) => total + deck.cardCount, 0),
+    decks: decks?.length ?? null,
+    cards: decks ? decks.reduce((total, deck) => total + deck.cardTotal, 0) : null,
     documents: documents?.length ?? null,
   }
 
@@ -76,10 +75,16 @@ function Home() {
 
       <CountTiles counts={counts} />
 
-      <DeckList
-        decks={decks}
-        empty={<DeckListEmpty hasDocument={documents !== undefined && documents.length > 0} />}
-      />
+      {decksError ? (
+        <ErrorState title="Decks could not be loaded" detail={decksError} onRetry={retryDecks} />
+      ) : decks === undefined ? (
+        <div aria-hidden="true" className="h-56 animate-pulse rounded-xl bg-muted" />
+      ) : (
+        <DeckList
+          decks={decks}
+          empty={<DeckListEmpty hasDocument={documents !== undefined && documents.length > 0} />}
+        />
+      )}
     </div>
   )
 }

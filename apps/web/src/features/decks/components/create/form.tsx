@@ -3,7 +3,6 @@ import { Button } from '@fliprag/ui/components/button'
 import { FieldError } from '@fliprag/ui/components/field-error'
 import { Input } from '@fliprag/ui/components/input'
 import { Label } from '@fliprag/ui/components/label'
-import { toast } from '@fliprag/ui/components/sonner'
 import { Textarea } from '@fliprag/ui/components/textarea'
 import { cn } from '@fliprag/ui/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -21,9 +20,12 @@ const card = 'flex flex-col rounded-xl border bg-card p-5 shadow-xs'
 
 type NewDeckFormProps = {
   documents: SourceDocument[]
+  onSubmit: (deck: NewDeck) => void
+  pending: boolean
+  error?: string
 }
 
-export function NewDeckForm({ documents }: NewDeckFormProps) {
+export function NewDeckForm({ documents, onSubmit, pending, error }: NewDeckFormProps) {
   const [pickerOpen, setPickerOpen] = useState(false)
 
   const {
@@ -47,15 +49,10 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
   const documentId = watch('documentId')
   const document = documents.find((doc) => doc.id === documentId)
   const complete = watch('title').trim().length > 0 && document !== undefined
+  const hint = error ?? (complete ? null : 'A title and a source document are required.')
 
-  // TODO: create the deck through the API, then open its editor. For now submitting only shows a
-  // toast.
   return (
-    <form
-      onSubmit={handleSubmit(() => toast.info('Saving is not connected yet.'))}
-      noValidate
-      className="flex flex-col gap-3.5"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-3.5">
       <section className={cn(card, 'gap-5')}>
         <div className="flex flex-col gap-2">
           <Label htmlFor="deck-title">Title</Label>
@@ -121,18 +118,21 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
       </section>
 
       <div className="flex flex-wrap items-center justify-between gap-4 pt-1">
-        <p className="text-muted-foreground text-xs">
-          {complete
-            ? 'Saving is not connected yet.'
-            : 'A title and a source document are required.'}
-        </p>
+        {hint && (
+          <p
+            role={error && 'alert'}
+            className={cn('text-xs', error ? 'text-destructive' : 'text-muted-foreground')}
+          >
+            {hint}
+          </p>
+        )}
 
-        <div className="flex gap-2.5">
+        <div className="ml-auto flex gap-2.5">
           <Button asChild variant="outline" size="lg">
             <Link to="/">Cancel</Link>
           </Button>
 
-          <Button type="submit" size="lg">
+          <Button type="submit" size="lg" disabled={pending}>
             Create deck
             <ArrowRight aria-hidden="true" />
           </Button>

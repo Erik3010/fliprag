@@ -1,9 +1,10 @@
 import { Button } from '@fliprag/ui/components/button'
 import { EmptyState } from '@fliprag/ui/components/empty-state'
+import { ErrorState } from '@fliprag/ui/components/error-state'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ChevronLeft } from 'lucide-react'
 import { DeckNotFound } from '@/features/decks/components/deck-not-found'
-import { placeholderCards, placeholderDeckDetails } from '@/features/decks/placeholder'
+import { useDeck } from '@/features/decks/hooks/use-deck'
 import { StudySession } from '@/features/study/components/study-session'
 
 export const Route = createFileRoute('/_focus/decks/$deckId/study')({
@@ -11,19 +12,22 @@ export const Route = createFileRoute('/_focus/decks/$deckId/study')({
   component: Study,
 })
 
-// TODO: load the deck and its cards from the server. Placeholder rows until then.
 function Study() {
   const { deckId } = Route.useParams()
-  const deck = placeholderDeckDetails.find((row) => row.id === deckId)
-  const cards = placeholderCards[deckId] ?? []
+  const { deck, loading, notFound, error, retry } = useDeck(deckId)
 
-  if (deck && cards.length > 0) {
-    return <StudySession deckId={deck.id} deckTitle={deck.title} cards={cards} />
+  if (deck && deck.cards.length > 0) {
+    return <StudySession deckId={deck.id} deckTitle={deck.title} cards={deck.cards} />
   }
 
   return (
     <main className="grid min-h-dvh place-items-center px-5 py-12">
-      {deck ? (
+      {loading ? (
+        <div
+          aria-hidden="true"
+          className="h-64 w-full max-w-sm animate-pulse rounded-2xl bg-muted"
+        />
+      ) : deck ? (
         <EmptyState
           title="Nothing to study yet"
           description={`${deck.title} has no cards. Write the first one in the editor and come back.`}
@@ -37,8 +41,15 @@ function Study() {
           }
           className="w-full max-w-sm"
         />
-      ) : (
+      ) : notFound ? (
         <DeckNotFound className="w-full max-w-sm" />
+      ) : (
+        <ErrorState
+          title="The deck could not be loaded"
+          detail={error}
+          onRetry={retry}
+          className="w-full max-w-sm"
+        />
       )}
     </main>
   )

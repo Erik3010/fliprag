@@ -1,5 +1,5 @@
 import { Loader2 } from 'lucide-react'
-import { type Generation, generationSteps } from '@/features/decks/hooks/use-generation-walk'
+import { type Generation, generationSteps } from '@/features/decks/generation'
 
 type StatusPillProps = {
   generation: Generation

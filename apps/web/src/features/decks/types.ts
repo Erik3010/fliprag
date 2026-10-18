@@ -1,18 +1,32 @@
+import type { Card } from '@/features/cards/types'
+import type { SourceDocument } from '@/features/documents/types'
+
 export type Deck = {
   id: string
+  documentId: string
   title: string
+  description: string | null
+  topics: string | null
   cardCount: number
-  documentName: string
+  createdAt: string
   updatedAt: string
 }
 
-export type DeckStatus = 'generating' | 'ready'
+export type DeckSummary = Deck & {
+  document: SourceDocument
+  cardTotal: number
+}
+
+export type DeckProgress = {
+  step: 'finding' | 'writing'
+  status: 'waiting' | 'running' | 'done' | 'failed'
+  error: string | null
+}
 
 export type DeckDetail = Deck & {
-  description: string
-  topics: string
-  documentId: string
-  status: DeckStatus
+  document: SourceDocument
+  progress: DeckProgress | null
+  cards: Card[]
 }
 
 /** Null while loading, so a count is never shown as 0 by mistake. */

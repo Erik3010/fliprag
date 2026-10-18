@@ -2,7 +2,7 @@ import { Button } from '@fliprag/ui/components/button'
 import { Pencil, Trash2 } from 'lucide-react'
 import { useRef } from 'react'
 import { StatusPill } from '@/features/decks/components/editor/status-pill'
-import type { Generation } from '@/features/decks/hooks/use-generation-walk'
+import type { Generation } from '@/features/decks/generation'
 
 type DeckEditorHeaderProps = {
   title: string

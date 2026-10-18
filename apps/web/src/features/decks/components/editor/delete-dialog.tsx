@@ -11,11 +11,18 @@ import {
 type DeleteDeckDialogProps = {
   open: boolean
   title: string
+  pending: boolean
   onCancel: () => void
   onConfirm: () => void
 }
 
-export function DeleteDeckDialog({ open, title, onCancel, onConfirm }: DeleteDeckDialogProps) {
+export function DeleteDeckDialog({
+  open,
+  title,
+  pending,
+  onCancel,
+  onConfirm,
+}: DeleteDeckDialogProps) {
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onCancel()}>
       <DialogContent>
@@ -30,7 +37,7 @@ export function DeleteDeckDialog({ open, title, onCancel, onConfirm }: DeleteDec
           <Button type="button" variant="outline" onClick={onCancel}>
             Keep it
           </Button>
-          <Button type="button" variant="destructive" onClick={onConfirm}>
+          <Button type="button" variant="destructive" disabled={pending} onClick={onConfirm}>
             Delete deck
           </Button>
         </DialogFooter>

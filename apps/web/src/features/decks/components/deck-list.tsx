@@ -3,11 +3,11 @@ import { Button } from '@fliprag/ui/components/button'
 import { Link } from '@tanstack/react-router'
 import { FileText } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
-import type { Deck } from '@/features/decks/types'
+import type { DeckSummary } from '@/features/decks/types'
 import { relativeDay } from '@/lib/date'
 
 type DeckListProps = {
-  decks: Deck[]
+  decks: DeckSummary[]
   empty: ReactNode
   pageSize?: number
 }
@@ -50,7 +50,7 @@ export function DeckList({ decks, empty, pageSize = 6 }: DeckListProps) {
                 <span className="flex items-start justify-between gap-3">
                   <BrandMark />
                   <span className="whitespace-nowrap rounded-full bg-accent px-2.5 py-1 font-medium text-accent-foreground text-xs">
-                    {deck.cardCount} cards
+                    {deck.cardTotal} {deck.cardTotal === 1 ? 'card' : 'cards'}
                   </span>
                 </span>
 
@@ -61,7 +61,7 @@ export function DeckList({ decks, empty, pageSize = 6 }: DeckListProps) {
 
                   <span className="flex min-w-0 items-center gap-2 text-muted-foreground text-xs">
                     <FileText className="size-3.5 shrink-0 text-secondary" aria-hidden="true" />
-                    <span className="truncate">{deck.documentName}</span>
+                    <span className="truncate">{deck.document.name}</span>
                   </span>
                 </span>
 

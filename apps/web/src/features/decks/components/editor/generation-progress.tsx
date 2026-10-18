@@ -1,6 +1,6 @@
 import { cn } from '@fliprag/ui/lib/utils'
 import { Check, Loader2, X } from 'lucide-react'
-import { generationSteps } from '@/features/decks/hooks/use-generation-walk'
+import { generationSteps } from '@/features/decks/generation'
 
 type GenerationProgressProps = {
   /** Index of the current step. Everything before it is done. */
