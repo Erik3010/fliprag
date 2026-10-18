@@ -18,7 +18,7 @@ function Account() {
       <header className="flex flex-col gap-1">
         <h1 className="font-semibold text-3xl tracking-tight">Account</h1>
         <p className="text-muted-foreground text-sm">
-          Changing the name, email, or password comes in a later phase.
+          View your account details and manage your session.
         </p>
       </header>
 

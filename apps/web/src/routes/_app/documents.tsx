@@ -45,7 +45,7 @@ function Documents() {
         <div className="flex flex-col gap-1">
           <h1 className="font-semibold text-3xl tracking-tight">Documents</h1>
           <p className="text-muted-foreground text-sm">
-            Upload the documents you want to turn into flashcard decks.
+            Upload and manage the PDFs used to generate your decks.
           </p>
         </div>
 

@@ -26,7 +26,7 @@ export function DeckDetails({ description, topics, onDescriptionChange }: DeckDe
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <span className={label}>Topics asked for</span>
+        <span className={label}>Topics</span>
         {topics.trim() ? (
           <p className="text-pretty text-sm leading-relaxed">{topics}</p>
         ) : (

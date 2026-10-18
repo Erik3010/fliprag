@@ -47,9 +47,7 @@ export function SourceDocumentField({ document, errorId, onBrowse }: SourceDocum
 
       <span className="flex min-w-0 flex-1 basis-56 flex-col gap-0.5">
         <span className="font-medium text-sm">Which document is this deck from?</span>
-        <span className="text-muted-foreground text-xs">
-          Cards are written from this one document. It can't be swapped after the deck is made.
-        </span>
+        <span className="text-muted-foreground text-xs">Source for the deck's cards.</span>
       </span>
 
       <Button

@@ -12,7 +12,7 @@ export function CardListEmpty({ onAdd }: CardListEmptyProps) {
     <EmptyState
       icon={<BrandMark />}
       title="No cards in this deck"
-      description="Write the first one by hand: a question on the front, the answer on the back."
+      description="Add a card with a question on the front and the answer on the back."
       action={
         <Button type="button" size="lg" onClick={onAdd}>
           <Plus aria-hidden="true" />

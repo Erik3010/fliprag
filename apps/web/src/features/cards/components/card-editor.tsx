@@ -76,13 +76,13 @@ export function CardEditor({ card, position, total, onChange, onDelete }: CardEd
         <div className="flex flex-col gap-1.5">
           <label htmlFor={frontId} className="flex flex-col gap-0.5">
             <span className="font-semibold text-sm">Front</span>
-            <span className="text-muted-foreground text-xs">What you are asked</span>
+            <span className="text-muted-foreground text-xs">Question</span>
           </label>
           <Textarea
             id={frontId}
             rows={3}
             value={card.front}
-            placeholder="The question"
+            placeholder="e.g. What keeps the planets in orbit around the sun?"
             data-focus={`front-${card.id}`}
             className={face}
             onChange={(event) => onChange({ front: event.currentTarget.value })}
@@ -92,13 +92,13 @@ export function CardEditor({ card, position, total, onChange, onDelete }: CardEd
         <div className="flex flex-col gap-1.5">
           <label htmlFor={backId} className="flex flex-col gap-0.5">
             <span className="font-semibold text-sm">Back</span>
-            <span className="text-muted-foreground text-xs">What you should recall</span>
+            <span className="text-muted-foreground text-xs">Answer</span>
           </label>
           <Textarea
             id={backId}
             rows={3}
             value={card.back}
-            placeholder="The answer"
+            placeholder="e.g. The sun's gravity"
             className={face}
             onChange={(event) => onChange({ back: event.currentTarget.value })}
           />

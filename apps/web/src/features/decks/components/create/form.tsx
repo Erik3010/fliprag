@@ -86,7 +86,7 @@ export function NewDeckForm({ documents }: NewDeckFormProps) {
       <section className={cn(card, 'gap-3')}>
         <div className="flex items-baseline justify-between gap-4">
           <span className="font-medium text-sm">Source document</span>
-          <span className="text-muted-foreground text-xs">One per deck</span>
+          <span className="text-muted-foreground text-xs">Required</span>
         </div>
 
         <SourceDocumentField

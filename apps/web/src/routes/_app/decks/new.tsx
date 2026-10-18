@@ -54,11 +54,7 @@ function NewDeck() {
 
         <h1 className="font-semibold text-3xl tracking-tight">Create deck</h1>
 
-        <p className="text-muted-foreground text-sm">
-          {documents.length > 0 || loading || error
-            ? 'Select a source document and the topics to cover.'
-            : 'A deck requires one source document.'}
-        </p>
+        <p className="text-muted-foreground text-sm">Generate flashcards from a PDF document.</p>
       </header>
 
       {content()}

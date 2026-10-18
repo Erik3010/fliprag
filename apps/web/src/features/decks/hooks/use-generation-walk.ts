@@ -2,10 +2,7 @@ import { useEffect, useState } from 'react'
 import type { DeckStatus } from '@/features/decks/types'
 
 // TODO (phase 2): replace this timer with progress from the server. The steps stay the same.
-export const generationSteps = [
-  'Finding the passages that match the topics',
-  'Writing the cards',
-] as const
+export const generationSteps = ['Retrieving context', 'Generating cards'] as const
 
 const STEP_PACE_MS = 1500
 const LAST_STEP = generationSteps.length - 1
