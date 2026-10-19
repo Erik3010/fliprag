@@ -1,36 +1,114 @@
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  HeadBucketCommand,
+  HeadObjectCommand,
+  NoSuchKey,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+import { HttpError } from './http-error.js'
 
 export type Storage = {
   put(key: string, bytes: Uint8Array): Promise<void>
   get(key: string): Promise<Uint8Array>
+  signedUrl(key: string, filename: string): Promise<string>
   delete(key: string): Promise<void>
+  ping(): Promise<void>
 }
 
-// Local disk for phase 1. S3 or R2 later is a second object with the same three methods; the
-// keys in the database do not change. docs/database.md, "storage_key, not a path".
-const root =
-  process.env.UPLOADS_DIR ?? fileURLToPath(new URL('../../../../uploads', import.meta.url))
+function readSettings() {
+  const accountId = process.env.R2_ACCOUNT_ID
+  const accessKeyId = process.env.R2_ACCESS_KEY_ID
+  const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY
+  const bucket = process.env.R2_BUCKET
 
-function pathFor(key: string) {
-  const path = resolve(root, key)
-  if (!path.startsWith(`${root}/`)) {
-    throw new Error(`Storage key escapes the uploads directory: ${key}`)
+  if (!accountId || !accessKeyId || !secretAccessKey || !bucket) {
+    const missing = Object.entries({
+      R2_ACCOUNT_ID: accountId,
+      R2_ACCESS_KEY_ID: accessKeyId,
+      R2_SECRET_ACCESS_KEY: secretAccessKey,
+      R2_BUCKET: bucket,
+    })
+      .filter(([, value]) => !value)
+      .map(([name]) => name)
+    throw new Error(`Missing in .env: ${missing.join(', ')}. See .env.example.`)
   }
-  return path
+  return { accountId, accessKeyId, secretAccessKey, bucket }
+}
+
+const { accountId, accessKeyId, secretAccessKey, bucket } = readSettings()
+
+const NOT_FOUND = 'File not found.'
+const LINK_SECONDS = 5 * 60
+
+const client = new S3Client({
+  region: 'auto',
+  endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+  credentials: { accessKeyId, secretAccessKey },
+})
+
+async function call<T>(run: () => Promise<T>): Promise<T> {
+  try {
+    return await run()
+  } catch (error) {
+    if (error instanceof HttpError) {
+      throw error
+    }
+    if (error instanceof NoSuchKey || (error instanceof Error && error.name === 'NotFound')) {
+      throw new HttpError(404, NOT_FOUND)
+    }
+    throw new HttpError(503, 'File storage is not reachable.', error)
+  }
 }
 
 export const storage: Storage = {
-  async put(key, bytes) {
-    const path = pathFor(key)
-    await mkdir(dirname(path), { recursive: true })
-    await writeFile(path, bytes)
+  put(key, bytes) {
+    return call(async () => {
+      await client.send(
+        new PutObjectCommand({
+          Bucket: bucket,
+          Key: key,
+          Body: bytes,
+          ContentType: 'application/pdf',
+        }),
+      )
+    })
   },
   get(key) {
-    return readFile(pathFor(key))
+    return call(async () => {
+      const object = await client.send(new GetObjectCommand({ Bucket: bucket, Key: key }))
+      if (!object.Body) {
+        throw new HttpError(404, NOT_FOUND)
+      }
+      return object.Body.transformToByteArray()
+    })
+  },
+  signedUrl(key, filename) {
+    return call(async () => {
+      // Signing does not touch R2, so check the file is there before handing out a link to it.
+      await client.send(new HeadObjectCommand({ Bucket: bucket, Key: key }))
+      return getSignedUrl(
+        client,
+        new GetObjectCommand({
+          Bucket: bucket,
+          Key: key,
+          ResponseContentType: 'application/pdf',
+          ResponseContentDisposition: `inline; filename*=UTF-8''${encodeURIComponent(filename)}`,
+        }),
+        { expiresIn: LINK_SECONDS },
+      )
+    })
   },
   delete(key) {
-    return rm(pathFor(key), { force: true })
+    return call(async () => {
+      await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }))
+    })
+  },
+  ping() {
+    return call(async () => {
+      await client.send(new HeadBucketCommand({ Bucket: bucket }))
+    })
   },
 }

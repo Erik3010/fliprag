@@ -19,6 +19,9 @@ export const app = new Hono()
 
 app.onError((error, c) => {
   if (error instanceof HttpError) {
+    if (error.status >= 500 && error.cause instanceof Error) {
+      console.error(describe(error.cause))
+    }
     return c.json({ message: error.message }, error.status)
   }
   if (error instanceof HTTPException) {

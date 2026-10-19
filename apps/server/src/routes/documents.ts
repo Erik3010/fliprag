@@ -10,15 +10,9 @@ export const documentRoutes = new Hono<AuthEnv>()
   .post('/', zValidator('form', uploadDocumentSchema, rejectInvalid), async (c) =>
     c.json(await documents.upload(c.get('userId'), c.req.valid('form').file), 201),
   )
-  .get('/:id/file', async (c) => {
-    const { bytes, filename } = await documents.getFile(c.get('userId'), c.req.param('id'))
-    return new Response(bytes, {
-      headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `inline; filename="${encodeURIComponent(filename)}"`,
-      },
-    })
-  })
+  .get('/:id/file', async (c) =>
+    c.json(await documents.fileUrl(c.get('userId'), c.req.param('id'))),
+  )
   .patch('/:id', zValidator('json', renameDocumentSchema, rejectInvalid), async (c) =>
     c.json(await documents.rename(c.get('userId'), c.req.param('id'), c.req.valid('json').name)),
   )

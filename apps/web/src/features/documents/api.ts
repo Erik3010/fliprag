@@ -15,10 +15,10 @@ export function deleteDocument(id: string) {
   return api.delete(`documents/${id}`)
 }
 
-// A plain link can't send the Bearer header, so the file is fetched and opened as a blob URL.
-export async function fetchDocumentFile(id: string) {
-  const blob = await api.get(`documents/${id}/file`).blob()
-  return URL.createObjectURL(blob)
+// A short-lived signed link to the PDF in R2, made after the server checks ownership.
+export async function documentFileUrl(id: string) {
+  const { url } = await api.get(`documents/${id}/file`).json<{ url: string }>()
+  return url
 }
 
 type UploadOptions = {

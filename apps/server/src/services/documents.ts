@@ -74,12 +74,12 @@ export async function upload(userId: string, file: File): Promise<Document> {
     }
     return row
   } catch (error) {
-    await storage.delete(storageKey)
+    await storage.delete(storageKey).catch(() => {})
     throw error
   }
 }
 
-export async function getFile(userId: string, id: string) {
+export async function fileUrl(userId: string, id: string): Promise<{ url: string }> {
   const row = await db.query.documents.findFirst({
     columns: { storageKey: true, originalFilename: true, name: true },
     where: owned(userId, id),
@@ -88,10 +88,8 @@ export async function getFile(userId: string, id: string) {
     throw new HttpError(404, NOT_FOUND)
   }
 
-  return {
-    bytes: await storage.get(row.storageKey),
-    filename: row.originalFilename ?? `${row.name}.pdf`,
-  }
+  const filename = row.originalFilename ?? `${row.name}.pdf`
+  return { url: await storage.signedUrl(row.storageKey, filename) }
 }
 
 export async function rename(userId: string, id: string, name: string): Promise<Document> {
@@ -121,5 +119,6 @@ export async function remove(userId: string, id: string) {
   if (!deleted) {
     throw new HttpError(404, NOT_FOUND)
   }
-  await storage.delete(deleted.storageKey)
+  // The row is already gone, so a file left behind in the bucket is harmless.
+  await storage.delete(deleted.storageKey).catch(() => {})
 }
