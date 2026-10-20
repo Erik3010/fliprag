@@ -12,7 +12,7 @@ import { requireEnv } from './env.js'
 import { HttpError } from './http-error.js'
 
 export type Storage = {
-  put(key: string, bytes: Uint8Array): Promise<void>
+  put(key: string, body: Uint8Array | string, contentType: string): Promise<void>
   get(key: string): Promise<Uint8Array>
   signedUrl(key: string, filename: string): Promise<string>
   delete(key: string): Promise<void>
@@ -50,15 +50,10 @@ async function call<T>(run: () => Promise<T>): Promise<T> {
 }
 
 export const storage: Storage = {
-  put(key, bytes) {
+  put(key, body, contentType) {
     return call(async () => {
       await client.send(
-        new PutObjectCommand({
-          Bucket: bucket,
-          Key: key,
-          Body: bytes,
-          ContentType: 'application/pdf',
-        }),
+        new PutObjectCommand({ Bucket: bucket, Key: key, Body: body, ContentType: contentType }),
       )
     })
   },

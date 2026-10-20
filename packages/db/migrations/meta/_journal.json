@@ -29,6 +29,13 @@
       "when": 1792328359173,
       "tag": "0003_eager_wildside",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792490727434,
+      "tag": "0004_slim_tattoo",
+      "breakpoints": true
     }
   ]
 }

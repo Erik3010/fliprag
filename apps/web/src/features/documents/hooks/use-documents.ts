@@ -4,8 +4,17 @@ import { failureMessage } from '@/lib/http'
 
 export const documentsQueryKey = ['documents'] as const
 
+const PROCESSING_POLL_MS = 3000
+
 export function useDocuments() {
-  const query = useQuery({ queryKey: documentsQueryKey, queryFn: listDocuments })
+  const query = useQuery({
+    queryKey: documentsQueryKey,
+    queryFn: listDocuments,
+    refetchInterval: (current) =>
+      current.state.data?.some((document) => document.status === 'processing')
+        ? PROCESSING_POLL_MS
+        : false,
+  })
 
   return {
     documents: query.data,

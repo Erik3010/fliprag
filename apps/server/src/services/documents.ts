@@ -1,6 +1,7 @@
-import { db, documents } from '@fliprag/db'
+import { db, type documentStatuses, documents } from '@fliprag/db'
 import { and, desc, eq } from 'drizzle-orm'
 import { PDFDocument } from 'pdf-lib'
+import * as processDocument from '../jobs/process-document.js'
 import { HttpError } from '../lib/http-error.js'
 import { FOREIGN_KEY_VIOLATION, pgErrorCode } from '../lib/pg-error.js'
 import { storage } from '../lib/storage.js'
@@ -11,6 +12,8 @@ export const documentColumns = {
   originalFilename: documents.originalFilename,
   sizeBytes: documents.sizeBytes,
   pageCount: documents.pageCount,
+  status: documents.status,
+  processError: documents.processError,
   createdAt: documents.createdAt,
 }
 
@@ -20,6 +23,8 @@ export type Document = {
   originalFilename: string | null
   sizeBytes: number | null
   pageCount: number | null
+  status: (typeof documentStatuses)[number]
+  processError: string | null
   createdAt: Date
 }
 
@@ -29,7 +34,7 @@ function owned(userId: string, id: string) {
   return and(eq(documents.id, id), eq(documents.userId, userId))
 }
 
-// A damaged PDF is still accepted with a null count; phase 2's generator is what can reject it.
+// A damaged PDF is still accepted with a null count; processing it is what can reject it.
 async function readPageCount(bytes: Uint8Array) {
   try {
     const pdf = await PDFDocument.load(bytes, { ignoreEncryption: true })
@@ -53,7 +58,7 @@ export async function upload(userId: string, file: File): Promise<Document> {
   const id = crypto.randomUUID()
   const storageKey = `${userId}/${id}.pdf`
 
-  await storage.put(storageKey, bytes)
+  await storage.put(storageKey, bytes, 'application/pdf')
 
   try {
     const [row] = await db
@@ -72,6 +77,7 @@ export async function upload(userId: string, file: File): Promise<Document> {
     if (!row) {
       throw new Error('Insert returned no row.')
     }
+    processDocument.enqueue(row.id)
     return row
   } catch (error) {
     await storage.delete(storageKey).catch(() => {})
@@ -120,5 +126,9 @@ export async function remove(userId: string, id: string) {
     throw new HttpError(404, NOT_FOUND)
   }
   // The row is already gone, so a file left behind in the bucket is harmless.
-  await storage.delete(deleted.storageKey).catch(() => {})
+  await Promise.all(
+    [deleted.storageKey, processDocument.resultKey(deleted.storageKey)].map((key) =>
+      storage.delete(key).catch(() => {}),
+    ),
+  )
 }

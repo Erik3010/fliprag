@@ -7,6 +7,7 @@ import {
 } from '@fliprag/ui/components/dropdown-menu'
 import { ExternalLink, MoreVertical, Pencil, Trash2 } from 'lucide-react'
 import { DocumentIcon } from '@/features/documents/components/document-icon'
+import { DocumentProcessStatus } from '@/features/documents/components/library/process-status'
 import { documentMeta } from '@/features/documents/format'
 import type { SourceDocument } from '@/features/documents/types'
 
@@ -31,6 +32,7 @@ export function DocumentRow({ document, onOpen, onRename, onDelete }: DocumentRo
           {document.name}
         </button>
         <span className="text-muted-foreground text-xs">{documentMeta(document)}</span>
+        <DocumentProcessStatus document={document} />
       </span>
 
       <span className="flex shrink-0 items-center gap-2">

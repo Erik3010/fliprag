@@ -16,10 +16,14 @@
     "@fliprag/schemas": "workspace:*",
     "@hono/node-server": "^2.1.1",
     "@hono/zod-validator": "^0.9.1",
+    "@langchain/core": "^1.2.18",
+    "@langchain/textsplitters": "^1.0.2",
+    "@mistralai/mistralai": "^2.7.0",
     "bcryptjs": "^3.0.3",
     "drizzle-orm": "^0.45.3",
     "hono": "^4.13.8",
     "pdf-lib": "^1.17.1",
+    "pg-boss": "^12.38.0",
     "zod": "catalog:"
   },
   "devDependencies": {
