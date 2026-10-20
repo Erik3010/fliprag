@@ -72,11 +72,14 @@ export function list(userId: string): Promise<DeckSummary[]> {
 
 export async function create(userId: string, details: NewDeck): Promise<Deck> {
   const document = await db.query.documents.findFirst({
-    columns: { id: true },
+    columns: { id: true, status: true },
     where: and(eq(documents.id, details.documentId), eq(documents.userId, userId)),
   })
   if (!document) {
     throw new HttpError(404, NO_DOCUMENT)
+  }
+  if (document.status !== 'ready') {
+    throw new HttpError(409, 'Document is not ready yet.')
   }
 
   try {

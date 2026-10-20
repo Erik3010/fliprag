@@ -11,6 +11,7 @@ import {
 import { cn } from '@fliprag/ui/lib/utils'
 import { Check, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { DocumentStatus } from '@/features/documents/components/document-status'
 import { documentMeta } from '@/features/documents/format'
 import type { SourceDocument } from '@/features/documents/types'
 
@@ -62,16 +63,21 @@ export function DocumentPicker({
         <div className="flex max-h-[60vh] flex-col gap-2 overflow-y-auto px-5 pt-4 pb-5">
           {documents.map((doc) => {
             const active = doc.id === highlighted
+            // A deck needs a ready document; the rest stay listed so they do not seem lost.
+            const unavailable = doc.status !== 'ready'
 
             return (
               <button
                 key={doc.id}
                 type="button"
                 aria-pressed={active}
+                disabled={unavailable}
                 onClick={() => setHighlighted(doc.id)}
                 className={cn(
-                  'flex w-full cursor-pointer items-center gap-3 rounded-lg border p-3.5 text-left outline-offset-2 outline-ring transition-colors focus-visible:outline-2',
-                  active ? 'border-primary bg-accent/55' : 'hover:border-ring hover:bg-muted/50',
+                  'flex w-full cursor-pointer items-center gap-3 rounded-lg border p-3.5 text-left outline-offset-2 outline-ring transition-colors focus-visible:outline-2 disabled:cursor-not-allowed disabled:opacity-60',
+                  active
+                    ? 'border-primary bg-accent/55'
+                    : 'enabled:hover:border-ring enabled:hover:bg-muted/50',
                 )}
               >
                 <span
@@ -87,6 +93,7 @@ export function DocumentPicker({
                 <span className="flex min-w-0 flex-1 flex-col gap-1">
                   <span className="truncate font-medium text-sm">{doc.name}</span>
                   <span className="text-muted-foreground text-xs">{documentMeta(doc)}</span>
+                  <DocumentStatus document={doc} />
                 </span>
               </button>
             )
