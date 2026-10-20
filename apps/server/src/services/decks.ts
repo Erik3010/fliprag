@@ -2,6 +2,7 @@ import { cards, db, deckProgress, decks, documents } from '@fliprag/db'
 import type { CardInput } from '@fliprag/schemas/card'
 import type { NewDeck, UpdateDeck } from '@fliprag/schemas/deck'
 import { and, asc, count, desc, eq, notInArray } from 'drizzle-orm'
+import * as generateDeck from '../jobs/generate-deck.js'
 import { HttpError } from '../lib/http-error.js'
 import {
   FOREIGN_KEY_VIOLATION,
@@ -9,7 +10,7 @@ import {
   pgErrorCode,
   UNIQUE_VIOLATION,
 } from '../lib/pg-error.js'
-import { type Document, documentColumns, search as searchDocument } from './documents.js'
+import { type Document, documentColumns } from './documents.js'
 
 const columns = {
   id: decks.id,
@@ -83,21 +84,28 @@ export async function create(userId: string, details: NewDeck): Promise<Deck> {
   }
 
   try {
-    const [row] = await db
-      .insert(decks)
-      .values({
-        userId,
-        documentId: details.documentId,
-        title: details.title,
-        description: details.description || null,
-        topics: details.topics || null,
-        cardCount: details.cardCount,
-      })
-      .returning(columns)
+    const row = await db.transaction(async (tx) => {
+      const [inserted] = await tx
+        .insert(decks)
+        .values({
+          userId,
+          documentId: details.documentId,
+          title: details.title,
+          description: details.description || null,
+          topics: details.topics || null,
+          cardCount: details.cardCount,
+        })
+        .returning(columns)
 
-    if (!row) {
-      throw new Error('Insert returned no row.')
-    }
+      if (!inserted) {
+        throw new Error('Insert returned no row.')
+      }
+      await tx
+        .insert(deckProgress)
+        .values({ deckId: inserted.id, step: 'finding', status: 'waiting' })
+      return inserted
+    })
+    generateDeck.enqueue(row.id)
     return row
   } catch (error) {
     // The document was deleted between the check and the insert.
@@ -106,17 +114,6 @@ export async function create(userId: string, details: NewDeck): Promise<Deck> {
     }
     throw error
   }
-}
-
-const CHUNKS_PER_DECK = 10
-
-// A deck with no topics searches with its title and description, so it always has a query.
-export function findChunks(
-  userId: string,
-  deck: Pick<Deck, 'documentId' | 'title' | 'description' | 'topics'>,
-) {
-  const query = deck.topics ?? [deck.title, deck.description].filter(Boolean).join('\n')
-  return searchDocument(userId, deck.documentId, query, CHUNKS_PER_DECK)
 }
 
 export async function get(userId: string, id: string): Promise<DeckDetail> {
