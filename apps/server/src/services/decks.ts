@@ -1,7 +1,8 @@
+import { setTimeout } from 'node:timers/promises'
 import { cards, db, deckProgress, decks, documents } from '@fliprag/db'
 import type { CardInput } from '@fliprag/schemas/card'
 import type { NewDeck, UpdateDeck } from '@fliprag/schemas/deck'
-import { and, asc, count, desc, eq, notInArray } from 'drizzle-orm'
+import { and, asc, count, desc, eq, ne, notInArray } from 'drizzle-orm'
 import * as generateDeck from '../jobs/generate-deck.js'
 import { HttpError } from '../lib/http-error.js'
 import {
@@ -46,6 +47,8 @@ export type DeckDetail = Deck & {
 }
 
 const NOT_FOUND = 'Deck not found.'
+const BEING_MADE = 'Deck is still being made.'
+const WATCH_MS = 1000
 const NO_DOCUMENT = 'Document not found.'
 
 function owned(userId: string, id: string) {
@@ -143,6 +146,28 @@ export async function get(userId: string, id: string): Promise<DeckDetail> {
   return { ...deck, progress: progress ?? null, cards: deckCards }
 }
 
+// Answers the deck now, then again each time it changes, until it is done or failed. The first
+// read happens before the stream opens, so a missing deck is a plain 404.
+export async function watch(userId: string, id: string) {
+  const first = await get(userId, id)
+  return changes(userId, id, first)
+}
+
+async function* changes(userId: string, id: string, first: DeckDetail) {
+  let deck = first
+  let sent = ''
+  while (true) {
+    const snapshot = JSON.stringify(deck)
+    if (snapshot !== sent) {
+      yield deck
+      sent = snapshot
+    }
+    if (!deck.progress || deck.progress.status === 'failed') return
+    await setTimeout(WATCH_MS)
+    deck = await get(userId, id)
+  }
+}
+
 type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0]
 
 export async function update(userId: string, id: string, changes: UpdateDeck): Promise<DeckDetail> {
@@ -161,6 +186,14 @@ export async function update(userId: string, id: string, changes: UpdateDeck): P
 
       if (!row) {
         throw new HttpError(404, NOT_FOUND)
+      }
+      // A save from a tab opened earlier would remove the cards the job has written since.
+      const making = await tx.query.deckProgress.findFirst({
+        columns: { status: true },
+        where: and(eq(deckProgress.deckId, id), ne(deckProgress.status, 'failed')),
+      })
+      if (making) {
+        throw new HttpError(409, BEING_MADE)
       }
       if (changes.cards) {
         await replaceCards(tx, id, changes.cards)
