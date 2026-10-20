@@ -1,5 +1,5 @@
-# Only Postgres runs in Docker. The web and server run on the host with pnpm, so hot reload and
-# the nvm toolchain keep working. Start it once with `docker compose up -d`.
+# Only Postgres and Chroma run in Docker. The web and server run on the host with pnpm, so hot
+# reload and the nvm toolchain keep working. Start them once with `docker compose up -d`.
 services:
   db:
     image: postgres:17-alpine
@@ -18,5 +18,14 @@ services:
       timeout: 3s
       retries: 10
 
+  chroma:
+    image: chromadb/chroma:1.5.9
+    container_name: fliprag-chroma
+    ports:
+      - '${CHROMA_PORT:-8000}:8000'
+    volumes:
+      - chromadata:/data
+
 volumes:
   pgdata:
+  chromadata:
