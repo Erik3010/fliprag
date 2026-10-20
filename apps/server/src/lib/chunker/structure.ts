@@ -1,5 +1,5 @@
 import type { Page } from './chunk.js'
-import { isNoiseLine, stripImages } from './cleanup.js'
+import { isBoilerplateTitle, isNoiseLine, stripImages } from './cleanup.js'
 
 export type Block = {
   kind: 'heading' | 'table' | 'text'
@@ -14,6 +14,7 @@ export type Section = {
 
 const HEADING = /^(#{1,6})\s+(.+)$/
 const TABLE_ROW = /^\s*\|/
+const SECTION_NUMBER = /^(\d+(?:\.\d+)*)\.?\s/
 
 export function toSections(pages: Page[]) {
   const sections: Section[] = []
@@ -26,7 +27,7 @@ export function toSections(pages: Page[]) {
       if (current.blocks.length > 0) {
         sections.push(current)
       }
-      const level = match[1].length
+      const level = numberedLevel(match[2]) ?? match[1].length
       while ((headings.at(-1)?.level ?? 0) >= level) {
         headings.pop()
       }
@@ -42,6 +43,12 @@ export function toSections(pages: Page[]) {
   return sections
 }
 
+// OCR guesses heading levels from how text looks, and gets siblings wrong. A section number is the
+// author's own: "3.2.2" is level 3, whatever its # count.
+function numberedLevel(title: string) {
+  return title.match(SECTION_NUMBER)?.[1]?.split('.').length
+}
+
 function toBlocks(pages: Page[]) {
   const blocks: Block[] = []
   let current: Block | null = null
@@ -49,10 +56,15 @@ function toBlocks(pages: Page[]) {
   for (const page of pages) {
     current = null
     for (const raw of page.markdown.split('\n')) {
-      const line = stripImages(raw).trimEnd()
+      let line = stripImages(raw).trimEnd()
       if (isNoiseLine(line)) {
         current = null
         continue
+      }
+      // OCR can leave a title like "References" as plain text. It becomes a heading, so its
+      // section can be skipped.
+      if (!HEADING.test(line) && isBoilerplateTitle(line)) {
+        line = `# ${line.trim()}`
       }
 
       const kind = HEADING.test(line) ? 'heading' : TABLE_ROW.test(line) ? 'table' : 'text'

@@ -21,6 +21,7 @@ const NOISE_LINES = [
   /^\d{1,4}$/, // page number: 12
   /\.{4,}\s*\d+$/, // contents entry: Methods ........ 12
   /^([-*_])\1{2,}$/, // horizontal rule: ---
+  /^#+$/, // heading with no text: ####
 ]
 
 export function stripImages(line: string) {
@@ -36,7 +37,11 @@ export function isNoiseLine(line: string) {
 // so dropping what looks nested under it could drop every chapter.
 export function isSkippedSection(section: Section) {
   const title = section.blocks[0]?.kind === 'heading' ? section.path.at(-1) : undefined
-  return title !== undefined && SKIPPED_SECTIONS.has(normalizeTitle(title))
+  return title !== undefined && isBoilerplateTitle(title)
+}
+
+export function isBoilerplateTitle(text: string) {
+  return SKIPPED_SECTIONS.has(normalizeTitle(text))
 }
 
 // "7 References", "**References**", "IV. References" → "references"
