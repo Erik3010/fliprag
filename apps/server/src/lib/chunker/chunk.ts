@@ -14,7 +14,7 @@ export type Chunk = {
   lastPage: number
 }
 
-// In characters. Starting values, to tune once search can be measured.
+// In characters. Measured against a plain splitter in part 3, and kept.
 const MAX = 2000
 const OVERLAP = 200
 const MIN = 300
