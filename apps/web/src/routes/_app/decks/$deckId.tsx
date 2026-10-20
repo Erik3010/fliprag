@@ -3,6 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { DeckNotFound } from '@/features/decks/components/deck-not-found'
 import { DeckBackLink } from '@/features/decks/components/editor/back-link'
 import { DeckEditor } from '@/features/decks/components/editor/deck-editor'
+import { generationOf } from '@/features/decks/generation'
 import { useDeck } from '@/features/decks/hooks/use-deck'
 
 export const Route = createFileRoute('/_app/decks/$deckId')({
@@ -15,7 +16,9 @@ function DeckPage() {
   const { deck, loading, notFound, error, retry } = useDeck(deckId)
 
   if (deck) {
-    return <DeckEditor key={deck.id} deck={deck} />
+    // A new key when generation ends, so editing starts from the cards the job wrote.
+    const making = generationOf(deck.progress).walking
+    return <DeckEditor key={making ? `${deck.id}-making` : deck.id} deck={deck} />
   }
 
   return (

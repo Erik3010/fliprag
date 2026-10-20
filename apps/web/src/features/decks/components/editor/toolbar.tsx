@@ -7,7 +7,8 @@ import type { ReactNode } from 'react'
 type DeckEditorToolbarProps = {
   back: ReactNode
   deckId: string
-  canStudy: boolean
+  /** Why Study is off, or null when it can be used. */
+  studyBlocked: string | null
   unsaved: boolean
   saving: boolean
   onSave: () => void
@@ -19,7 +20,7 @@ const shortcut =
 export function DeckEditorToolbar({
   back,
   deckId,
-  canStudy,
+  studyBlocked,
   unsaved,
   saving,
   onSave,
@@ -50,7 +51,7 @@ export function DeckEditorToolbar({
           </kbd>
         </Button>
 
-        {canStudy ? (
+        {!studyBlocked ? (
           <Button asChild variant="outline" size="lg">
             <Link to="/decks/$deckId/study" params={{ deckId }}>
               <Play aria-hidden="true" />
@@ -71,7 +72,7 @@ export function DeckEditorToolbar({
                 Study
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Add at least one card to study</TooltipContent>
+            <TooltipContent>{studyBlocked}</TooltipContent>
           </Tooltip>
         )}
       </div>

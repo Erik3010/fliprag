@@ -10,6 +10,7 @@ type CardEditorProps = {
   card: Card
   position: number
   total: number
+  locked: boolean
   onChange: (patch: Partial<Pick<Card, 'front' | 'back'>>) => void
   onDelete: () => void
 }
@@ -17,7 +18,7 @@ type CardEditorProps = {
 const face =
   'min-h-20 bg-background transition-[color,background-color,box-shadow] duration-150 hover:bg-card focus-visible:bg-card'
 
-export function CardEditor({ card, position, total, onChange, onDelete }: CardEditorProps) {
+export function CardEditor({ card, position, total, locked, onChange, onDelete }: CardEditorProps) {
   const frontId = `card-${card.id}-front`
   const backId = `card-${card.id}-back`
   const {
@@ -28,7 +29,7 @@ export function CardEditor({ card, position, total, onChange, onDelete }: CardEd
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: card.id })
+  } = useSortable({ id: card.id, disabled: locked })
 
   return (
     <article
@@ -41,18 +42,20 @@ export function CardEditor({ card, position, total, onChange, onDelete }: CardEd
       )}
     >
       <div className="flex items-center gap-2.5">
-        <Button
-          ref={setActivatorNodeRef}
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          aria-label={`Reorder card ${position}`}
-          className="-ml-1.5 cursor-grab touch-none text-muted-foreground active:cursor-grabbing"
-          {...attributes}
-          {...listeners}
-        >
-          <GripVertical aria-hidden="true" />
-        </Button>
+        {!locked && (
+          <Button
+            ref={setActivatorNodeRef}
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            aria-label={`Reorder card ${position}`}
+            className="-ml-1.5 cursor-grab touch-none text-muted-foreground active:cursor-grabbing"
+            {...attributes}
+            {...listeners}
+          >
+            <GripVertical aria-hidden="true" />
+          </Button>
+        )}
 
         <span className="whitespace-nowrap rounded-full bg-accent px-2.5 py-1 font-medium text-accent-foreground text-xs">
           Card {position} of {total}
@@ -60,16 +63,18 @@ export function CardEditor({ card, position, total, onChange, onDelete }: CardEd
 
         <span className="flex-1" />
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          aria-label={`Delete card ${position}`}
-          className="hover:text-destructive"
-          onClick={onDelete}
-        >
-          <Trash2 aria-hidden="true" />
-        </Button>
+        {!locked && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            aria-label={`Delete card ${position}`}
+            className="hover:text-destructive"
+            onClick={onDelete}
+          >
+            <Trash2 aria-hidden="true" />
+          </Button>
+        )}
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -84,6 +89,7 @@ export function CardEditor({ card, position, total, onChange, onDelete }: CardEd
             value={card.front}
             placeholder="e.g. What keeps the planets in orbit around the sun?"
             data-focus={`front-${card.id}`}
+            readOnly={locked}
             className={face}
             onChange={(event) => onChange({ front: event.currentTarget.value })}
           />
@@ -99,6 +105,7 @@ export function CardEditor({ card, position, total, onChange, onDelete }: CardEd
             rows={3}
             value={card.back}
             placeholder="e.g. The sun's gravity"
+            readOnly={locked}
             className={face}
             onChange={(event) => onChange({ back: event.currentTarget.value })}
           />

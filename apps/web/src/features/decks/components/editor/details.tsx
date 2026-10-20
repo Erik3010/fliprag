@@ -3,12 +3,18 @@ import { Textarea } from '@fliprag/ui/components/textarea'
 type DeckDetailsProps = {
   description: string
   topics: string
+  locked: boolean
   onDescriptionChange: (value: string) => void
 }
 
 const label = 'font-medium text-muted-foreground text-xs'
 
-export function DeckDetails({ description, topics, onDescriptionChange }: DeckDetailsProps) {
+export function DeckDetails({
+  description,
+  topics,
+  locked,
+  onDescriptionChange,
+}: DeckDetailsProps) {
   return (
     <section className="flex flex-col gap-4 rounded-xl border bg-card p-5 shadow-xs">
       <div className="flex flex-col gap-1.5">
@@ -19,6 +25,7 @@ export function DeckDetails({ description, topics, onDescriptionChange }: DeckDe
           id="deck-description"
           rows={2}
           value={description}
+          readOnly={locked}
           onChange={(event) => onDescriptionChange(event.currentTarget.value)}
           placeholder="e.g. For my science exam"
           className="min-h-20 resize-y bg-background leading-relaxed transition-[color,background-color,box-shadow] duration-150 hover:bg-card focus-visible:bg-card"

@@ -95,10 +95,14 @@ export function useDeckEditor(deck: DeckDetail) {
     [change],
   )
 
+  const generation = generationOf(deck.progress)
+
   return {
     ...fields,
-    cards,
-    generation: generationOf(deck.progress),
+    // While the deck is being made its cards come from the stream, not from edits.
+    cards: generation.walking ? deck.cards : cards,
+    locked: generation.walking,
+    generation,
     unsaved,
     saving,
     save,

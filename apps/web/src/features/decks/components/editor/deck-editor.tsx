@@ -14,6 +14,12 @@ import { DeckEditorToolbar } from '@/features/decks/components/editor/toolbar'
 import { useDeckEditor } from '@/features/decks/hooks/use-deck-editor'
 import type { DeckDetail } from '@/features/decks/types'
 
+function studyBlockedReason(locked: boolean, cardCount: number) {
+  if (locked) return 'Available once the deck is made'
+  if (cardCount === 0) return 'Add at least one card to study'
+  return null
+}
+
 type DeckEditorProps = {
   deck: DeckDetail
 }
@@ -23,7 +29,7 @@ export function DeckEditor({ deck }: DeckEditorProps) {
   const [confirmingDelete, setConfirmingDelete] = useState(false)
   const [deletingCardId, setDeletingCardId] = useState<string | null>(null)
 
-  const { cards, generation } = editor
+  const { cards, generation, locked } = editor
   const deletingIndex = cards.findIndex((card) => card.id === deletingCardId)
 
   return (
@@ -31,7 +37,7 @@ export function DeckEditor({ deck }: DeckEditorProps) {
       <DeckEditorToolbar
         back={<DeckBackLink />}
         deckId={deck.id}
-        canStudy={cards.length > 0}
+        studyBlocked={studyBlockedReason(locked, cards.length)}
         unsaved={editor.unsaved}
         saving={editor.saving}
         onSave={editor.save}
@@ -41,6 +47,7 @@ export function DeckEditor({ deck }: DeckEditorProps) {
         title={editor.title}
         cardCount={cards.length}
         generation={generation}
+        locked={locked}
         onTitleChange={editor.setTitle}
         onDelete={() => setConfirmingDelete(true)}
       />
@@ -50,6 +57,7 @@ export function DeckEditor({ deck }: DeckEditorProps) {
       <DeckDetails
         description={editor.description}
         topics={deck.topics ?? ''}
+        locked={locked}
         onDescriptionChange={editor.setDescription}
       />
 
@@ -63,17 +71,22 @@ export function DeckEditor({ deck }: DeckEditorProps) {
             Cards
           </h2>
 
-          <Button type="button" variant="outline" onClick={editor.addCard}>
-            <Plus aria-hidden="true" />
-            Add a card
-          </Button>
+          {!locked && (
+            <Button type="button" variant="outline" onClick={editor.addCard}>
+              <Plus aria-hidden="true" />
+              Add a card
+            </Button>
+          )}
         </div>
 
-        {cards.length === 0 ? (
+        {cards.length === 0 && locked ? (
+          <p className="text-muted-foreground text-sm">Cards appear here as they are written.</p>
+        ) : cards.length === 0 ? (
           <CardListEmpty onAdd={editor.addCard} />
         ) : (
           <CardList
             cards={cards}
+            locked={locked}
             focusKey={editor.focusKey}
             onFocused={editor.clearFocus}
             onChange={editor.updateCard}

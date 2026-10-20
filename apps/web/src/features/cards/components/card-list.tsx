@@ -24,6 +24,8 @@ type CardListProps = {
   /** A `data-focus` key to move focus to once the list has rendered, or null. */
   focusKey: string | null
   onFocused: () => void
+  /** True while the deck is being made: cards are shown, not edited. */
+  locked?: boolean
   onChange: (id: string, patch: Partial<Pick<Card, 'front' | 'back'>>) => void
   onMove: (id: string, to: number) => void
   onDelete: (id: string) => void
@@ -33,6 +35,7 @@ export function CardList({
   cards,
   focusKey,
   onFocused,
+  locked = false,
   onChange,
   onMove,
   onDelete,
@@ -73,6 +76,7 @@ export function CardList({
                 card={card}
                 position={index + 1}
                 total={cards.length}
+                locked={locked}
                 onChange={(patch) => onChange(card.id, patch)}
                 onDelete={() => onDelete(card.id)}
               />
