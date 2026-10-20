@@ -1,5 +1,5 @@
 import { db, type documentStatuses, documents } from '@fliprag/db'
-import { and, desc, eq } from 'drizzle-orm'
+import { and, desc, eq, ne } from 'drizzle-orm'
 import { PDFDocument } from 'pdf-lib'
 import * as processDocument from '../jobs/process-document.js'
 import { HttpError } from '../lib/http-error.js'
@@ -113,7 +113,7 @@ export async function rename(userId: string, id: string, name: string): Promise<
 export async function remove(userId: string, id: string) {
   const [deleted] = await db
     .delete(documents)
-    .where(owned(userId, id))
+    .where(and(owned(userId, id), ne(documents.status, 'processing')))
     .returning({ storageKey: documents.storageKey })
     .catch((error: unknown) => {
       if (pgErrorCode(error) === FOREIGN_KEY_VIOLATION) {
@@ -123,7 +123,13 @@ export async function remove(userId: string, id: string) {
     })
 
   if (!deleted) {
-    throw new HttpError(404, NOT_FOUND)
+    const exists = await db.query.documents.findFirst({
+      columns: { id: true },
+      where: owned(userId, id),
+    })
+    throw exists
+      ? new HttpError(409, 'Document is still being processed.')
+      : new HttpError(404, NOT_FOUND)
   }
   // The row is already gone, so a file left behind in the bucket is harmless.
   await Promise.all(

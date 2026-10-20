@@ -52,7 +52,11 @@ export function DocumentRow({ document, onOpen, onRename, onDelete }: DocumentRo
               <Pencil aria-hidden="true" />
               Rename
             </DropdownMenuItem>
-            <DropdownMenuItem variant="destructive" onSelect={() => onDelete(document)}>
+            <DropdownMenuItem
+              variant="destructive"
+              disabled={document.status === 'processing'}
+              onSelect={() => onDelete(document)}
+            >
               <Trash2 aria-hidden="true" />
               Delete
             </DropdownMenuItem>
