@@ -58,7 +58,7 @@ export function CardEditor({ card, position, total, locked, onChange, onDelete }
         )}
 
         <span className="whitespace-nowrap rounded-full bg-accent px-2.5 py-1 font-medium text-accent-foreground text-xs">
-          Card {position} of {total}
+          Card {position}
         </span>
 
         <span className="flex-1" />
