@@ -1,17 +1,10 @@
 import { sign, verify } from 'hono/jwt'
+import { requireEnv } from './env.js'
 
 const TOKEN_DAYS = 7
 const ALGORITHM = 'HS256'
 
-const secret = requireSecret()
-
-function requireSecret() {
-  const value = process.env.JWT_SECRET
-  if (!value) {
-    throw new Error('JWT_SECRET is not set. Copy .env.example at the repo root to .env.')
-  }
-  return value
-}
+const { JWT_SECRET: secret } = requireEnv('JWT_SECRET')
 
 export function signToken(userId: string) {
   const exp = Math.floor(Date.now() / 1000) + TOKEN_DAYS * 24 * 60 * 60

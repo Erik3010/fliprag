@@ -8,6 +8,7 @@ import {
   S3Client,
 } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+import { requireEnv } from './env.js'
 import { HttpError } from './http-error.js'
 
 export type Storage = {
@@ -18,27 +19,12 @@ export type Storage = {
   ping(): Promise<void>
 }
 
-function readSettings() {
-  const accountId = process.env.R2_ACCOUNT_ID
-  const accessKeyId = process.env.R2_ACCESS_KEY_ID
-  const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY
-  const bucket = process.env.R2_BUCKET
-
-  if (!accountId || !accessKeyId || !secretAccessKey || !bucket) {
-    const missing = Object.entries({
-      R2_ACCOUNT_ID: accountId,
-      R2_ACCESS_KEY_ID: accessKeyId,
-      R2_SECRET_ACCESS_KEY: secretAccessKey,
-      R2_BUCKET: bucket,
-    })
-      .filter(([, value]) => !value)
-      .map(([name]) => name)
-    throw new Error(`Missing in .env: ${missing.join(', ')}. See .env.example.`)
-  }
-  return { accountId, accessKeyId, secretAccessKey, bucket }
-}
-
-const { accountId, accessKeyId, secretAccessKey, bucket } = readSettings()
+const {
+  R2_ACCOUNT_ID: accountId,
+  R2_ACCESS_KEY_ID: accessKeyId,
+  R2_SECRET_ACCESS_KEY: secretAccessKey,
+  R2_BUCKET: bucket,
+} = requireEnv('R2_ACCOUNT_ID', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY', 'R2_BUCKET')
 
 const NOT_FOUND = 'File not found.'
 const LINK_SECONDS = 5 * 60
