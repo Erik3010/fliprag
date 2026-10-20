@@ -116,7 +116,7 @@ export function findChunks(
   deck: Pick<Deck, 'documentId' | 'title' | 'description' | 'topics'>,
 ) {
   const query = deck.topics ?? [deck.title, deck.description].filter(Boolean).join('\n')
-  return searchDocument(userId, deck.documentId, { query, limit: CHUNKS_PER_DECK })
+  return searchDocument(userId, deck.documentId, query, CHUNKS_PER_DECK)
 }
 
 export async function get(userId: string, id: string): Promise<DeckDetail> {

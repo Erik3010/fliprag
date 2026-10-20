@@ -1,8 +1,4 @@
-import {
-  renameDocumentSchema,
-  searchDocumentSchema,
-  uploadDocumentSchema,
-} from '@fliprag/schemas/document'
+import { renameDocumentSchema, uploadDocumentSchema } from '@fliprag/schemas/document'
 import { zValidator } from '@hono/zod-validator'
 import { Hono } from 'hono'
 import { rejectInvalid } from '../lib/validate.js'
@@ -16,9 +12,6 @@ export const documentRoutes = new Hono<AuthEnv>()
   )
   .get('/:id/file', async (c) =>
     c.json(await documents.fileUrl(c.get('userId'), c.req.param('id'))),
-  )
-  .post('/:id/search', zValidator('json', searchDocumentSchema, rejectInvalid), async (c) =>
-    c.json(await documents.search(c.get('userId'), c.req.param('id'), c.req.valid('json'))),
   )
   .patch('/:id', zValidator('json', renameDocumentSchema, rejectInvalid), async (c) =>
     c.json(await documents.rename(c.get('userId'), c.req.param('id'), c.req.valid('json').name)),

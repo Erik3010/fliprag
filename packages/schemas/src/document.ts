@@ -23,17 +23,3 @@ export const renameDocumentSchema = z.object({
 })
 
 export type RenameDocument = z.infer<typeof renameDocumentSchema>
-
-export const searchLimit = { default: 10, max: 50 } as const
-
-export const searchDocumentSchema = z.object({
-  query: z.string().trim().min(1, 'Query is required.'),
-  limit: z
-    .number('Limit must be a number.')
-    .int('Limit must be a whole number.')
-    .min(1, 'Limit must be at least 1.')
-    .max(searchLimit.max, `Limit must be at most ${searchLimit.max}.`)
-    .default(searchLimit.default),
-})
-
-export type SearchDocument = z.infer<typeof searchDocumentSchema>

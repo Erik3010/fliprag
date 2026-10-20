@@ -1,5 +1,4 @@
 import { db, type documentStatuses, documents } from '@fliprag/db'
-import type { SearchDocument } from '@fliprag/schemas/document'
 import { and, desc, eq, ne } from 'drizzle-orm'
 import { PDFDocument } from 'pdf-lib'
 import * as processDocument from '../jobs/process-document.js'
@@ -105,7 +104,8 @@ export async function fileUrl(userId: string, id: string): Promise<{ url: string
 export async function search(
   userId: string,
   id: string,
-  { query, limit }: SearchDocument,
+  query: string,
+  limit: number,
 ): Promise<ChunkMatch[]> {
   const row = await db.query.documents.findFirst({
     columns: { status: true },
