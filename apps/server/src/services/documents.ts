@@ -1,9 +1,12 @@
 import { db, type documentStatuses, documents } from '@fliprag/db'
+import type { SearchDocument } from '@fliprag/schemas/document'
 import { and, desc, eq, ne } from 'drizzle-orm'
 import { PDFDocument } from 'pdf-lib'
 import * as processDocument from '../jobs/process-document.js'
+import type { ChunkMatch } from '../lib/chroma.js'
 import * as vectorStore from '../lib/chroma.js'
 import { HttpError } from '../lib/http-error.js'
+import { embedText } from '../lib/openai.js'
 import { FOREIGN_KEY_VIOLATION, pgErrorCode } from '../lib/pg-error.js'
 import { storage } from '../lib/storage.js'
 
@@ -97,6 +100,28 @@ export async function fileUrl(userId: string, id: string): Promise<{ url: string
 
   const filename = row.originalFilename ?? `${row.name}.pdf`
   return { url: await storage.signedUrl(row.storageKey, filename) }
+}
+
+export async function search(
+  userId: string,
+  id: string,
+  { query, limit }: SearchDocument,
+): Promise<ChunkMatch[]> {
+  const row = await db.query.documents.findFirst({
+    columns: { status: true },
+    where: owned(userId, id),
+  })
+  if (!row) {
+    throw new HttpError(404, NOT_FOUND)
+  }
+  if (row.status !== 'ready') {
+    throw new HttpError(409, 'Document is not ready yet.')
+  }
+
+  const embedding = await embedText(query).catch((error: unknown) => {
+    throw new HttpError(503, 'Search is not available right now.', error)
+  })
+  return vectorStore.search(userId, id, embedding, limit)
 }
 
 export async function rename(userId: string, id: string, name: string): Promise<Document> {

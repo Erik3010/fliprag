@@ -9,7 +9,7 @@ import {
   pgErrorCode,
   UNIQUE_VIOLATION,
 } from '../lib/pg-error.js'
-import { type Document, documentColumns } from './documents.js'
+import { type Document, documentColumns, search as searchDocument } from './documents.js'
 
 const columns = {
   id: decks.id,
@@ -106,6 +106,17 @@ export async function create(userId: string, details: NewDeck): Promise<Deck> {
     }
     throw error
   }
+}
+
+const CHUNKS_PER_DECK = 10
+
+// A deck with no topics searches with its title and description, so it always has a query.
+export function findChunks(
+  userId: string,
+  deck: Pick<Deck, 'documentId' | 'title' | 'description' | 'topics'>,
+) {
+  const query = deck.topics ?? [deck.title, deck.description].filter(Boolean).join('\n')
+  return searchDocument(userId, deck.documentId, { query, limit: CHUNKS_PER_DECK })
 }
 
 export async function get(userId: string, id: string): Promise<DeckDetail> {
