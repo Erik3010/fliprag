@@ -2,6 +2,7 @@ import { db, type documentStatuses, documents } from '@fliprag/db'
 import { and, desc, eq, ne } from 'drizzle-orm'
 import { PDFDocument } from 'pdf-lib'
 import * as processDocument from '../jobs/process-document.js'
+import * as vectorStore from '../lib/chroma.js'
 import { HttpError } from '../lib/http-error.js'
 import { FOREIGN_KEY_VIOLATION, pgErrorCode } from '../lib/pg-error.js'
 import { storage } from '../lib/storage.js'
@@ -114,7 +115,7 @@ export async function remove(userId: string, id: string) {
   const [deleted] = await db
     .delete(documents)
     .where(and(owned(userId, id), ne(documents.status, 'processing')))
-    .returning({ storageKey: documents.storageKey })
+    .returning({ id: documents.id, storageKey: documents.storageKey })
     .catch((error: unknown) => {
       if (pgErrorCode(error) === FOREIGN_KEY_VIOLATION) {
         throw new HttpError(409, 'Document is in use by one or more decks.')
@@ -131,10 +132,11 @@ export async function remove(userId: string, id: string) {
       ? new HttpError(409, 'Document is still being processed.')
       : new HttpError(404, NOT_FOUND)
   }
-  // The row is already gone, so a file left behind in the bucket is harmless.
-  await Promise.all(
-    [deleted.storageKey, processDocument.resultKey(deleted.storageKey)].map((key) =>
+  // The row is already gone, so a file or vectors left behind are harmless.
+  await Promise.all([
+    ...[deleted.storageKey, processDocument.resultKey(deleted.storageKey)].map((key) =>
       storage.delete(key).catch(() => {}),
     ),
-  )
+    vectorStore.remove(deleted.id).catch(() => {}),
+  ])
 }

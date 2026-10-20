@@ -1,9 +1,11 @@
 import { db, documents } from '@fliprag/db'
 import { MistralError } from '@mistralai/mistralai/models/errors'
 import { and, asc, eq } from 'drizzle-orm'
+import * as vectorStore from '../lib/chroma.js'
 import { type Chunk, chunkPages, type Page } from '../lib/chunker/chunk.js'
 import { HttpError } from '../lib/http-error.js'
 import { ocrPdf } from '../lib/mistral.js'
+import { embedTexts } from '../lib/openai.js'
 import { createQueue } from '../lib/queue.js'
 import { storage } from '../lib/storage.js'
 
@@ -12,16 +14,19 @@ const UNREADABLE = 'This PDF could not be read.'
 const NO_TEXT = 'No text was found in this PDF.'
 const UNAVAILABLE = 'Reading is not available right now.'
 
+type PositionedChunk = Chunk & { position: number }
+
 export type ProcessResult = {
   model: string
   pages: Page[]
-  chunks: (Chunk & { position: number })[]
+  chunks: PositionedChunk[]
 }
 
 type Job = { documentId: string }
 
 type ProcessingDocument = {
   id: string
+  userId: string
   name: string
   originalFilename: string | null
   storageKey: string
@@ -74,12 +79,10 @@ async function run(documentId: string) {
       return await markFailed(document.id, NO_TEXT)
     }
 
-    const chunks = await chunkPages(pages)
-    await saveResult(document, {
-      model,
-      pages,
-      chunks: chunks.map((chunk, position) => ({ position, ...chunk })),
-    })
+    const chunks = (await chunkPages(pages)).map((chunk, position) => ({ position, ...chunk }))
+    const embeddings = await embedChunks(chunks)
+    await saveResult(document, { model, pages, chunks })
+    await saveVectors(document, chunks, embeddings)
     await markReady(document)
   } catch (error) {
     console.error(`Failed to process document ${document.id}:`, error)
@@ -91,6 +94,7 @@ async function loadProcessing(id: string): Promise<ProcessingDocument | undefine
   const [row] = await db
     .select({
       id: documents.id,
+      userId: documents.userId,
       name: documents.name,
       originalFilename: documents.originalFilename,
       storageKey: documents.storageKey,
@@ -105,7 +109,25 @@ function readPdf(document: ProcessingDocument) {
   return storage.signedUrl(document.storageKey, filename).then((url) => ocrPdf(url, filename))
 }
 
-// Saved before the status changes, so a ready document always has its file.
+function embedChunks(chunks: PositionedChunk[]) {
+  const textToEmbed = (chunk: PositionedChunk) =>
+    chunk.headingPath ? `${chunk.headingPath}\n\n${chunk.text}` : chunk.text
+  return embedTexts(chunks.map(textToEmbed))
+}
+
+function saveVectors(
+  document: ProcessingDocument,
+  chunks: PositionedChunk[],
+  embeddings: number[][],
+) {
+  return vectorStore.replace(
+    document.userId,
+    document.id,
+    chunks.map((chunk, i) => ({ ...chunk, embedding: embeddings[i] ?? [] })),
+  )
+}
+
+// Saved before the status changes, so a ready document always has its file and its vectors.
 function saveResult(document: ProcessingDocument, result: ProcessResult) {
   return storage.put(resultKey(document.storageKey), JSON.stringify(result), 'application/json')
 }
@@ -119,6 +141,7 @@ async function markReady(document: ProcessingDocument) {
   // Deleted mid-job, after its files were removed.
   if (!kept) {
     await storage.delete(resultKey(document.storageKey)).catch(() => {})
+    await vectorStore.remove(document.id).catch(() => {})
   }
 }
 

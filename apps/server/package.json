@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^4.0.98",
     "@aws-sdk/client-s3": "^3.1152.0",
     "@aws-sdk/s3-request-presigner": "^3.1152.0",
     "@fliprag/db": "workspace:*",
@@ -19,7 +20,9 @@
     "@langchain/core": "^1.2.18",
     "@langchain/textsplitters": "^1.0.2",
     "@mistralai/mistralai": "^2.7.0",
+    "ai": "^7.0.146",
     "bcryptjs": "^3.0.3",
+    "chromadb": "^3.5.0",
     "drizzle-orm": "catalog:",
     "hono": "^4.13.8",
     "pdf-lib": "^1.17.1",
