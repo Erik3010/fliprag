@@ -9,6 +9,9 @@ catalogs:
     '@types/node':
       specifier: ^26.6.2
       version: 26.6.2
+    drizzle-orm:
+      specifier: ^0.45.3
+      version: 0.45.3
     typescript:
       specifier: ^7.0.2
       version: 7.0.2
@@ -76,7 +79,7 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
       drizzle-orm:
-        specifier: ^0.45.3
+        specifier: 'catalog:'
         version: 0.45.3(@opentelemetry/api@1.9.1)(pg@8.23.1)(postgres@3.4.9)
       hono:
         specifier: ^4.13.8
@@ -192,7 +195,7 @@ importers:
   packages/db:
     dependencies:
       drizzle-orm:
-        specifier: ^0.45.3
+        specifier: 'catalog:'
         version: 0.45.3(@opentelemetry/api@1.9.1)(pg@8.23.1)(postgres@3.4.9)
       postgres:
         specifier: ^3.4.9
