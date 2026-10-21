@@ -62,8 +62,16 @@ export function PassCard({
 
       <FlipCard card={card} flipped={flipped} onFlip={onFlip} />
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <Button type="button" variant="outline" size="lg" onClick={onPrev} disabled={atFirst}>
+      {/* On a phone, Flip takes the first row and Previous and Next share the second. */}
+      <div className="grid grid-cols-2 gap-3 sm:flex sm:items-center sm:justify-between">
+        <Button
+          type="button"
+          variant="outline"
+          size="xl"
+          onClick={onPrev}
+          disabled={atFirst}
+          className="order-2 sm:order-none"
+        >
           <ChevronLeft aria-hidden="true" />
           Previous
         </Button>
@@ -71,15 +79,21 @@ export function PassCard({
         <Button
           type="button"
           variant="outline"
-          size="lg"
+          size="xl"
           onClick={onFlip}
-          className="border-primary font-semibold text-accent-foreground hover:bg-accent hover:text-accent-foreground"
+          className="order-1 col-span-2 border-primary font-semibold text-accent-foreground hover:bg-accent hover:text-accent-foreground sm:order-none"
         >
           <RefreshCw aria-hidden="true" />
           {flipped ? 'Show the front' : 'Flip to the back'}
         </Button>
 
-        <Button type="button" variant="outline" size="lg" onClick={onNext}>
+        <Button
+          type="button"
+          variant="outline"
+          size="xl"
+          onClick={onNext}
+          className="order-3 sm:order-0"
+        >
           {atLast ? 'Finish' : 'Next'}
           <ChevronRight aria-hidden="true" />
         </Button>
