@@ -80,7 +80,9 @@ export function DeckEditor({ deck }: DeckEditorProps) {
         </div>
 
         {cards.length === 0 && locked ? (
-          <p className="text-muted-foreground text-sm">Cards appear here as they are written.</p>
+          <p className="text-muted-foreground text-sm">
+            No cards yet. New cards show here as they are generated.
+          </p>
         ) : cards.length === 0 ? (
           <CardListEmpty onAdd={editor.addCard} />
         ) : (
