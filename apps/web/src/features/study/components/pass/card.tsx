@@ -99,7 +99,7 @@ export function PassCard({
         </Button>
       </div>
 
-      <p className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-muted-foreground text-xs">
+      <p className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-muted-foreground text-xs pointer-coarse:hidden">
         <Hint keyName="Space">flip</Hint>
         <Hint keyName="←">back</Hint>
         <Hint keyName="→">next</Hint>

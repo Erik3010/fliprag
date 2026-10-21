@@ -38,7 +38,10 @@ export function FlipCard({ card, flipped, onFlip }: FlipCardProps) {
           <span className="flex min-h-0 flex-1 items-center overflow-auto text-pretty font-medium text-xl leading-snug tracking-tight sm:text-2xl">
             {card.front.trim() || 'This card has no front yet.'}
           </span>
-          <span className="text-muted-foreground text-xs">Space flips the card</span>
+          <span className="text-muted-foreground text-xs">
+            <span className="pointer-coarse:hidden">Space flips the card</span>
+            <span className="hidden pointer-coarse:inline">Tap to flip</span>
+          </span>
         </span>
 
         <span aria-hidden={!flipped} className={cn(face, 'rotate-y-180 border-ring bg-accent')}>
@@ -46,7 +49,10 @@ export function FlipCard({ card, flipped, onFlip }: FlipCardProps) {
           <span className="flex min-h-0 flex-1 items-center overflow-auto text-pretty text-lg leading-relaxed sm:text-xl">
             {card.back.trim() || 'This card has no back yet.'}
           </span>
-          <span className="text-accent-foreground text-xs">Right arrow for the next card</span>
+          <span className="text-accent-foreground text-xs">
+            <span className="pointer-coarse:hidden">Right arrow for the next card</span>
+            <span className="hidden pointer-coarse:inline">Tap to flip back</span>
+          </span>
         </span>
       </span>
     </button>
