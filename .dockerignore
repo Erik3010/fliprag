@@ -1,0 +1,16 @@
+**/node_modules
+**/dist
+.git
+.env
+.env.*
+!.env.example
+docs
+anti-slop
+.claude
+.agents
+.opencode
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+**/*.log
+.DS_Store
