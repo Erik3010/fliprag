@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# Run on the server from the repo root, after git pull. Migrating before `up` means the new server
-# never starts against an old schema.
+# Migrates before starting the new version, so it never runs against an old database schema.
+#   ./deploy.sh               latest images
+#   TAG=<sha> ./deploy.sh     one commit's images (rollback)
+#   ./deploy.sh --build       build locally instead of pulling
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -8,8 +10,12 @@ compose() {
   docker compose -f docker-compose.prod.yml "$@"
 }
 
-compose build
+if [[ "${1:-}" == "--build" ]]; then
+  compose build
+else
+  compose pull
+fi
 compose run --rm server node /app/packages/db/dist/migrate.js
 compose up -d
-# Only this project's leftover images, not other projects' on the same machine.
-docker image prune -f --filter label=com.docker.compose.project=fliprag-prod
+# Deletes old fliprag images; the label filter leaves other projects' images alone.
+docker image prune -af --filter label=org.opencontainers.image.source=https://github.com/Erik3010/fliprag

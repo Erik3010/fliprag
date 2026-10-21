@@ -1,5 +1,6 @@
 # Node and pnpm, shared by every stage
 FROM node:22-slim AS base
+LABEL org.opencontainers.image.source=https://github.com/Erik3010/fliprag
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 RUN corepack enable
 WORKDIR /app
@@ -35,5 +36,6 @@ CMD ["node", "dist/index.js"]
 
 # Caddy with the built web app
 FROM caddy:2.10 AS web
+LABEL org.opencontainers.image.source=https://github.com/Erik3010/fliprag
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY --from=build /app/apps/web/dist /srv/web

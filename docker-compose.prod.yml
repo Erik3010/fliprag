@@ -1,4 +1,4 @@
-# Deploy with ./deploy.sh: it builds, migrates, then starts the new version.
+# Deploy with ./deploy.sh. TAG picks a commit's images (default: latest).
 name: fliprag-prod
 
 x-logging: &logging
@@ -9,11 +9,12 @@ x-logging: &logging
 
 services:
   caddy:
+    image: ghcr.io/erik3010/fliprag-web:${TAG:-latest}
     build:
       context: .
       target: web
     restart: unless-stopped
-    # Changeable for a local trial where 80 and 443 are taken.
+    # Overridable for a local trial.
     ports:
       - '${HTTP_PORT:-80}:80'
       - '${HTTPS_PORT:-443}:443'
@@ -28,6 +29,7 @@ services:
     logging: *logging
 
   server:
+    image: ghcr.io/erik3010/fliprag-server:${TAG:-latest}
     build:
       context: .
       target: server
