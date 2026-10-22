@@ -36,7 +36,7 @@ export function DeckEditorHeader({
               onChange={(event) => onTitleChange(event.currentTarget.value)}
               aria-label="Deck title"
               placeholder="Untitled deck"
-              className="-ml-2 field-sizing-content h-12 min-w-48 max-w-full rounded-lg border border-transparent bg-transparent px-2 py-1 font-semibold text-3xl tracking-tight outline-none transition-colors placeholder:text-muted-foreground hover:bg-muted focus-visible:border-ring focus-visible:bg-card focus-visible:ring-3 focus-visible:ring-ring/50"
+              className="-ml-2 field-sizing-content h-12 max-w-full rounded-lg border border-transparent bg-transparent px-2 py-1 font-semibold text-3xl tracking-tight outline-none transition-colors placeholder:text-muted-foreground hover:bg-muted focus-visible:border-ring focus-visible:bg-card focus-visible:ring-3 focus-visible:ring-ring/50"
             />
             {!locked && (
               <Button
